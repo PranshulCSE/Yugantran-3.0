@@ -1,0 +1,43 @@
+[
+        {
+        "id": 1,
+        "name": "Sejal",
+        "role": "Overall Manager",
+        "image": "/images/team/sejal.jpg",
+        "linkedin": "https://www.linkedin.com/in/sejal-sharama-135974389?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "#",
+        "email": "sejalsharmab.tech@gmail.com"
+        
+    },
+    {
+        "id": 2,
+        "name": "Naveenta",
+        "role": "Marketing Team",
+        "image": "/images/team/naveenta.jpg",
+        "linkedin": "https://www.linkedin.com/in/naveenta-manhas-37b011391?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://www.instagram.com/_komalmanhas_?igsh=bHFieGpxd29oMWZu",
+        "email": "naveentamanhas@gmail.com"
+        
+    },
+    {
+        "id": 3,
+        "name": "Anjali",
+        "role": "Event Manager",
+        "image": "/images/team/anjali.jpg",
+        "linkedin": "https://www.linkedin.com/in/anjali-dhankar?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://www.instagram.com/_anjali._.10._?igsh=MXNlb3FpeXJ3MXh2Yw==",
+        "email": "a22847632@gmail.com"
+    },
+    {
+        "id": 4,
+        "name": "Palak Jain",
+        "role": "Discipline Lead",
+        "image": "/images/team/palak.jpg",
+        "linkedin": "https://www.linkedin.com/in/palak-jain-4a1b3232b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://github.com/jainpalak6319/",
+        "email": "palakjain6319@gmail.com"
+        
+    }
+
+
+]

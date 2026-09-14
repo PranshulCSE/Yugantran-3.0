@@ -1,0 +1,65 @@
+[
+    {
+        "id": 1,
+        "name": "Tejasvi",
+        "role": "Core Head",
+        "image": "/images/team/tejasvi.webp",
+        "linkedin": "https://www.linkedin.com/in/tejasvi-sharma-001845295?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://www.instagram.com/tejas.visharma?igsh=NXd2MjZsb3JyYWRl",
+        "email": "tejasvisharma100@gmail.com"
+    },
+    {
+        "id": 2,
+        "name": "Shaina",
+        "role": "Core Head",
+        "image": "/images/team/shaina.jpg",
+        "linkedin": "https://www.linkedin.com/in/shaina-hussain",
+        "github": "https://www.instagram.com/withi.nk",
+        "email": "iamshainah@gmail.com"
+    },
+    {
+        "id": 3,
+        "name": "Kunal Khandelwal",
+        "role": "Tech Lead",
+        "image": "/images/team/kunal.jpg",
+        "linkedin": "https://www.linkedin.com/in/kunal-khandelwal-62a5b1311",
+        "github": "https://www.instagram.com/k13_kunal/",
+        "email": "kunalkhandelwal155@gmail.com"
+    },
+    {
+        "id": 4,
+        "name": "Suryansh",
+        "role": "Marketing Head",
+        "image": "/images/team/suryansh.jpg",
+        "linkedin": "https://www.linkedin.com/in/suryansh-saini-216712292/",
+        "github": "https://www.instagram.com/suryxnsh_09/",
+        "email": "anshsaini189@gmail.com"
+    },
+    {
+        "id": 5,
+        "name": "Sahil Bhardwaj",
+        "role": "Outreach Head",
+        "image": "/images/team/sahil.jpg",
+        "linkedin": "https://www.linkedin.com/in/sahil-bhardwajs10?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+        "github": "https://www.instagram.com/bhardwaj_sahil10?igsh=aHc5NGhoM2FpdXV4",
+        "email": "Sahilbhardwaj4488@gmail.com"
+    },
+    {
+        "id": 6,
+        "name": "Muskan Kaushik",
+        "role": "Operation Lead",
+        "image": "/images/team/muskan.jpg",
+        "linkedin": "http://www.linkedin.com/in/kaushikmuskan29",
+        "github": "https://www.instagram.com/who_muskan_90/",
+        "email": "kaushikmuskan2006@gmail.com"
+    },
+    {
+        "id": 7,
+        "name": "Meet Bajaj",
+        "role": "Creativity Head",
+        "image": "/images/team/meet.jpg",
+        "linkedin": "https://www.linkedin.com/in/meetbajaj",
+        "github": "https://www.instagram.com/meet_bajaj_",
+        "email": "Meetbajaj005@gmail.com"
+    }
+]
