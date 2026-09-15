@@ -1,4 +1,4 @@
-﻿import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminHeader from "./components/AdminHeader";
@@ -27,16 +27,22 @@ export default function AdminApp() {
   return (
     <div className="min-h-screen bg-[#020902] text-[#b0ffb0]">
       <Routes>
-        <Route path="login" element={isAuthenticated ? <Navigate to="/admin" replace /> : <Login />} />
+        {/* Login */}
+        <Route
+          path="login"
+          element={isAuthenticated ? <Navigate to="/admin" replace /> : <Login />}
+        />
+
+        {/* Protected admin routes */}
         <Route
           path="*"
           element={
             <ProtectedRoute>
               <div className="flex">
                 <AdminSidebar />
-                <div className="admin-content flex-1">
+                <div className="admin-content flex-1 flex flex-col">
                   <AdminHeader />
-                  <div className="p-6">
+                  <div className="p-6 flex-1">
                     <Routes>
                       <Route index element={<Dashboard />} />
                       <Route path="events" element={<EventsManager />} />

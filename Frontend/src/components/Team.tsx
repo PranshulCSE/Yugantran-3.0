@@ -1,4 +1,4 @@
-﻿import { motion } from "motion/react";
+import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
@@ -11,25 +11,37 @@ function MemberCard({ member, index }: { member: any; index: number }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.07 }}
       whileHover={{ y: -8 }}
-      className="glass glass-hover rounded-xl overflow-hidden text-center group"
+      className="glass glass-hover rounded-xl overflow-hidden group"
     >
+      {/* Photo */}
       <div className="relative h-56 bg-[rgba(0,255,65,0.04)]">
         {member.image ? (
-          <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+          <img
+            src={member.image}
+            alt={member.name}
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <User className="w-16 h-16 text-[rgba(0,255,65,0.3)]" />
+            <User className="w-16 h-16 text-[rgba(0,255,65,0.2)]" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#000000] via-[rgba(0,0,0,0.1)] to-transparent" />
       </div>
+
+      {/* Info */}
       <div className="p-5">
         <h3 className="font-orbitron text-sm text-[#00ff41] mb-1 tracking-wide">{member.name}</h3>
         <p className="text-[rgba(176,255,176,0.6)] text-sm mb-1">{member.role}</p>
         <p className="font-mono-matrix text-xs text-[rgba(176,255,176,0.3)] mb-3">{member.department}</p>
         {member.linkedin && member.linkedin !== "#" && (
-          <a href={member.linkedin} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[#00ccff] hover:text-[#00eeff] text-xs transition-colors">
+          <a
+            href={member.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[#00ccff] hover:text-[#44ddff] text-xs transition-colors"
+          >
             <Linkedin className="w-3 h-3" /> LinkedIn
           </a>
         )}
@@ -44,7 +56,9 @@ export default function Team() {
   const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
-    publicApi.getTeam("core").then((r) => setMembers(r.data)).catch(() => {});
+    publicApi.getTeam("core")
+      .then((r) => setMembers(r.data))
+      .catch(() => {});
   }, []);
 
   return (
@@ -60,12 +74,19 @@ export default function Team() {
             Meet the <span className="gradient-text">Team</span>
           </h2>
           <p className="text-[rgba(176,255,176,0.5)] text-lg max-w-2xl mx-auto">
-            The people behind YUGANTRAN 3.0 — dedicated individuals working to make this an unforgettable experience.
+            The people behind YUGANTRAN 3.0 — dedicated and passionate individuals working to make this unforgettable.
           </p>
         </motion.div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {members.map((m, i) => <MemberCard key={m._id} member={m} index={i} />)}
-        </div>
+
+        {members.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {members.map((m, i) => <MemberCard key={m._id} member={m} index={i} />)}
+          </div>
+        ) : (
+          <div className="text-center py-16 text-[rgba(176,255,176,0.3)] font-mono-matrix">
+            Loading team...
+          </div>
+        )}
       </div>
     </section>
   );

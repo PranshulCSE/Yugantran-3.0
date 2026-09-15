@@ -1,4 +1,4 @@
-﻿import { motion } from "motion/react";
+import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
@@ -10,7 +10,9 @@ export default function SubTeam() {
   const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
-    publicApi.getTeam("subteam").then((r) => setMembers(r.data)).catch(() => {});
+    publicApi.getTeam("subteam")
+      .then((r) => setMembers(r.data))
+      .catch(() => {});
   }, []);
 
   if (!members.length) return null;
@@ -36,15 +38,20 @@ export default function SubTeam() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ delay: i * 0.05 }}
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -4, scale: 1.02 }}
               className="glass glass-hover p-4 rounded-xl text-center"
             >
-              <div className="w-16 h-16 rounded-full mx-auto mb-3 overflow-hidden border border-[rgba(0,255,65,0.2)] bg-[rgba(0,255,65,0.04)]">
+              <div className="w-16 h-16 rounded-full mx-auto mb-3 overflow-hidden border border-[rgba(0,255,65,0.18)] bg-[rgba(0,255,65,0.04)]">
                 {m.image ? (
-                  <img src={m.image} alt={m.name} className="w-full h-full object-cover" />
+                  <img
+                    src={m.image}
+                    alt={m.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <User className="w-8 h-8 text-[rgba(0,255,65,0.3)]" />
+                    <User className="w-8 h-8 text-[rgba(0,255,65,0.25)]" />
                   </div>
                 )}
               </div>

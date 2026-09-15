@@ -1,4 +1,4 @@
-﻿import { motion } from "motion/react";
+import { motion } from "motion/react";
 import { useInView } from "motion/react";
 import { useRef } from "react";
 import { Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal } from "lucide-react";
@@ -7,16 +7,16 @@ const AWARDS = [
   { icon: Trophy, title: "Best Overall", desc: "Tech Olympics Champion — YUGANTRAN TECH OLYMPION", color: "#ffd700" },
   { icon: Bot, title: "Best AI Solution", desc: "Most innovative AI application in AI Warzone", color: "#00ff41" },
   { icon: Shield, title: "Best Cybersecurity", desc: "Top team in Cyber Escape CTF challenge", color: "#ff4444" },
-  { icon: Code, title: "Best Developer", desc: "Outstanding coding skills in Code Sprint or Git Wars", color: "#00ccff" },
+  { icon: Code, title: "Best Developer", desc: "Outstanding coding in Code Sprint or Git Wars", color: "#00ccff" },
   { icon: Palette, title: "Best UI/UX", desc: "Most exceptional user interface design", color: "#ff88ff" },
   { icon: Rocket, title: "Best Startup Idea", desc: "Most innovative and viable startup pitch", color: "#88ff00" },
-  { icon: Star, title: "Best Innovation", desc: "Most creative tech solution across all events", color: "#ffaa00" },
-  { icon: Medal, title: "Special Recognition", desc: "Outstanding contribution to the fest", color: "#00ffcc" },
+  { icon: Star, title: "Best Innovation", desc: "Most creative tech solution across events", color: "#ffaa00" },
+  { icon: Medal, title: "Special Recognition", desc: "Outstanding contribution to the festival", color: "#00ffcc" },
 ];
 
 export default function Awards() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
     <section id="awards" ref={ref} className="relative py-24 overflow-visible">
@@ -39,7 +39,7 @@ export default function Awards() {
           {AWARDS.map((award, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: i * 0.07 }}
               whileHover={{ y: -8, scale: 1.02 }}
@@ -47,17 +47,19 @@ export default function Awards() {
             >
               <div
                 className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center"
-                style={{ background: `${award.color}15`, border: `1px solid ${award.color}30` }}
+                style={{ background: `${award.color}14`, border: `1px solid ${award.color}28` }}
               >
                 <award.icon className="w-7 h-7" style={{ color: award.color }} />
               </div>
-              <h3 className="font-orbitron text-sm mb-2" style={{ color: award.color }}>{award.title}</h3>
+              <h3 className="font-orbitron text-sm mb-2" style={{ color: award.color }}>
+                {award.title}
+              </h3>
               <p className="text-[rgba(176,255,176,0.5)] text-sm leading-relaxed">{award.desc}</p>
             </motion.div>
           ))}
         </div>
 
-        {/* Prize note */}
+        {/* Prize pool callout */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -66,7 +68,7 @@ export default function Awards() {
         >
           <div className="inline-block glass px-8 py-4 rounded-full">
             <p className="font-mono-matrix text-[#00ff41] text-sm tracking-wider">
-              🏆 TOTAL PRIZE POOL: <strong>₹73,000+</strong> &nbsp;+&nbsp; Certificates, Internship Opportunities & Sponsor Rewards
+              🏆 TOTAL PRIZE POOL: <strong>₹73,000+</strong>&nbsp;+&nbsp;Certificates, Internship Opportunities & Sponsor Rewards
             </p>
           </div>
         </motion.div>
