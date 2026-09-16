@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
-import { Save, ToggleLeft, ToggleRight } from "lucide-react";
+import { Save, ToggleLeft, ToggleRight, Sparkles, CheckCircle2 } from "lucide-react";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<any>(null);
@@ -9,7 +9,8 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    adminApi.getSettings()
+    adminApi
+      .getSettings()
       .then((res) => setSettings(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -24,95 +25,133 @@ export default function SettingsPage() {
       await adminApi.updateSettings(settings);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
-    } catch (e) { console.error(e); }
-    finally { setSaving(false); }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center h-48">
-        <div className="w-8 h-8 border-2 border-[#00ff41] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   const Field = ({ label, field, type = "text", hint = "" }: any) => (
     <div>
-      <label className="block font-mono-matrix text-xs text-[rgba(176,255,176,0.45)] tracking-widest mb-2">{label}</label>
+      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+        {label}
+      </label>
       <input
         type={type}
         value={settings?.[field] ?? ""}
         onChange={(e) => set(field, e.target.value)}
         className="admin-input"
       />
-      {hint && <p className="text-[rgba(176,255,176,0.3)] text-xs mt-1">{hint}</p>}
+      {hint && <p className="text-slate-400 text-xs mt-1.5 font-space">{hint}</p>}
     </div>
   );
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-4xl">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-orbitron text-2xl text-[#00ff41] tracking-widest">SETTINGS</h1>
-          <p className="text-[rgba(176,255,176,0.35)] font-mono-matrix text-sm mt-1">Global fest configuration</p>
+          <h1 className="font-orbitron font-black text-2xl sm:text-3xl text-white tracking-wider">
+            GLOBAL FESTIVAL CONTROLS
+          </h1>
+          <p className="text-slate-400 font-space text-sm mt-1">
+            Configure live registration status, payment identifiers, dates, and festival metadata.
+          </p>
         </div>
-        <button onClick={handleSave} disabled={saving} className="btn-primary flex items-center gap-2 py-2 px-5">
-          <Save className="w-4 h-4" />
-          {saving ? "SAVING..." : saved ? "✓ SAVED" : "SAVE CHANGES"}
+
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="btn-primary text-xs py-3 px-6 flex items-center gap-2 self-start sm:self-auto shadow-cyan-500/30"
+        >
+          {saved ? <CheckCircle2 className="w-4 h-4 text-slate-950" /> : <Save className="w-4 h-4" />}
+          <span>{saving ? "SAVING CONFIG..." : saved ? "CONFIG SAVED ✓" : "SAVE ALL CHANGES"}</span>
         </button>
       </div>
 
-      {/* Registration Status */}
-      <div className="admin-card p-6 rounded-xl">
-        <h2 className="font-orbitron text-sm text-[#00ff41] tracking-widest mb-4">REGISTRATION STATUS</h2>
+      {/* 1. Master Registration Switch */}
+      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-[#b0ffb0] font-medium">
-              Registration is currently{" "}
-              <span className={settings?.isRegistrationOpen ? "text-[#00ff41]" : "text-[#ff6666]"}>
-                {settings?.isRegistrationOpen ? "OPEN" : "CLOSED"}
+            <h2 className="font-orbitron font-bold text-base text-white mb-1">
+              MASTER REGISTRATION GATE
+            </h2>
+            <p className="text-slate-400 text-sm font-space">
+              Current state:{" "}
+              <span
+                className={`font-bold ${
+                  settings?.isRegistrationOpen ? "text-emerald-400" : "text-rose-400"
+                }`}
+              >
+                {settings?.isRegistrationOpen ? "OPEN & ACCEPTING ENTRIES" : "CLOSED TO PUBLIC"}
               </span>
             </p>
-            <p className="text-[rgba(176,255,176,0.4)] text-sm mt-1">
-              Toggle to open or close registrations for all events instantly.
-            </p>
           </div>
+
           <button onClick={() => set("isRegistrationOpen", !settings?.isRegistrationOpen)}>
-            {settings?.isRegistrationOpen
-              ? <ToggleRight className="w-12 h-12 text-[#00ff41]" />
-              : <ToggleLeft className="w-12 h-12 text-[rgba(176,255,176,0.25)]" />}
+            {settings?.isRegistrationOpen ? (
+              <ToggleRight className="w-12 h-12 text-cyan-400" />
+            ) : (
+              <ToggleLeft className="w-12 h-12 text-slate-600" />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Fest Info */}
-      <div className="admin-card p-6 rounded-xl space-y-4">
-        <h2 className="font-orbitron text-sm text-[#00ff41] tracking-widest mb-2">FEST INFORMATION</h2>
-        <Field label="Fest Name" field="festName" />
-        <Field label="Theme / Tagline" field="theme" />
-        <Field label="Venue" field="venue" />
-        <Field label="Total Prize Pool" field="totalPrizePool" hint="e.g. ₹73,000+" />
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Event Start (ISO)" field="eventDateStart" hint="e.g. 2026-10-27T09:00:00+05:30" />
-          <Field label="Event End (ISO)" field="eventDateEnd" hint="e.g. 2026-10-28T17:00:00+05:30" />
+      {/* 2. Fest Information */}
+      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
+        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
+          FESTIVAL IDENTITY & VENUE
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Field label="Fest Official Title" field="festName" />
+          <Field label="Theme / Tagline" field="theme" />
+          <Field label="Official Campus Venue" field="venue" />
+          <Field label="Total Prize Pool Tag" field="totalPrizePool" hint="e.g. ₹73,000+" />
+          <Field label="Event Start Date (ISO)" field="eventDateStart" hint="e.g. 2026-10-27T09:00:00+05:30" />
+          <Field label="Event End Date (ISO)" field="eventDateEnd" hint="e.g. 2026-10-28T17:00:00+05:30" />
         </div>
-        <Field label="Registration Deadline (ISO)" field="registrationDeadline" />
+
+        <Field
+          label="Registration Cutoff Deadline (ISO)"
+          field="registrationDeadline"
+          hint="Countdown timer on hero calculates from this date"
+        />
       </div>
 
-      {/* Payment */}
-      <div className="admin-card p-6 rounded-xl space-y-4">
-        <h2 className="font-orbitron text-sm text-[#00ff41] tracking-widest mb-2">PAYMENT</h2>
-        <Field label="UPI ID" field="upiId" hint="e.g. yugantran@upi" />
-        <Field label="UPI QR Image URL" field="upiQrImageUrl" hint="Paste URL of hosted QR code image" />
+      {/* 3. Payment Gateway Config */}
+      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
+        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
+          UPI PAYMENT GATEWAY & QR
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <Field label="Fest UPI VPA ID" field="upiId" hint="e.g. yugantran@okhdfcbank" />
+          <Field label="Hosted QR Code Image URL" field="upiQrImageUrl" hint="Paste direct link to QR image" />
+        </div>
       </div>
 
-      {/* Contact & Social */}
-      <div className="admin-card p-6 rounded-xl space-y-4">
-        <h2 className="font-orbitron text-sm text-[#00ff41] tracking-widest mb-2">CONTACT & SOCIAL</h2>
-        <Field label="Contact Email" field="contactEmail" />
-        <Field label="Instagram URL" field="instagram" />
-        <Field label="LinkedIn URL" field="linkedin" />
+      {/* 4. Contact & Socials */}
+      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
+        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
+          CONTACT INTEL & SOCIAL HANDLES
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <Field label="Contact Email" field="contactEmail" />
+          <Field label="Instagram URL" field="instagram" />
+          <Field label="LinkedIn URL" field="linkedin" />
+        </div>
       </div>
     </div>
   );

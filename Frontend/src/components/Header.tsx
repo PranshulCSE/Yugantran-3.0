@@ -1,149 +1,170 @@
 import { useState, useEffect } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X, Zap, ChevronRight, Sparkles } from "lucide-react";
 import { publicApi } from "../lib/api";
 
 const NAV_ITEMS = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Timeline", href: "#timeline" },
-  { name: "Events", href: "#events" },
-  { name: "Awards", href: "#awards" },
-  { name: "Team", href: "#team" },
-  { name: "Register", href: "#register" },
+  { name: "Home", path: "/" },
+  { name: "About", path: "/about" },
+  { name: "Events (14)", path: "/events" },
+  { name: "Timeline", path: "/timeline" },
+  { name: "Awards", path: "/awards" },
+  { name: "Team", path: "/team" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close mobile drawer on route change
   useEffect(() => {
-    publicApi.getSettings()
+    setMobileOpen(false);
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    publicApi
+      .getSettings()
       .then((res) => setIsRegistrationOpen(res.data.isRegistrationOpen ?? true))
       .catch(() => {});
   }, []);
 
-  const scrollTo = (href: string) => {
-    if (href.startsWith("#")) {
-      const el = document.querySelector(href);
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-      setMobileOpen(false);
-    }
-  };
-
   return (
     <motion.header
-      initial={{ y: -80 }}
-      animate={{ y: 0 }}
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[rgba(0,0,0,0.85)] backdrop-blur-xl border-b border-[rgba(0,255,65,0.12)] shadow-[0_4px_30px_rgba(0,255,65,0.05)]"
-          : "bg-transparent"
+          ? "py-3 bg-[#030712]/90 backdrop-blur-2xl border-b border-cyan-500/20 shadow-[0_10px_35px_rgba(0,0,0,0.8)] shadow-cyan-950/20"
+          : "py-5 bg-gradient-to-b from-[#030712]/80 to-transparent"
       }`}
     >
       <div className="container mx-auto px-4 lg:px-8">
-        <nav className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <motion.a
-            href="#home"
-            onClick={(e) => { e.preventDefault(); scrollTo("#home"); }}
-            className="flex items-center gap-3 group"
-            whileHover={{ scale: 1.03 }}
+        <nav className="flex items-center justify-between">
+          {/* Brand Logo Link to Home */}
+          <Link
+            to="/"
+            className="flex items-center gap-3.5 group cursor-pointer"
           >
-            <div className="relative">
-              <Sparkles className="w-6 h-6 text-[#00ff41] group-hover:rotate-180 transition-transform duration-500" />
-              <div className="absolute inset-0 bg-[#00ff41] rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
+            <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-600/30 border border-cyan-400/40 group-hover:border-cyan-400 transition-all duration-300 shadow-[0_0_20px_rgba(0,242,254,0.3)]">
+              <Zap className="w-6 h-6 text-cyan-400 group-hover:text-white transition-colors" />
+              <div className="absolute inset-0 bg-cyan-400 rounded-xl blur-md opacity-20 group-hover:opacity-60 transition-opacity" />
             </div>
             <div>
-              <span className="font-orbitron text-lg tracking-widest gradient-text font-bold">YUGANTRAN</span>
-              <span className="font-orbitron text-xs text-[rgba(0,255,65,0.5)] ml-1">3.0</span>
+              <div className="flex items-center gap-2">
+                <span className="font-orbitron text-xl font-black tracking-wider text-white group-hover:text-cyan-300 transition-colors">
+                  YUGANTRAN
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-orbitron font-bold bg-cyan-500/15 border border-cyan-400/40 text-cyan-300 shadow-[0_0_10px_rgba(0,242,254,0.3)]">
+                  3.0
+                </span>
+              </div>
+              <p className="text-[10px] font-space tracking-widest text-slate-400 uppercase">
+                SCSE • GEETA UNIVERSITY
+              </p>
             </div>
-          </motion.a>
+          </Link>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {NAV_ITEMS.map((item, i) => (
-              <motion.a
-                key={item.name}
-                href={item.href}
-                onClick={(e) => { e.preventDefault(); scrollTo(item.href); }}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="relative group text-[rgba(176,255,176,0.6)] hover:text-[#00ff41] font-mono-matrix text-sm tracking-wider transition-colors duration-200"
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/60 backdrop-blur-2xl shadow-inner shadow-cyan-500/10">
+            {NAV_ITEMS.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `relative px-4 py-2 rounded-full text-xs font-space font-semibold tracking-wide transition-all duration-200 ${
+                    isActive
+                      ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold shadow-[0_0_20px_rgba(0,242,254,0.4)]"
+                      : "text-slate-300 hover:text-white hover:bg-cyan-500/10"
+                  }`
+                }
               >
                 {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#00ff41] group-hover:w-full transition-all duration-300" />
-              </motion.a>
+              </NavLink>
             ))}
           </div>
 
-          {/* CTA */}
-          <div className="hidden md:block">
+          {/* Live Status & Register CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-[11px] font-mono-matrix text-cyan-300">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+              </span>
+              <span>OCT 27-28, 2026</span>
+            </div>
+
             {isRegistrationOpen ? (
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.97 }}
-                onClick={() => scrollTo("#register")}
-                className="btn-primary text-sm py-2.5 px-6"
+              <Link
+                to="/register"
+                className="btn-primary text-xs py-2.5 px-6 shadow-cyan-500/30 flex items-center gap-2"
               >
-                REGISTER NOW
-              </motion.button>
+                <span>REGISTER NOW</span>
+                <ChevronRight className="w-4 h-4" />
+              </Link>
             ) : (
-              <div className="px-6 py-2.5 border border-[rgba(255,68,68,0.3)] rounded-lg text-[#ff6666] font-orbitron text-sm tracking-wider">
+              <div className="px-5 py-2 rounded-xl border border-rose-500/40 bg-rose-950/30 text-rose-400 font-orbitron text-xs font-semibold">
                 REG. CLOSED
               </div>
             )}
           </div>
 
-          {/* Mobile toggle */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-[#00ff41]"
-            aria-label="Toggle menu"
+            className="lg:hidden p-2.5 rounded-xl bg-slate-900 border border-cyan-500/30 text-cyan-400 hover:text-white transition-colors"
+            aria-label="Toggle navigation menu"
           >
-            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </nav>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[rgba(0,0,0,0.95)] backdrop-blur-xl border-t border-[rgba(0,255,65,0.1)]"
+            className="lg:hidden bg-[#030712]/98 backdrop-blur-2xl border-b border-cyan-500/20 shadow-2xl"
           >
-            <div className="container mx-auto px-4 py-6 space-y-4">
+            <div className="container mx-auto px-6 py-6 space-y-3">
               {NAV_ITEMS.map((item) => (
-                <motion.button
-                  key={item.name}
-                  whileHover={{ x: 8 }}
-                  onClick={() => scrollTo(item.href)}
-                  className="block w-full text-left py-2 text-[rgba(176,255,176,0.7)] hover:text-[#00ff41] font-mono-matrix text-sm tracking-widest transition-colors"
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between w-full py-3 px-4 rounded-xl font-space text-sm font-semibold tracking-wide transition-all ${
+                      isActive
+                        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-md"
+                        : "text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/40"
+                    }`
+                  }
                 >
-                  &gt; {item.name}
-                </motion.button>
+                  <span>{item.name}</span>
+                  <ChevronRight className="w-4 h-4 opacity-50" />
+                </NavLink>
               ))}
-              <button
-                onClick={() => scrollTo("#register")}
-                className="btn-primary w-full text-center block py-3 mt-2"
-              >
-                {isRegistrationOpen ? "REGISTER NOW" : "REG. CLOSED"}
-              </button>
+
+              <div className="pt-4 border-t border-slate-800">
+                <Link
+                  to="/register"
+                  className="btn-primary w-full py-3.5 text-sm justify-center flex items-center gap-2"
+                >
+                  <span>REGISTER FOR FESTIVAL 🚀</span>
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}

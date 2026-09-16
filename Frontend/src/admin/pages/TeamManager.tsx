@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight, Sparkles } from "lucide-react";
 
-const EMPTY = { name: "", role: "", department: "SCSE", image: "", linkedin: "", category: "core", order: 0, isActive: true };
+const EMPTY = {
+  name: "",
+  role: "",
+  department: "SCSE",
+  image: "",
+  linkedin: "",
+  category: "core",
+  order: 0,
+  isActive: true,
+};
 
 export default function TeamManager() {
   const [members, setMembers] = useState<any[]>([]);
@@ -17,14 +26,29 @@ export default function TeamManager() {
 
   const fetch = async () => {
     setLoading(true);
-    try { const r = await adminApi.getAllTeam(); setMembers(r.data); } catch {}
-    finally { setLoading(false); }
+    try {
+      const r = await adminApi.getAllTeam();
+      setMembers(r.data);
+    } catch {}
+    finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { fetch(); }, []);
+  useEffect(() => {
+    fetch();
+  }, []);
 
-  const openCreate = () => { setEditMember(null); setForm({ ...EMPTY }); setShowPanel(true); };
-  const openEdit = (m: any) => { setEditMember(m); setForm({ ...m }); setShowPanel(true); };
+  const openCreate = () => {
+    setEditMember(null);
+    setForm({ ...EMPTY });
+    setShowPanel(true);
+  };
+  const openEdit = (m: any) => {
+    setEditMember(m);
+    setForm({ ...m });
+    setShowPanel(true);
+  };
 
   const save = async () => {
     setSaving(true);
@@ -33,23 +57,38 @@ export default function TeamManager() {
       else await adminApi.createTeamMember(form);
       setShowPanel(false);
       fetch();
-    } catch (e: any) { alert(e.response?.data?.error || "Save failed"); }
-    finally { setSaving(false); }
+    } catch (e: any) {
+      alert(e.response?.data?.error || "Save operation failed.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const del = async (id: string) => {
-    try { await adminApi.deleteTeamMember(id); setDeleteId(null); fetch(); } catch {}
+    try {
+      await adminApi.deleteTeamMember(id);
+      setDeleteId(null);
+      fetch();
+    } catch {}
   };
 
-  const filtered = filter === "all" ? members : members.filter((m) => m.category === filter);
+  const filtered =
+    filter === "all" ? members : members.filter((m) => m.category === filter);
 
   const Field = ({ label, field, type = "text" }: any) => (
     <div>
-      <label className="block font-mono-matrix text-xs text-[rgba(176,255,176,0.45)] tracking-widest mb-2">{label}</label>
+      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+        {label}
+      </label>
       <input
         type={type}
         value={form[field] ?? ""}
-        onChange={(e) => setForm((p: any) => ({ ...p, [field]: type === "number" ? Number(e.target.value) : e.target.value }))}
+        onChange={(e) =>
+          setForm((p: any) => ({
+            ...p,
+            [field]: type === "number" ? Number(e.target.value) : e.target.value,
+          }))
+        }
         className="admin-input"
       />
     </div>
@@ -58,120 +97,241 @@ export default function TeamManager() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="font-orbitron text-2xl text-[#00ff41] tracking-widest">TEAM MANAGER</h1>
-          <p className="text-[rgba(176,255,176,0.35)] font-mono-matrix text-sm mt-1">{members.length} members</p>
+          <h1 className="font-orbitron font-black text-2xl sm:text-3xl text-white tracking-wider">
+            ORGANIZING CREW & VOLUNTEERS
+          </h1>
+          <p className="text-slate-400 font-space text-sm mt-1">
+            {members.length} leaders & crew members listed in the directory.
+          </p>
         </div>
-        <button onClick={openCreate} className="btn-primary flex items-center gap-2 py-2 px-5">
-          <Plus className="w-4 h-4" /> Add Member
+
+        <button
+          onClick={openCreate}
+          className="btn-primary text-xs py-3 px-6 flex items-center gap-2 self-start sm:self-auto"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Add Team Member</span>
         </button>
       </div>
 
-      {/* Filter tabs */}
-      <div className="flex gap-3">
+      {/* Tabs */}
+      <div className="flex gap-2">
         {["all", "core", "subteam"].map((cat) => (
-          <button key={cat} onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded-full font-mono-matrix text-xs tracking-widest border transition-all ${
+          <button
+            key={cat}
+            onClick={() => setFilter(cat)}
+            className={`px-5 py-2.5 rounded-full font-space text-xs font-bold tracking-wider border transition-all ${
               filter === cat
-                ? "border-[rgba(0,255,65,0.5)] bg-[rgba(0,255,65,0.1)] text-[#00ff41]"
-                : "border-[rgba(0,255,65,0.15)] text-[rgba(176,255,176,0.45)] hover:border-[rgba(0,255,65,0.3)]"
-            }`}>
-            {cat.toUpperCase()}
+                ? "bg-gradient-to-r from-cyan-500 to-blue-600 border-cyan-400 text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.3)]"
+                : "border-slate-800 bg-slate-900/60 text-slate-400 hover:text-white"
+            }`}
+          >
+            {cat === "all" ? "ALL MEMBERS" : cat === "core" ? "CORE TEAM" : "VOLUNTEERS"}
           </button>
         ))}
       </div>
 
       {/* Table */}
-      <div className="admin-card rounded-xl overflow-x-auto">
+      <div className="glass rounded-3xl overflow-x-auto border-cyan-500/20 shadow-xl">
         {loading ? (
-          <div className="flex justify-center h-32 items-center">
-            <div className="w-8 h-8 border-2 border-[#00ff41] border-t-transparent rounded-full animate-spin" />
+          <div className="flex justify-center h-40 items-center">
+            <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <table className="data-table min-w-full">
             <thead>
-              <tr><th>Photo</th><th>Name</th><th>Role</th><th>Dept</th><th>Type</th><th>Order</th><th>Active</th><th>Actions</th></tr>
+              <tr>
+                <th>Avatar</th>
+                <th>Member Name</th>
+                <th>Role / Designation</th>
+                <th>Dept</th>
+                <th>Squad Type</th>
+                <th>Order</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
             </thead>
             <tbody>
               {filtered.map((m) => (
                 <tr key={m._id}>
                   <td>
-                    <div className="w-9 h-9 rounded-full overflow-hidden bg-[rgba(0,255,65,0.08)] border border-[rgba(0,255,65,0.18)] flex items-center justify-center">
-                      {m.image ? <img src={m.image} alt={m.name} className="w-full h-full object-cover" /> : <User className="w-4 h-4 text-[rgba(0,255,65,0.35)]" />}
+                    <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-900 border border-cyan-500/30 flex items-center justify-center">
+                      {m.image ? (
+                        <img
+                          src={m.image}
+                          alt={m.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-5 h-5 text-cyan-400/40" />
+                      )}
                     </div>
                   </td>
-                  <td className="font-medium">{m.name}</td>
-                  <td className="text-sm text-[rgba(176,255,176,0.6)]">{m.role}</td>
-                  <td className="font-mono-matrix text-xs">{m.department}</td>
-                  <td><span className="font-mono-matrix text-xs px-2 py-0.5 rounded border border-[rgba(0,255,65,0.18)] text-[rgba(0,255,65,0.65)]">{m.category}</span></td>
-                  <td className="font-mono-matrix text-xs">{m.order}</td>
-                  <td><span className={m.isActive ? "text-[#00ff41]" : "text-[rgba(176,255,176,0.25)]"}>{m.isActive ? "●" : "○"}</span></td>
+                  <td className="font-bold text-white">{m.name}</td>
+                  <td className="text-sm text-cyan-300 font-space">{m.role}</td>
+                  <td className="font-mono-matrix text-xs text-slate-400">{m.department}</td>
+                  <td>
+                    <span className="font-space text-xs px-2.5 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/60 text-cyan-300">
+                      {m.category === "core" ? "CORE LEAD" : "VOLUNTEER"}
+                    </span>
+                  </td>
+                  <td className="font-mono-matrix text-xs text-slate-400">{m.order}</td>
+                  <td>
+                    <span className={m.isActive ? "text-emerald-400" : "text-slate-600"}>
+                      {m.isActive ? "● LIVE" : "○ OFF"}
+                    </span>
+                  </td>
                   <td>
                     <div className="flex gap-2">
-                      <button onClick={() => openEdit(m)} className="p-1.5 rounded bg-[rgba(0,204,255,0.1)] hover:bg-[rgba(0,204,255,0.2)] text-[#00ccff] transition-colors"><Edit2 className="w-3 h-3" /></button>
-                      <button onClick={() => setDeleteId(m._id)} className="p-1.5 rounded bg-[rgba(255,68,68,0.1)] hover:bg-[rgba(255,68,68,0.2)] text-[#ff4444] transition-colors"><Trash2 className="w-3 h-3" /></button>
+                      <button
+                        onClick={() => openEdit(m)}
+                        className="p-2 rounded-xl bg-cyan-950 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 transition-all"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setDeleteId(m._id)}
+                        className="p-2 rounded-xl bg-rose-950 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-white transition-all"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </td>
                 </tr>
               ))}
               {!filtered.length && (
-                <tr><td colSpan={8} className="text-center text-[rgba(176,255,176,0.3)] font-mono-matrix text-sm py-8">No members found.</td></tr>
+                <tr>
+                  <td colSpan={8} className="text-center text-slate-500 py-10">
+                    No members found in this category.
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         )}
       </div>
 
-      {/* Delete confirm */}
+      {/* Delete Modal */}
       <AnimatePresence>
         {deleteId && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm">
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="glass p-8 rounded-2xl max-w-sm w-full text-center">
-              <h3 className="font-orbitron text-lg text-[#ff4444] mb-2">REMOVE MEMBER?</h3>
-              <div className="flex gap-3 justify-center mt-6">
-                <button onClick={() => setDeleteId(null)} className="btn-outline py-2 px-6 text-sm">CANCEL</button>
-                <button onClick={() => del(deleteId)} className="px-6 py-2 rounded-lg bg-[rgba(255,68,68,0.12)] border border-[rgba(255,68,68,0.3)] text-[#ff4444] font-orbitron text-sm hover:bg-[rgba(255,68,68,0.22)] transition-all">REMOVE</button>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="glass p-8 rounded-3xl max-w-sm w-full text-center border-rose-500/40 shadow-2xl"
+            >
+              <h3 className="font-orbitron font-bold text-xl text-rose-400 mb-2">
+                REMOVE MEMBER?
+              </h3>
+              <p className="text-slate-300 text-sm font-space mb-6">
+                Are you sure you want to remove this member from the website?
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button onClick={() => setDeleteId(null)} className="btn-outline text-xs py-2.5 px-5">
+                  CANCEL
+                </button>
+                <button
+                  onClick={() => del(deleteId)}
+                  className="px-6 py-2.5 rounded-xl bg-rose-600 text-white font-orbitron font-bold text-xs hover:bg-rose-500 transition-all shadow-lg shadow-rose-600/30"
+                >
+                  REMOVE
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Panel */}
+      {/* Slide Panel */}
       <AnimatePresence>
         {showPanel && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-            <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 28 }}
-              className="w-full max-w-lg bg-[#050f05] border-l border-[rgba(0,255,65,0.15)] h-full overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="font-orbitron text-lg text-[#00ff41] tracking-widest">{editMember ? "EDIT MEMBER" : "ADD MEMBER"}</h2>
-                  <button onClick={() => setShowPanel(false)} className="p-2 rounded-lg hover:bg-[rgba(0,255,65,0.06)] text-[rgba(176,255,176,0.45)] hover:text-[#b0ffb0] transition-colors"><X className="w-5 h-5" /></button>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 28 }}
+              className="w-full max-w-lg bg-[#060e22] border-l border-cyan-500/30 h-full overflow-y-auto shadow-2xl"
+            >
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
+                  <h2 className="font-orbitron font-black text-xl text-white tracking-wider flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-cyan-400" />
+                    <span>{editMember ? "EDIT MEMBER INTEL" : "ADD NEW MEMBER"}</span>
+                  </h2>
+
+                  <button
+                    onClick={() => setShowPanel(false)}
+                    className="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
-                <div className="space-y-4">
+
+                <div className="space-y-5">
                   <Field label="Full Name" field="name" />
-                  <Field label="Role / Position" field="role" />
-                  <Field label="Department" field="department" />
-                  <Field label="Profile Image URL" field="image" />
-                  <Field label="LinkedIn URL" field="linkedin" />
+                  <Field label="Role / Title (e.g. Lead Organizer)" field="role" />
+                  <Field label="Department / Batch" field="department" />
+                  <Field label="Profile Image Path / URL" field="image" />
+                  <Field label="LinkedIn Profile URL" field="linkedin" />
+
                   <div>
-                    <label className="block font-mono-matrix text-xs text-[rgba(176,255,176,0.45)] tracking-widest mb-2">CATEGORY</label>
-                    <select value={form.category} onChange={(e) => setForm((p: any) => ({ ...p, category: e.target.value }))} className="admin-input">
-                      <option value="core" className="bg-[#050f05]">Core Team</option>
-                      <option value="subteam" className="bg-[#050f05]">Sub Team / Volunteers</option>
+                    <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                      SQUAD CATEGORY
+                    </label>
+                    <select
+                      value={form.category}
+                      onChange={(e) => setForm((p: any) => ({ ...p, category: e.target.value }))}
+                      className="admin-input"
+                    >
+                      <option value="core">Core Organizing Committee</option>
+                      <option value="subteam">Student Volunteer</option>
                     </select>
                   </div>
-                  <Field label="Display Order" field="order" type="number" />
-                  <div className="flex items-center gap-3">
-                    <label className="font-mono-matrix text-xs text-[rgba(176,255,176,0.45)] tracking-widest">ACTIVE</label>
-                    <button type="button" onClick={() => setForm((p: any) => ({ ...p, isActive: !p.isActive }))}>
-                      {form.isActive ? <ToggleRight className="w-7 h-7 text-[#00ff41]" /> : <ToggleLeft className="w-7 h-7 text-[rgba(176,255,176,0.25)]" />}
+
+                  <Field label="Display Sequence Order" field="order" type="number" />
+
+                  <div className="flex items-center gap-3 pt-2">
+                    <span className="font-space text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                      VISIBILITY STATE:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setForm((p: any) => ({ ...p, isActive: !p.isActive }))}
+                    >
+                      {form.isActive ? (
+                        <ToggleRight className="w-8 h-8 text-cyan-400" />
+                      ) : (
+                        <ToggleLeft className="w-8 h-8 text-slate-600" />
+                      )}
+                    </button>
+                    <span className="text-xs font-mono-matrix text-slate-400">
+                      {form.isActive ? "ACTIVE" : "HIDDEN"}
+                    </span>
+                  </div>
+
+                  <div className="pt-6">
+                    <button
+                      onClick={save}
+                      disabled={saving}
+                      className="btn-primary w-full py-4 text-sm justify-center shadow-cyan-500/40"
+                    >
+                      <Save className="w-4 h-4" />
+                      <span>{saving ? "SAVING..." : editMember ? "UPDATE MEMBER" : "ADD MEMBER"}</span>
                     </button>
                   </div>
-                  <button onClick={save} disabled={saving} className="btn-primary w-full py-3 flex items-center justify-center gap-2">
-                    <Save className="w-4 h-4" /> {saving ? "SAVING..." : editMember ? "UPDATE" : "ADD MEMBER"}
-                  </button>
                 </div>
               </div>
             </motion.div>

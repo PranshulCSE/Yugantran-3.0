@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Sparkles, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Sparkles, Eye, EyeOff, Lock, Mail, Zap, Shield, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function Login() {
@@ -21,66 +21,53 @@ export default function Login() {
       await login(username.trim(), password);
       navigate("/admin");
     } catch (err: any) {
-      setError(err.response?.data?.error || "Login failed. Check credentials.");
+      setError(err.response?.data?.error || "Invalid administrator credentials.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Radial glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,65,0.08),transparent_70%)] pointer-events-none" />
-      {/* Scanlines */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          background:
-            "repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,1) 2px,rgba(0,255,65,1) 3px)",
-          backgroundSize: "100% 4px",
-        }}
-      />
+    <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         {/* Header */}
-        <div className="text-center mb-10">
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="inline-block mb-6"
-          >
-            <div className="w-16 h-16 rounded-full border-2 border-[#00ff41] border-dashed flex items-center justify-center">
-              <Sparkles className="w-7 h-7 text-[#00ff41]" />
-            </div>
-          </motion.div>
-          <h1 className="font-orbitron text-3xl text-[#00ff41] tracking-widest text-glow-green">
-            YUGANTRAN
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(0,242,254,0.4)]">
+            <Shield className="w-8 h-8 text-slate-950" />
+          </div>
+
+          <h1 className="font-orbitron font-black text-3xl text-white tracking-wider">
+            YUGANTRAN <span className="gradient-text">3.0</span>
           </h1>
-          <p className="font-mono-matrix text-sm text-[rgba(176,255,176,0.4)] tracking-[0.3em] mt-2">
-            3.0 // ADMIN ACCESS
+          <p className="font-space text-xs text-cyan-400 tracking-widest mt-1.5 uppercase font-semibold">
+            ADMINISTRATOR COMMAND TERMINAL
           </p>
         </div>
 
-        {/* Form */}
-        <div className="glass p-8 rounded-2xl">
+        {/* Login Card */}
+        <div className="glass p-8 sm:p-9 rounded-3xl border-cyan-500/30 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username */}
             <div>
-              <label className="block font-mono-matrix text-xs text-[rgba(176,255,176,0.5)] tracking-widest mb-2">
-                USERNAME
+              <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                ADMIN IDENTIFIER
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[rgba(0,255,65,0.35)]" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="admin-input pl-10"
+                  className="admin-input pl-11"
                   placeholder="admin@yugantran.com"
                   autoComplete="username"
                   required
@@ -90,33 +77,33 @@ export default function Login() {
 
             {/* Password */}
             <div>
-              <label className="block font-mono-matrix text-xs text-[rgba(176,255,176,0.5)] tracking-widest mb-2">
-                PASSWORD
+              <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                SECURITY PASSPHRASE
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[rgba(0,255,65,0.35)]" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type={showPwd ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="admin-input pl-10 pr-10"
-                  placeholder="••••••••••"
+                  className="admin-input pl-11 pr-11"
+                  placeholder="••••••••••••"
                   autoComplete="current-password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPwd(!showPwd)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgba(0,255,65,0.35)] hover:text-[#00ff41] transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cyan-400 transition-colors"
                 >
                   {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Error */}
+            {/* Error banner */}
             {error && (
-              <div className="p-3 rounded-lg bg-[rgba(255,68,68,0.08)] border border-[rgba(255,68,68,0.2)] text-[#ff7777] font-mono-matrix text-sm">
+              <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs font-space">
                 ⚠ {error}
               </div>
             )}
@@ -125,22 +112,22 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-3 py-3.5 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary w-full py-4 text-sm justify-center shadow-cyan-500/40 mt-2"
             >
               {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  AUTHENTICATING...
-                </>
+                <span>AUTHENTICATING...</span>
               ) : (
-                "ACCESS ADMIN PANEL"
+                <>
+                  <span>ACCESS CONTROL PANEL</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
               )}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-[rgba(176,255,176,0.15)] font-mono-matrix text-xs mt-6 tracking-widest">
-          YUGANTRAN 3.0 // SCSE // GEETA UNIVERSITY
+        <p className="text-center text-slate-500 text-xs font-space mt-6">
+          SCSE • GEETA UNIVERSITY • SECURED WITH JWT
         </p>
       </motion.div>
     </div>
