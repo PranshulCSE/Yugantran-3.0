@@ -58,8 +58,8 @@ export const adminApi = {
     api.get("/api/registrations/admin/export", { params, responseType: "blob" }),
   getStats: () => api.get("/api/registrations/admin/stats"),
 
-  // Team
-  getAllTeam: () => api.get("/api/team/admin/all"),
+  // Team (route is /api/team/admin not /api/team/admin/all)
+  getAllTeam: () => api.get("/api/team/admin"),
   createTeamMember: (data: any) => api.post("/api/team/admin", data),
   updateTeamMember: (id: string, data: any) => api.put(`/api/team/admin/${id}`, data),
   deleteTeamMember: (id: string) => api.delete(`/api/team/admin/${id}`),

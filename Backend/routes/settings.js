@@ -8,16 +8,25 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     let settings = await Settings.findOne();
-    if (!settings) {
-      settings = await Settings.create({});
-    }
+    if (!settings) settings = await Settings.create({});
     res.json(settings);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch settings." });
   }
 });
 
-// PUT /api/admin/settings — Update settings (admin)
+// GET /api/settings/admin — Same settings for admin panel
+router.get("/admin", authMiddleware, async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) settings = await Settings.create({});
+    res.json(settings);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch settings." });
+  }
+});
+
+// PUT /api/settings/admin — Update settings (admin)
 router.put("/admin", authMiddleware, async (req, res) => {
   try {
     let settings = await Settings.findOne();
@@ -34,3 +43,4 @@ router.put("/admin", authMiddleware, async (req, res) => {
 });
 
 export default router;
+

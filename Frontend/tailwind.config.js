@@ -2,38 +2,46 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}", // <-- required so Tailwind picks up classes
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        cyber: ["Audiowide", "sans-serif"],
-        body: ["Rajdhani", "sans-serif"],
-        orbitron: ["Orbitron", "sans-serif"],
+        orbitron:     ["Orbitron", "sans-serif"],
+        "mono-matrix": ["Share Tech Mono", "monospace"],
+        cyber:        ["Audiowide", "sans-serif"],
+        body:         ["Inter", "sans-serif"],
+      },
+      colors: {
+        matrix: {
+          green:     "#00ff41",
+          secondary: "#00cc33",
+          dim:       "#00aa28",
+          text:      "#b0ffb0",
+        },
       },
       animation: {
-        "slow-pan": "slow-pan 30s linear infinite",
-        "pulse-slow": "pulse-slow 6s ease-in-out infinite",
-        "gradient-move": "gradient-move 15s ease infinite",
-        "glow-text": "glow-text 4s ease-in-out infinite",
+        "gradient-shift": "gradient-shift 3.5s linear infinite",
+        "pulse-green":    "pulse-green 2s ease-in-out infinite",
+        float:            "float 6s ease-in-out infinite",
+        "slow-pan":       "slow-pan 30s linear infinite",
       },
       keyframes: {
+        "gradient-shift": {
+          "0%":   { backgroundPosition: "0% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "pulse-green": {
+          "0%, 100%": { boxShadow: "0 0 0 0 rgba(0,255,65,0.35)" },
+          "50%":      { boxShadow: "0 0 0 10px rgba(0,255,65,0)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%":      { transform: "translateY(-12px)" },
+        },
         "slow-pan": {
-          "0%": { backgroundPosition: "0 0, 0 0" },
-          "100%": { backgroundPosition: "80px 80px, 80px 80px" },
-        },
-        "pulse-slow": {
-          "0%, 100%": { opacity: "0.8" },
-          "50%": { opacity: "1" },
-        },
-        "gradient-move": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" },
-        },
-        "glow-text": {
-          "0%, 100%": { textShadow: "0 0 20px rgba(0,255,255,0.4)" },
-          "50%": { textShadow: "0 0 40px rgba(0,255,255,0.8)" },
+          "0%":   { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "80px 80px" },
         },
       },
     },

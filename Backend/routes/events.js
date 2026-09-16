@@ -4,32 +4,9 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// ─── PUBLIC ─────────────────────────────────────────
+// ─── ADMIN (JWT protected) — MUST be before /:slug wildcard ──────
 
-// GET /api/events — All active events (public)
-router.get("/", async (req, res) => {
-  try {
-    const events = await Event.find({ isActive: true }).sort({ order: 1, createdAt: 1 });
-    res.json(events);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch events." });
-  }
-});
-
-// GET /api/events/:slug — Single event by slug (public)
-router.get("/:slug", async (req, res) => {
-  try {
-    const event = await Event.findOne({ slug: req.params.slug, isActive: true });
-    if (!event) return res.status(404).json({ error: "Event not found." });
-    res.json(event);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch event." });
-  }
-});
-
-// ─── ADMIN (JWT protected) ────────────────────────────
-
-// GET /api/admin/events — All events including inactive
+// GET /api/events/admin/all — All events including inactive
 router.get("/admin/all", authMiddleware, async (req, res) => {
   try {
     const events = await Event.find().sort({ order: 1, createdAt: 1 });
@@ -39,7 +16,7 @@ router.get("/admin/all", authMiddleware, async (req, res) => {
   }
 });
 
-// POST /api/admin/events — Create event
+// POST /api/events/admin — Create event
 router.post("/admin", authMiddleware, async (req, res) => {
   try {
     const slug =
@@ -60,7 +37,7 @@ router.post("/admin", authMiddleware, async (req, res) => {
   }
 });
 
-// PUT /api/admin/events/:id — Update event
+// PUT /api/events/admin/:id — Update event
 router.put("/admin/:id", authMiddleware, async (req, res) => {
   try {
     const event = await Event.findByIdAndUpdate(req.params.id, req.body, {
@@ -74,7 +51,7 @@ router.put("/admin/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// DELETE /api/admin/events/:id — Delete event
+// DELETE /api/events/admin/:id — Delete event
 router.delete("/admin/:id", authMiddleware, async (req, res) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
@@ -82,6 +59,30 @@ router.delete("/admin/:id", authMiddleware, async (req, res) => {
     res.json({ message: "Event deleted successfully." });
   } catch (err) {
     res.status(500).json({ error: "Failed to delete event." });
+  }
+});
+
+// ─── PUBLIC ─────────────────────────────────────────
+
+// GET /api/events — All active events (public)
+router.get("/", async (req, res) => {
+  try {
+    const events = await Event.find({ isActive: true }).sort({ order: 1, createdAt: 1 });
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch events." });
+  }
+});
+
+// GET /api/events/:slug — Single event by slug (public)
+// NOTE: This must remain LAST — it is a wildcard that would otherwise swallow /admin/all
+router.get("/:slug", async (req, res) => {
+  try {
+    const event = await Event.findOne({ slug: req.params.slug, isActive: true });
+    if (!event) return res.status(404).json({ error: "Event not found." });
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch event." });
   }
 });
 
