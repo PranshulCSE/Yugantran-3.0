@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useInView } from "motion/react";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { publicApi } from "../lib/api";
@@ -199,7 +198,6 @@ function EventCard({ event, onClick }: { event: any; onClick: () => void }) {
 
 export default function Events() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [events, setEvents] = useState<any[]>([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -216,15 +214,16 @@ export default function Events() {
   const filtered = activeFilter === "all" ? events : events.filter((e) => e.category === activeFilter);
 
   return (
-    <section id="events" ref={ref} className="relative py-24 overflow-visible scroll-mt-16">
+    <section id="events" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-visible scroll-mt-16">
       <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-[rgba(0,255,65,0.04)] rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center mb-10"
         >
           <span className="section-tag">// EVENTS</span>
           <h2 className="font-orbitron text-4xl md:text-5xl mt-6 mb-4">
@@ -238,9 +237,9 @@ export default function Events() {
         {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-12"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.3 }}
+          className="flex flex-wrap justify-center gap-3 mb-10"
         >
           {categories.map((cat) => {
             const cfg = cat === "all" ? null : CATEGORY_CONFIG[cat];
@@ -264,12 +263,12 @@ export default function Events() {
 
         {/* Events Grid */}
         <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="popLayout">
             {filtered.map((event) => (
               <EventCard
                 key={event._id}

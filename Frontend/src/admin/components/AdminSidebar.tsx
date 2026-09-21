@@ -7,7 +7,6 @@ import {
   Users,
   Settings,
   LogOut,
-  Sparkles,
   ChevronRight,
   Shield,
   Zap,

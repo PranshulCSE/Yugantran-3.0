@@ -1,7 +1,6 @@
 import { motion } from "motion/react";
-import { useInView } from "motion/react";
 import { useRef } from "react";
-import { Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Sparkles, Award } from "lucide-react";
+import { Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award } from "lucide-react";
 
 const AWARDS = [
   {
@@ -72,17 +71,16 @@ const AWARDS = [
 
 export default function Awards() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
-    <section id="awards" ref={ref} className="relative py-28 overflow-hidden">
+    <section id="awards" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-3xl mx-auto mb-14"
         >
           <div className="section-tag mb-4">
             <Award className="w-3.5 h-3.5" />
@@ -103,9 +101,9 @@ export default function Awards() {
           {AWARDS.map((award, i) => (
             <motion.div
               key={award.title}
-              initial={{ opacity: 0, y: 25 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.06, duration: 0.5 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.3 }}
               className="glass glass-hover p-6 rounded-3xl text-center flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
             >
               <div>
@@ -152,8 +150,8 @@ export default function Awards() {
         {/* Grand Total Callout */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ delay: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.35 }}
           className="mt-14 text-center"
         >
           <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-8 py-5 rounded-3xl glass border-cyan-400/40 shadow-[0_0_40px_rgba(0,242,254,0.15)]">

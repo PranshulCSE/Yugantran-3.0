@@ -1,5 +1,4 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useInView } from "motion/react";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { publicApi } from "../lib/api";
 import {
@@ -57,7 +56,6 @@ const ICON_MAP: Record<string, any> = {
 
 export default function Register() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const successRef = useRef<HTMLDivElement>(null);
 
   const [events, setEvents] = useState<any[]>([]);
@@ -252,14 +250,14 @@ export default function Register() {
   const upiId = settings?.upiId || "yugantran@upi";
 
   return (
-    <section id="register" ref={ref} className="relative py-28 overflow-hidden scroll-mt-20">
+    <section id="register" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden scroll-mt-20">
       <div className="container mx-auto px-4 lg:px-8 max-w-4xl relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-2xl mx-auto mb-12"
         >
           <div className="section-tag mb-4">
             <Zap className="w-3.5 h-3.5" />
@@ -320,8 +318,8 @@ export default function Register() {
         {isRegistrationOpen && !submitted && (
           <motion.form
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
             onSubmit={handleSubmit}
             className="space-y-8"
           >
@@ -831,7 +829,7 @@ export default function Register() {
             exit={{ opacity: 0, y: 30 }}
             className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-6 py-3.5 rounded-full bg-slate-950/95 border border-cyan-400/50 shadow-[0_0_30px_rgba(0,242,254,0.35)] backdrop-blur-xl text-cyan-300 font-space text-sm font-semibold flex items-center gap-2.5"
           >
-            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
             <span>{toast}</span>
           </motion.div>
         )}

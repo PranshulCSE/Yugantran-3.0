@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 
-export default function MatrixRain() {
+function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -8,6 +8,10 @@ export default function MatrixRain() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    let animId: number;
+    let lastTime = 0;
+    const frameInterval = 50; // ~20fps for classic matrix feel
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -21,7 +25,12 @@ export default function MatrixRain() {
     const columns = Math.floor(canvas.width / fontSize);
     const drops: number[] = Array(columns).fill(1);
 
-    const draw = () => {
+    const draw = (currentTime: number) => {
+      animId = requestAnimationFrame(draw);
+
+      if (currentTime - lastTime < frameInterval) return;
+      lastTime = currentTime;
+
       // Fade effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -29,7 +38,6 @@ export default function MatrixRain() {
       ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
 
       drops.forEach((y, i) => {
-        // Random char
         const char = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize;
 
@@ -50,10 +58,10 @@ export default function MatrixRain() {
       });
     };
 
-    const interval = setInterval(draw, 50);
+    animId = requestAnimationFrame(draw);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
   }, []);
@@ -66,3 +74,5 @@ export default function MatrixRain() {
     />
   );
 }
+
+export default memo(MatrixRain);

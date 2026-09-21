@@ -7,8 +7,8 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className="pt-28 pb-8"
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="pt-20 pb-12 w-full"
     >
       {children}
     </motion.div>

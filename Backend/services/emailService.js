@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resendClient = null;
+function getResendClient() {
+  if (!resendClient && process.env.RESEND_API_KEY) {
+    resendClient = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resendClient;
+}
 
 export async function sendConfirmationEmail(to, payload) {
   const { name, event, teamName, transactionId, whatsappLink } = payload;
@@ -113,6 +119,12 @@ export async function sendConfirmationEmail(to, payload) {
   `;
 
   try {
+    const resend = getResendClient();
+    if (!resend) {
+      console.warn("⚠️ RESEND_API_KEY is not configured. Email notification skipped.");
+      return null;
+    }
+
     const result = await resend.emails.send({
       from: process.env.EMAIL_FROM || "YUGANTRAN 3.0 <onboarding@resend.dev>",
       to: [to],

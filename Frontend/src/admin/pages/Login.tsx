@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Sparkles, Eye, EyeOff, Lock, Mail, Zap, Shield, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Zap, Shield, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function Login() {

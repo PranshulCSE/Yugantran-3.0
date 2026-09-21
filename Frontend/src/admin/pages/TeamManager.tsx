@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight, Sparkles } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight, Zap } from "lucide-react";
 
 const EMPTY = {
   name: "",
@@ -14,6 +14,34 @@ const EMPTY = {
   isActive: true,
 };
 
+function FormField({
+  label,
+  value,
+  onChange,
+  type = "text",
+}: {
+  label: string;
+  value: any;
+  onChange: (val: any) => void;
+  type?: string;
+}) {
+  return (
+    <div>
+      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value !== undefined ? value : ""}
+        onChange={(e) =>
+          onChange(type === "number" ? (e.target.value === "" ? 0 : Number(e.target.value)) : e.target.value)
+        }
+        className="admin-input"
+      />
+    </div>
+  );
+}
+
 export default function TeamManager() {
   const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +51,10 @@ export default function TeamManager() {
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
+
+  const updateField = (field: string, val: any) => {
+    setForm((p: any) => ({ ...p, [field]: val }));
+  };
 
   const fetch = async () => {
     setLoading(true);
@@ -74,25 +106,6 @@ export default function TeamManager() {
 
   const filtered =
     filter === "all" ? members : members.filter((m) => m.category === filter);
-
-  const Field = ({ label, field, type = "text" }: any) => (
-    <div>
-      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        value={form[field] ?? ""}
-        onChange={(e) =>
-          setForm((p: any) => ({
-            ...p,
-            [field]: type === "number" ? Number(e.target.value) : e.target.value,
-          }))
-        }
-        className="admin-input"
-      />
-    </div>
-  );
 
   return (
     <div className="space-y-6">
@@ -174,7 +187,7 @@ export default function TeamManager() {
                   <td className="font-mono-matrix text-xs text-slate-400">{m.department}</td>
                   <td>
                     <span className="font-space text-xs px-2.5 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/60 text-cyan-300">
-                      {m.category === "core" ? "CORE LEAD" : "VOLUNTEER"}
+                      {m.category === "core" ? "CORE TEAM" : "SUB-CORE"}
                     </span>
                   </td>
                   <td className="font-mono-matrix text-xs text-slate-400">{m.order}</td>
@@ -268,7 +281,7 @@ export default function TeamManager() {
               <div className="p-8">
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
                   <h2 className="font-orbitron font-black text-xl text-white tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-cyan-400" />
+                    <Zap className="w-5 h-5 text-cyan-400" />
                     <span>{editMember ? "EDIT MEMBER INTEL" : "ADD NEW MEMBER"}</span>
                   </h2>
 
@@ -281,11 +294,11 @@ export default function TeamManager() {
                 </div>
 
                 <div className="space-y-5">
-                  <Field label="Full Name" field="name" />
-                  <Field label="Role / Title (e.g. Lead Organizer)" field="role" />
-                  <Field label="Department / Batch" field="department" />
-                  <Field label="Profile Image Path / URL" field="image" />
-                  <Field label="LinkedIn Profile URL" field="linkedin" />
+                  <FormField label="Full Name" value={form.name} onChange={(v) => updateField("name", v)} />
+                  <FormField label="Role / Title (e.g. Lead Organizer)" value={form.role} onChange={(v) => updateField("role", v)} />
+                  <FormField label="Department / Batch" value={form.department} onChange={(v) => updateField("department", v)} />
+                  <FormField label="Profile Image Path / URL" value={form.image} onChange={(v) => updateField("image", v)} />
+                  <FormField label="LinkedIn Profile URL" value={form.linkedin} onChange={(v) => updateField("linkedin", v)} />
 
                   <div>
                     <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
@@ -301,7 +314,7 @@ export default function TeamManager() {
                     </select>
                   </div>
 
-                  <Field label="Display Sequence Order" field="order" type="number" />
+                  <FormField label="Display Sequence Order" value={form.order} onChange={(v) => updateField("order", v)} type="number" />
 
                   <div className="flex items-center gap-3 pt-2">
                     <span className="font-space text-xs font-semibold text-slate-300 uppercase tracking-wider">

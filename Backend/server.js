@@ -1,7 +1,7 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 import authRoutes from "./routes/auth.js";
@@ -9,8 +9,6 @@ import eventRoutes from "./routes/events.js";
 import registrationRoutes from "./routes/registrations.js";
 import teamRoutes from "./routes/team.js";
 import settingsRoutes from "./routes/settings.js";
-
-dotenv.config();
 
 const app = express();
 

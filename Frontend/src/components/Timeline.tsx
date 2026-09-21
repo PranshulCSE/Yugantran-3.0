@@ -1,7 +1,6 @@
-import { motion } from "motion/react";
-import { useInView } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useRef, useState } from "react";
-import { Clock, Calendar, Zap, Sparkles, MapPin, CheckCircle } from "lucide-react";
+import { Clock, Calendar, Zap, MapPin, CheckCircle } from "lucide-react";
 
 const SCHEDULE_DAY1 = [
   {
@@ -102,20 +101,19 @@ const SCHEDULE_DAY2 = [
 
 export default function Timeline() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [activeDay, setActiveDay] = useState<1 | 2>(1);
 
   const currentSchedule = activeDay === 1 ? SCHEDULE_DAY1 : SCHEDULE_DAY2;
 
   return (
-    <section id="timeline" ref={ref} className="relative py-28 overflow-hidden">
+    <section id="timeline" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-14"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-2xl mx-auto mb-10"
         >
           <div className="section-tag mb-4">
             <Zap className="w-3.5 h-3.5" />

@@ -1,6 +1,35 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
-import { Save, ToggleLeft, ToggleRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { Save, ToggleLeft, ToggleRight, CheckCircle2 } from "lucide-react";
+
+function FormField({
+  label,
+  value,
+  onChange,
+  type = "text",
+  hint = "",
+}: {
+  label: string;
+  value: any;
+  onChange: (val: string) => void;
+  type?: string;
+  hint?: string;
+}) {
+  return (
+    <div>
+      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="admin-input"
+      />
+      {hint && <p className="text-slate-400 text-xs mt-1.5 font-space">{hint}</p>}
+    </div>
+  );
+}
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<any>(null);
@@ -39,21 +68,6 @@ export default function SettingsPage() {
       </div>
     );
   }
-
-  const Field = ({ label, field, type = "text", hint = "" }: any) => (
-    <div>
-      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        value={settings?.[field] ?? ""}
-        onChange={(e) => set(field, e.target.value)}
-        className="admin-input"
-      />
-      {hint && <p className="text-slate-400 text-xs mt-1.5 font-space">{hint}</p>}
-    </div>
-  );
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -114,17 +128,18 @@ export default function SettingsPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field label="Fest Official Title" field="festName" />
-          <Field label="Theme / Tagline" field="theme" />
-          <Field label="Official Campus Venue" field="venue" />
-          <Field label="Total Prize Pool Tag" field="totalPrizePool" hint="e.g. ₹73,000+" />
-          <Field label="Event Start Date (ISO)" field="eventDateStart" hint="e.g. 2026-10-27T09:00:00+05:30" />
-          <Field label="Event End Date (ISO)" field="eventDateEnd" hint="e.g. 2026-10-28T17:00:00+05:30" />
+          <FormField label="Fest Official Title" value={settings?.festName} onChange={(v) => set("festName", v)} />
+          <FormField label="Theme / Tagline" value={settings?.theme} onChange={(v) => set("theme", v)} />
+          <FormField label="Official Campus Venue" value={settings?.venue} onChange={(v) => set("venue", v)} />
+          <FormField label="Total Prize Pool Tag" value={settings?.totalPrizePool} onChange={(v) => set("totalPrizePool", v)} hint="e.g. ₹73,000+" />
+          <FormField label="Event Start Date (ISO)" value={settings?.eventDateStart} onChange={(v) => set("eventDateStart", v)} hint="e.g. 2026-10-27T09:00:00+05:30" />
+          <FormField label="Event End Date (ISO)" value={settings?.eventDateEnd} onChange={(v) => set("eventDateEnd", v)} hint="e.g. 2026-10-28T17:00:00+05:30" />
         </div>
 
-        <Field
+        <FormField
           label="Registration Cutoff Deadline (ISO)"
-          field="registrationDeadline"
+          value={settings?.registrationDeadline}
+          onChange={(v) => set("registrationDeadline", v)}
           hint="Countdown timer on hero calculates from this date"
         />
       </div>
@@ -136,8 +151,8 @@ export default function SettingsPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Field label="Fest UPI VPA ID" field="upiId" hint="e.g. yugantran@okhdfcbank" />
-          <Field label="Hosted QR Code Image URL" field="upiQrImageUrl" hint="Paste direct link to QR image" />
+          <FormField label="Fest UPI VPA ID" value={settings?.upiId} onChange={(v) => set("upiId", v)} hint="e.g. yugantran@okhdfcbank" />
+          <FormField label="Hosted QR Code Image URL" value={settings?.upiQrImageUrl} onChange={(v) => set("upiQrImageUrl", v)} hint="Paste direct link to QR image" />
         </div>
       </div>
 
@@ -148,9 +163,9 @@ export default function SettingsPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Field label="Contact Email" field="contactEmail" />
-          <Field label="Instagram URL" field="instagram" />
-          <Field label="LinkedIn URL" field="linkedin" />
+          <FormField label="Contact Email" value={settings?.contactEmail} onChange={(v) => set("contactEmail", v)} />
+          <FormField label="Instagram URL" value={settings?.instagram} onChange={(v) => set("instagram", v)} />
+          <FormField label="LinkedIn URL" value={settings?.linkedin} onChange={(v) => set("linkedin", v)} />
         </div>
       </div>
     </div>

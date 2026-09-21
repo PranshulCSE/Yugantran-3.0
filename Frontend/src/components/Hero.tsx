@@ -85,6 +85,31 @@ export default function Hero() {
         transition={{ duration: 1, delay: 0.2 }}
       >
         <div className="space-y-8">
+          {/* Cyber Bot Mascot */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="flex justify-center"
+          >
+            <motion.div
+              animate={{ y: [-8, 8, -8] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
+              className="relative group cursor-pointer inline-block"
+              onClick={() => navigate("/events")}
+            >
+              <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-2xl group-hover:bg-cyan-400/40 transition-all" />
+              <img
+                src="/images/bot/bot.png"
+                alt="YUGANTRAN 3.0 Bot Mascot"
+                className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_0_25px_rgba(0,242,254,0.4)] group-hover:scale-105 transition-transform duration-300"
+              />
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-0.5 rounded-full bg-slate-900/90 border border-cyan-400/40 text-[10px] font-mono-matrix text-cyan-300 shadow-md">
+                ⚡ YUGA-BOT 3.0
+              </div>
+            </motion.div>
+          </motion.div>
+
           {/* Countdown / Status Badge */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}

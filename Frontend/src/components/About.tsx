@@ -1,5 +1,4 @@
 import { motion } from "motion/react";
-import { useInView } from "motion/react";
 import { useRef } from "react";
 import {
   Bot,
@@ -13,7 +12,7 @@ import {
   FileText,
   Download,
   CheckCircle2,
-  Sparkles,
+  Zap,
   ArrowRight,
 } from "lucide-react";
 
@@ -64,20 +63,19 @@ const DOMAINS = [
 
 export default function About() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.15 });
 
   return (
-    <section id="about" ref={ref} className="relative py-28 overflow-hidden">
+    <section id="about" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-3xl mx-auto mb-14"
         >
           <div className="section-tag mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5" />
             <span>ABOUT YUGANTRAN 3.0</span>
           </div>
 
@@ -107,7 +105,7 @@ export default function About() {
               download
               className="btn-outline text-xs py-3 px-6"
             >
-              <Sparkles className="w-4 h-4 text-cyan-400" />
+              <Zap className="w-4 h-4 text-cyan-400" />
               <span>EVENT BROCHURE</span>
               <Download className="w-3.5 h-3.5 opacity-80" />
             </a>
@@ -119,9 +117,9 @@ export default function About() {
           {DOMAINS.map((domain, i) => (
             <motion.div
               key={domain.title}
-              initial={{ opacity: 0, y: 25 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.1 * i, duration: 0.5 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 * i, duration: 0.3 }}
               className="glass glass-hover p-7 rounded-2xl flex flex-col justify-between group"
             >
               <div>
@@ -166,11 +164,11 @@ export default function About() {
           ))}
         </div>
 
-        {/* Evolution Comparison Card: 2.0 vs 3.0 */}
+        {/* Comparison Feature Banner */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.4 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.35 }}
           className="glass p-8 sm:p-10 rounded-3xl border-cyan-500/30 shadow-2xl relative overflow-hidden"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">

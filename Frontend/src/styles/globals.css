@@ -353,6 +353,18 @@ body {
   transition: all 0.2s ease;
 }
 
+.admin-input.pl-11,
+.admin-input.has-icon,
+.admin-input[class*="pl-11"],
+.admin-input[class*="pl-12"] {
+  padding-left: 44px !important;
+}
+
+.admin-input.pr-11,
+.admin-input[class*="pr-11"] {
+  padding-right: 44px !important;
+}
+
 .admin-input::placeholder {
   color: rgba(148, 163, 184, 0.4);
 }

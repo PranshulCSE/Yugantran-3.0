@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
 import { motion, AnimatePresence } from "motion/react";
-import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight, X, Save, Layers, Sparkles } from "lucide-react";
+import { Plus, Edit2, Trash2, ToggleLeft, ToggleRight, X, Save, Layers, Zap } from "lucide-react";
 
 const CATEGORIES = [
   { value: "ai", label: "AI & Emerging Tech" },
@@ -31,6 +31,45 @@ const EMPTY: any = {
   isActive: true,
   order: 0,
 };
+
+function FormField({
+  label,
+  value,
+  onChange,
+  type = "text",
+  textarea = false,
+}: {
+  label: string;
+  value: any;
+  onChange: (val: any) => void;
+  type?: string;
+  textarea?: boolean;
+}) {
+  return (
+    <div>
+      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+        {label}
+      </label>
+      {textarea ? (
+        <textarea
+          rows={3}
+          value={value ?? ""}
+          onChange={(e) => onChange(e.target.value)}
+          className="admin-input resize-none"
+        />
+      ) : (
+        <input
+          type={type}
+          value={value !== undefined ? value : ""}
+          onChange={(e) =>
+            onChange(type === "number" ? (e.target.value === "" ? 0 : Number(e.target.value)) : e.target.value)
+          }
+          className="admin-input"
+        />
+      )}
+    </div>
+  );
+}
 
 export default function EventsManager() {
   const [events, setEvents] = useState<any[]>([]);
@@ -96,33 +135,9 @@ export default function EventsManager() {
     } catch {}
   };
 
-  const Field = ({ label, field, type = "text", textarea = false }: any) => (
-    <div>
-      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-        {label}
-      </label>
-      {textarea ? (
-        <textarea
-          rows={3}
-          value={form[field] ?? ""}
-          onChange={(e) => setForm((p: any) => ({ ...p, [field]: e.target.value }))}
-          className="admin-input resize-none"
-        />
-      ) : (
-        <input
-          type={type}
-          value={form[field] !== undefined ? form[field] : ""}
-          onChange={(e) =>
-            setForm((p: any) => ({
-              ...p,
-              [field]: type === "number" ? Number(e.target.value) : e.target.value,
-            }))
-          }
-          className="admin-input"
-        />
-      )}
-    </div>
-  );
+  const updateField = (field: string, val: any) => {
+    setForm((p: any) => ({ ...p, [field]: val }));
+  };
 
   return (
     <div className="space-y-6">
@@ -272,7 +287,7 @@ export default function EventsManager() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
                   <h2 className="font-orbitron font-black text-xl text-white tracking-wider flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-cyan-400" />
+                    <Zap className="w-5 h-5 text-cyan-400" />
                     <span>{editEvent ? "EDIT COMPETITION INTEL" : "CREATE NEW COMPETITION"}</span>
                   </h2>
 
@@ -285,7 +300,7 @@ export default function EventsManager() {
                 </div>
 
                 <div className="space-y-5">
-                  <Field label="Competition Title" field="name" />
+                  <FormField label="Competition Title" value={form.name} onChange={(v) => updateField("name", v)} />
 
                   <div>
                     <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
@@ -304,12 +319,12 @@ export default function EventsManager() {
                     </select>
                   </div>
 
-                  <Field label="Brief Summary (Card View)" field="description" textarea />
-                  <Field label="Full Rules & Specifications" field="longDescription" textarea />
+                  <FormField label="Brief Summary (Card View)" value={form.description} onChange={(v) => updateField("description", v)} textarea />
+                  <FormField label="Full Rules & Specifications" value={form.longDescription} onChange={(v) => updateField("longDescription", v)} textarea />
 
                   <div className="grid grid-cols-2 gap-4">
-                    <Field label="Entry Fee (₹)" field="fee" type="number" />
-                    <Field label="Bounty / Prize" field="prize" />
+                    <FormField label="Entry Fee (₹)" value={form.fee} onChange={(v) => updateField("fee", v)} type="number" />
+                    <FormField label="Bounty / Prize" value={form.prize} onChange={(v) => updateField("prize", v)} />
                   </div>
 
                   <div>
@@ -328,17 +343,17 @@ export default function EventsManager() {
 
                   {form.teamType === "team" && (
                     <div className="grid grid-cols-2 gap-4">
-                      <Field label="Min Squad Size" field="minTeam" type="number" />
-                      <Field label="Max Squad Size" field="maxTeam" type="number" />
+                      <FormField label="Min Squad Size" value={form.minTeam} onChange={(v) => updateField("minTeam", v)} type="number" />
+                      <FormField label="Max Squad Size" value={form.maxTeam} onChange={(v) => updateField("maxTeam", v)} type="number" />
                     </div>
                   )}
 
                   <div className="grid grid-cols-2 gap-4">
-                    <Field label="Icon Name (Lucide)" field="icon" />
-                    <Field label="Display Sequence" field="order" type="number" />
+                    <FormField label="Icon Name (Lucide)" value={form.icon} onChange={(v) => updateField("icon", v)} />
+                    <FormField label="Display Sequence" value={form.order} onChange={(v) => updateField("order", v)} type="number" />
                   </div>
 
-                  <Field label="WhatsApp Community Link" field="whatsappLink" />
+                  <FormField label="WhatsApp Community Link" value={form.whatsappLink} onChange={(v) => updateField("whatsappLink", v)} />
 
                   {/* Active Toggle */}
                   <div className="flex items-center gap-3 pt-2">

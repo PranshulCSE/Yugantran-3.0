@@ -1,8 +1,7 @@
 import { motion } from "motion/react";
-import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
-import { Linkedin, User, Users, Sparkles, Shield, Award } from "lucide-react";
+import { Linkedin, User, Users, Shield, Award } from "lucide-react";
 
 function MemberCard({ member, index }: { member: any; index: number }) {
   return (
@@ -69,7 +68,6 @@ function MemberCard({ member, index }: { member: any; index: number }) {
 
 export default function Team() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
@@ -80,14 +78,14 @@ export default function Team() {
   }, []);
 
   return (
-    <section id="team" ref={ref} className="relative py-28 overflow-hidden">
+    <section id="team" ref={ref} className="relative pt-6 pb-12 md:pt-8 md:pb-16 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-3xl mx-auto mb-14"
         >
           <div className="section-tag mb-4">
             <Users className="w-3.5 h-3.5" />

@@ -1,12 +1,10 @@
 import { motion } from "motion/react";
-import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
-import { User, Sparkles } from "lucide-react";
+import { User, Zap } from "lucide-react";
 
 export default function SubTeam() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
   const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
@@ -19,16 +17,16 @@ export default function SubTeam() {
   if (!members.length) return null;
 
   return (
-    <section id="subteam" ref={ref} className="relative py-20 overflow-hidden">
+    <section id="subteam" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto mb-12"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-2xl mx-auto mb-10"
         >
           <div className="section-tag mb-3">
-            <Sparkles className="w-3 h-3" />
+            <Zap className="w-3 h-3" />
             <span>COMMUNITY CREW</span>
           </div>
 
@@ -45,9 +43,9 @@ export default function SubTeam() {
           {members.map((m, i) => (
             <motion.div
               key={m._id}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: i * 0.04, duration: 0.4 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.03, duration: 0.3 }}
               whileHover={{ y: -5, scale: 1.02 }}
               className="glass glass-hover p-4 rounded-2xl text-center border-cyan-500/15"
             >

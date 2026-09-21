@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { publicApi } from "../lib/api";
 import { NAV_ROUTES } from "../routes";
 
@@ -36,19 +36,39 @@ export default function Header() {
     >
       <div className="container mx-auto px-4 lg:px-8">
         <nav className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <motion.div whileHover={{ scale: 1.03 }}>
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <Sparkles className="w-6 h-6 text-[#00ff41] group-hover:rotate-180 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-[#00ff41] rounded-full blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
-              </div>
-              <div>
-                <span className="font-orbitron text-lg tracking-widest gradient-text font-bold">YUGANTRAN</span>
-                <span className="font-orbitron text-xs text-[rgba(0,255,65,0.5)] ml-1">3.0</span>
-              </div>
-            </Link>
-          </motion.div>
+          {/* Brand & University Logos */}
+          <div className="flex items-center gap-3 lg:gap-4">
+            <motion.div whileHover={{ scale: 1.02 }}>
+              <Link to="/" className="flex items-center gap-2.5 group">
+                <div>
+                  <span className="font-orbitron text-base md:text-lg tracking-widest gradient-text font-bold">YUGANTRAN</span>
+                  <span className="font-orbitron text-[10px] md:text-xs text-[rgba(0,255,65,0.5)] ml-1">3.0</span>
+                </div>
+              </Link>
+            </motion.div>
+
+            {/* University & Department Logos */}
+            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[rgba(0,255,65,0.2)]">
+              <img
+                src="/images/Geeta/univ-1.jpg"
+                alt="SCSE Logo"
+                title="School of Computer Science & Engineering (SCSE)"
+                className="h-7 md:h-8 w-auto rounded bg-white p-0.5 border border-cyan-400/30 object-contain shadow-sm"
+              />
+              <img
+                src="/images/Geeta/univ-2.jpg"
+                alt="GU Logo"
+                title="Geeta University (GU)"
+                className="h-7 md:h-8 w-auto rounded bg-white p-0.5 border border-cyan-400/30 object-contain shadow-sm"
+              />
+              <img
+                src="/images/Geeta/univ-3.jpg"
+                alt="GTH Logo"
+                title="Geeta Technical Hub (GTH)"
+                className="h-7 md:h-8 w-auto rounded bg-white p-0.5 border border-cyan-400/30 object-contain shadow-sm"
+              />
+            </div>
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1 lg:gap-2">
@@ -143,6 +163,33 @@ export default function Header() {
               >
                 {isRegistrationOpen ? "REGISTER NOW" : "REG. CLOSED"}
               </button>
+
+              {/* Mobile Institutional Logos */}
+              <div className="pt-4 mt-4 border-t border-[rgba(0,255,65,0.1)] flex items-center justify-between px-2">
+                <span className="text-[10px] font-mono-matrix text-[rgba(176,255,176,0.5)] uppercase tracking-wider">
+                  Organized By:
+                </span>
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/images/Geeta/univ-1.jpg"
+                    alt="SCSE"
+                    title="SCSE"
+                    className="h-6 w-auto rounded bg-white p-0.5 object-contain"
+                  />
+                  <img
+                    src="/images/Geeta/univ-2.jpg"
+                    alt="GU"
+                    title="Geeta University"
+                    className="h-6 w-auto rounded bg-white p-0.5 object-contain"
+                  />
+                  <img
+                    src="/images/Geeta/univ-3.jpg"
+                    alt="GTH"
+                    title="Geeta Technical Hub"
+                    className="h-6 w-auto rounded bg-white p-0.5 object-contain"
+                  />
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
