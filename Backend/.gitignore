@@ -10,3 +10,6 @@ node_modules/
 # Build artifacts (optional)
 dist/
 build/
+
+# Seeders files
+seed/
