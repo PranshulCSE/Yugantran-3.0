@@ -438,7 +438,7 @@ npm run build
 | 13 | Free Fire | Gaming | ₹100 | ₹3,000 |
 | 14 | Tekken 7 | Gaming | ₹50 | ₹2,000 |
 
-> 🏆 **Total Prize Pool: ₹73,000+** (+ Certificates, Internship Opportunities & Sponsor Rewards)
+> 🏆 **Total Prize Pool: ₹+** (+ Certificates, Internship Opportunities & Sponsor Rewards)
 
 ---
 
@@ -448,9 +448,9 @@ npm run build
 
 | Name | Role |
 |------|------|
-| Pranshul | Lead Developer & Organizer |
-| Garima | Organizer |
-| Khushi Saini | Organizer |
+| Pranshul | Lead Developer & Event Director |
+| Garima | Lead-Organizer |
+
 
 **Submitted To:** Dr. Meenu Gupta, Head of School, SCSE, Geeta University, Panipat
 
