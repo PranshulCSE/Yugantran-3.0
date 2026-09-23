@@ -3,6 +3,9 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
 import authRoutes from "./routes/auth.js";
 import eventRoutes from "./routes/events.js";
@@ -11,6 +14,15 @@ import teamRoutes from "./routes/team.js";
 import settingsRoutes from "./routes/settings.js";
 import awardRoutes from "./routes/awards.js";
 import domainRoutes from "./routes/domains.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
 const app = express();
 
@@ -39,6 +51,9 @@ app.use(
 
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+
+// ─── Static Uploads ─────────────────────────────────
+app.use("/uploads", express.static(uploadsDir));
 
 // ─── MongoDB ────────────────────────────────────────
 mongoose

@@ -1,10 +1,17 @@
 import express from "express";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 import Registration from "../models/Registration.js";
 import Event from "../models/Event.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/uploadMiddleware.js";
 import { uploadToDrive } from "../services/driveService.js";
 import { sendConfirmationEmail } from "../services/emailService.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, "..", "uploads");
 
 const router = express.Router();
 
@@ -39,21 +46,43 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
 
     // Build display filename
     const baseName = teamType === "team" && teamName ? teamName : name;
-    const ext = req.file.originalname.match(/\.[a-zA-Z0-9]+$/)?.[0] || "";
-    const filename = `${baseName.replace(/\s+/g, "_")}${ext}`;
+    const ext = req.file.originalname.match(/\.[a-zA-Z0-9]+$/)?.[0] || ".jpg";
+    const cleanBaseName = baseName.replace(/[^a-zA-Z0-9_-]/g, "_");
+    const uniqueLocalName = `${Date.now()}-${cleanBaseName}${ext}`;
+    const filename = `${cleanBaseName}${ext}`;
 
-    // Respond immediately — don't make user wait for Drive/email
+    // Respond immediately to user for best UX
     res.status(200).json({ message: "Registration received! Confirmation email will be sent shortly." });
 
-    // Upload to Google Drive (async, non-blocking)
+    // Save locally first so receipt is NEVER lost
     let paymentReceiptUrl = "";
     let paymentReceiptFileId = "";
+
     try {
-      const driveResult = await uploadToDrive(req.file.buffer, filename, req.file.mimetype);
-      paymentReceiptUrl = driveResult.webViewLink;
-      paymentReceiptFileId = driveResult.fileId;
-    } catch (driveErr) {
-      console.error("❌ Drive upload failed:", driveErr.message);
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      const localFilePath = path.join(uploadsDir, uniqueLocalName);
+      await fs.promises.writeFile(localFilePath, req.file.buffer);
+
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol || "http";
+      const host = req.get("host") || `localhost:${process.env.PORT || 5005}`;
+      paymentReceiptUrl = `${protocol}://${host}/uploads/${uniqueLocalName}`;
+    } catch (saveErr) {
+      console.error("⚠️ Local file save warning:", saveErr.message);
+    }
+
+    // Upload to Google Drive (if configured)
+    if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+      try {
+        const driveResult = await uploadToDrive(req.file.buffer, filename, req.file.mimetype);
+        if (driveResult?.webViewLink) {
+          paymentReceiptUrl = driveResult.webViewLink;
+          paymentReceiptFileId = driveResult.fileId;
+        }
+      } catch (driveErr) {
+        console.warn("⚠️ Google Drive upload skipped/failed (using local receipt URL):", driveErr.message);
+      }
     }
 
     // Save to MongoDB

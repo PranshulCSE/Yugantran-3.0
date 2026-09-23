@@ -41,28 +41,35 @@ export async function uploadToDrive(buffer, filename, mimeType) {
       body: stream,
     },
     fields: "id, webViewLink, webContentLink",
+    supportsAllDrives: true,
   });
 
   const fileId = response.data.id;
 
   // Make file publicly viewable (so admins can click link)
-  await drive.permissions.create({
-    fileId,
-    requestBody: {
-      role: "reader",
-      type: "anyone",
-    },
-  });
+  try {
+    await drive.permissions.create({
+      fileId,
+      supportsAllDrives: true,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+  } catch (permErr) {
+    console.warn("⚠️ Drive permission warning:", permErr.message);
+  }
 
   // Get updated link
   const file = await drive.files.get({
     fileId,
+    supportsAllDrives: true,
     fields: "id, webViewLink, webContentLink",
   });
 
   return {
     fileId: file.data.id,
-    webViewLink: file.data.webViewLink,
+    webViewLink: file.data.webViewLink || `https://drive.google.com/file/d/${file.data.id}/view`,
     directLink: `https://drive.google.com/uc?export=view&id=${file.data.id}`,
   };
 }
