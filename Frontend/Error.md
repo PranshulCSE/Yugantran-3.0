@@ -1,0 +1,2 @@
+❌ Drive upload failed: Service Accounts do not have storage quota. Leverage shared drives (https://developers.google.com/workspace/drive/api/guides/about-shareddrives), or use OAuth delegation (http://support.google.com/a/answer/7281227) instead.
+📧 Email sent to threjapranshul@gmail.com | ID: undefined

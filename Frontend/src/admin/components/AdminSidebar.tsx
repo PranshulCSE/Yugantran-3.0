@@ -10,6 +10,8 @@ import {
   ChevronRight,
   Shield,
   Zap,
+  Trophy,
+  Layers,
 } from "lucide-react";
 
 const navItems = [
@@ -17,6 +19,8 @@ const navItems = [
   { path: "/admin/events", label: "Events Manager", icon: CalendarDays },
   { path: "/admin/registrations", label: "Registrations", icon: ClipboardList },
   { path: "/admin/team", label: "Team Manager", icon: Users },
+  { path: "/admin/awards", label: "Awards Manager", icon: Trophy },
+  { path: "/admin/about-tracks", label: "About Tracks", icon: Layers },
   { path: "/admin/settings", label: "Fest Settings", icon: Settings },
 ];
 

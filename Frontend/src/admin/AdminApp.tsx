@@ -9,6 +9,8 @@ import EventsManager from "./pages/EventsManager";
 import RegistrationsManager from "./pages/RegistrationsManager";
 import TeamManager from "./pages/TeamManager";
 import SettingsPage from "./pages/Settings";
+import AwardsManager from "./pages/AwardsManager";
+import DomainsManager from "./pages/DomainsManager";
 
 export default function AdminApp() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -48,6 +50,8 @@ export default function AdminApp() {
                       <Route path="events" element={<EventsManager />} />
                       <Route path="registrations" element={<RegistrationsManager />} />
                       <Route path="team" element={<TeamManager />} />
+                      <Route path="awards" element={<AwardsManager />} />
+                      <Route path="about-tracks" element={<DomainsManager />} />
                       <Route path="settings" element={<SettingsPage />} />
                     </Routes>
                   </div>

@@ -48,7 +48,7 @@ export default function Header() {
             </motion.div>
 
             {/* University & Department Logos */}
-            <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-[rgba(0,255,65,0.2)]">
+            <div className="hidden lg:flex items-center gap-2 pl-3 border-l border-[rgba(0,255,65,0.2)]">
               <img
                 src="/images/Geeta/univ-1.jpg"
                 alt="SCSE Logo"
@@ -71,8 +71,8 @@ export default function Header() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2">
-            {NAV_ROUTES.map((item, i) => (
+          <div className="hidden md:flex items-center gap-0.5 lg:gap-1.5">
+            {NAV_ROUTES.filter((item) => item.path !== "/register").map((item, i) => (
               <motion.div
                 key={item.path}
                 initial={{ opacity: 0, y: -10 }}
@@ -83,7 +83,7 @@ export default function Header() {
                   to={item.path}
                   end={item.path === "/"}
                   className={({ isActive }) =>
-                    `relative group px-3 py-2 font-mono-matrix text-sm tracking-wider transition-colors duration-200 ${
+                    `relative group px-2 lg:px-3 py-2 font-mono-matrix text-xs lg:text-sm tracking-wider whitespace-nowrap transition-colors duration-200 ${
                       isActive ? "text-[#00ff41]" : "text-[rgba(176,255,176,0.6)] hover:text-[#00ff41]"
                     }`
                   }
@@ -92,7 +92,7 @@ export default function Header() {
                     <>
                       {item.name}
                       <span
-                        className={`absolute -bottom-0.5 left-3 right-3 h-px bg-[#00ff41] transition-all duration-300 ${
+                        className={`absolute -bottom-0.5 left-2 right-2 lg:left-3 lg:right-3 h-px bg-[#00ff41] transition-all duration-300 ${
                           isActive ? "opacity-100" : "opacity-0 group-hover:opacity-60"
                         }`}
                       />
@@ -104,18 +104,18 @@ export default function Header() {
           </div>
 
           {/* CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:block flex-shrink-0">
             {isRegistrationOpen ? (
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate("/register")}
-                className="btn-primary text-sm py-2.5 px-6"
+                className="btn-primary text-xs lg:text-sm py-2.5 px-4 lg:px-6 whitespace-nowrap"
               >
                 REGISTER NOW
               </motion.button>
             ) : (
-              <div className="px-6 py-2.5 border border-[rgba(255,68,68,0.3)] rounded-lg text-[#ff6666] font-orbitron text-sm tracking-wider">
+              <div className="px-4 lg:px-6 py-2.5 border border-[rgba(255,68,68,0.3)] rounded-lg text-[#ff6666] font-orbitron text-xs lg:text-sm tracking-wider whitespace-nowrap">
                 REG. CLOSED
               </div>
             )}

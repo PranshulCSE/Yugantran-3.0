@@ -8,7 +8,7 @@ export default function FloatingBot() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex flex-col items-start">
       {/* Speech Bubble Popup */}
       <AnimatePresence>
         {open && (
@@ -17,7 +17,7 @@ export default function FloatingBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
             transition={{ type: "spring", damping: 25 }}
-            className="mb-3 w-72 glass p-4 rounded-2xl border-cyan-400/40 shadow-[0_0_30px_rgba(0,242,254,0.25)] bg-[#050f24]/95 text-left relative"
+            className="mb-3 w-[85vw] max-w-72 glass p-4 rounded-2xl border-cyan-400/40 shadow-[0_0_30px_rgba(0,242,254,0.25)] bg-[#050f24]/95 text-left relative"
           >
             <button
               onClick={(e) => {
@@ -68,25 +68,25 @@ export default function FloatingBot() {
       {/* Floating Mascot Button */}
       <motion.button
         type="button"
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(!open)}
-        className="relative group p-1.5 rounded-full glass border-cyan-400/40 shadow-[0_0_25px_rgba(0,242,254,0.35)] bg-[#03091e]/90 flex items-center justify-center transition-all"
+        className="relative group p-2 rounded-full glass border-cyan-400/40 shadow-[0_0_25px_rgba(0,242,254,0.35)] bg-[#03091e]/90 flex items-center justify-center transition-all"
         title="Yugantran 3.0 Bot"
       >
         <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-md group-hover:bg-cyan-400/40 transition-all" />
-        
+
         {/* Animated Bot Avatar */}
         <motion.img
           animate={{ y: [-3, 3, -3] }}
           transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
           src="/images/bot/bot.png"
           alt="Yugantran 3.0 Mascot Bot"
-          className="relative z-10 w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-[0_0_12px_rgba(0,242,254,0.6)]"
+          className="relative z-10 w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_14px_rgba(0,242,254,0.6)]"
         />
 
         {/* Pulse Indicator */}
-        <span className="absolute top-0 right-0 flex h-3 w-3">
+        <span className="absolute top-1 left-1 flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500 border border-black" />
         </span>

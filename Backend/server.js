@@ -9,6 +9,8 @@ import eventRoutes from "./routes/events.js";
 import registrationRoutes from "./routes/registrations.js";
 import teamRoutes from "./routes/team.js";
 import settingsRoutes from "./routes/settings.js";
+import awardRoutes from "./routes/awards.js";
+import domainRoutes from "./routes/domains.js";
 
 const app = express();
 
@@ -54,6 +56,8 @@ app.use("/api/register", registrationRoutes);
 app.use("/api/registrations", registrationRoutes);  // alias for admin
 app.use("/api/team", teamRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/awards", awardRoutes);
+app.use("/api/domains", domainRoutes);
 
 // ─── 404 ────────────────────────────────────────────
 app.use((req, res) => {

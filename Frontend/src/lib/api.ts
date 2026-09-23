@@ -33,6 +33,8 @@ export const publicApi = {
   getEventBySlug: (slug: string) => api.get(`/api/events/${slug}`),
   getTeam: (category?: string) => api.get("/api/team", { params: category ? { category } : {} }),
   getSettings: () => api.get("/api/settings"),
+  getAwards: () => api.get("/api/awards"),
+  getDomains: () => api.get("/api/domains"),
   register: (formData: FormData) =>
     api.post("/api/register", formData, { headers: { "Content-Type": "multipart/form-data" } }),
 };
@@ -67,6 +69,18 @@ export const adminApi = {
   // Settings
   getSettings: () => api.get("/api/settings/admin"),
   updateSettings: (data: any) => api.put("/api/settings/admin", data),
+
+  // Awards
+  getAllAwards: () => api.get("/api/awards/admin"),
+  createAward: (data: any) => api.post("/api/awards/admin", data),
+  updateAward: (id: string, data: any) => api.put(`/api/awards/admin/${id}`, data),
+  deleteAward: (id: string) => api.delete(`/api/awards/admin/${id}`),
+
+  // Domains (About / Tracks)
+  getAllDomains: () => api.get("/api/domains/admin"),
+  createDomain: (data: any) => api.post("/api/domains/admin", data),
+  updateDomain: (id: string, data: any) => api.put(`/api/domains/admin/${id}`, data),
+  deleteDomain: (id: string) => api.delete(`/api/domains/admin/${id}`),
 };
 
 export default api;

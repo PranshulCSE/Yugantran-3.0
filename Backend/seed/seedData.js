@@ -17,6 +17,8 @@ import Admin from "../models/Admin.js";
 import Event from "../models/Event.js";
 import Team from "../models/Team.js";
 import Settings from "../models/Settings.js";
+import Award from "../models/Award.js";
+import Domain from "../models/Domain.js";
 
 const EVENTS = [
   {
@@ -471,6 +473,132 @@ const TEAM = [
   },
 ];
 
+const AWARDS = [
+  {
+    icon: "Trophy",
+    title: "Grand Champion",
+    subtitle: "Tech Olympics Victor",
+    desc: "Awarded to the ultimate multi-disciplinary team conquering all engineering challenges.",
+    color: "#fbbf24",
+    prize: "₹12,000 + Trophy",
+    order: 1,
+  },
+  {
+    icon: "Bot",
+    title: "Best AI Solution",
+    subtitle: "AI Warzone Track",
+    desc: "Most innovative real-world generative AI application and prompt architecture.",
+    color: "#00f2fe",
+    prize: "₹8,000 + Trophy",
+    order: 2,
+  },
+  {
+    icon: "Shield",
+    title: "Best Cyber Unit",
+    subtitle: "Cyber Escape CTF",
+    desc: "Top security team with flawless exploit breakdown and flag capture speed.",
+    color: "#f43f5e",
+    prize: "₹6,000 + Trophy",
+    order: 3,
+  },
+  {
+    icon: "Code",
+    title: "Master Developer",
+    subtitle: "Code Sprint & Git Wars",
+    desc: "Exceptional algorithmic efficiency, pristine git workflow, and speed.",
+    color: "#38bdf8",
+    prize: "₹5,000 + Trophy",
+    order: 4,
+  },
+  {
+    icon: "Rocket",
+    title: "Best Startup Pitch",
+    subtitle: "Startup in 60 Arena",
+    desc: "Most scalable, innovative, and market-ready tech business model.",
+    color: "#a855f7",
+    prize: "₹6,000 + Trophy",
+    order: 5,
+  },
+  {
+    icon: "Palette",
+    title: "Best UI/UX & Design",
+    subtitle: "Creative Tech Track",
+    desc: "Most intuitive, aesthetically pleasing, and accessible product interface.",
+    color: "#ec4899",
+    prize: "Special Citation",
+    order: 6,
+  },
+  {
+    icon: "Star",
+    title: "Best Hardware Hack",
+    subtitle: "IoT & Autonomous Track",
+    desc: "Fastest autonomous robotic rover build and smart sensor deployment.",
+    color: "#2dd4bf",
+    prize: "₹8,000 + Trophy",
+    order: 7,
+  },
+  {
+    icon: "Medal",
+    title: "Rising Star Award",
+    subtitle: "First-Year Prodigies",
+    desc: "Recognizing outstanding technical promise among junior participants.",
+    color: "#facc15",
+    prize: "Citation + Rewards",
+    order: 8,
+  },
+];
+
+const DOMAINS = [
+  {
+    icon: "Bot",
+    title: "AI & Generative AI",
+    desc: "Prompt engineering, LLM app building, AI warzones, and generative vision.",
+    color: "#00f2fe",
+    badge: "TRACK 01",
+    order: 1,
+  },
+  {
+    icon: "Shield",
+    title: "Cybersecurity & CTF",
+    desc: "Capture the Flag, network security, ethical hacking, and vulnerability discovery.",
+    color: "#f43f5e",
+    badge: "TRACK 02",
+    order: 2,
+  },
+  {
+    icon: "Terminal",
+    title: "Software Engineering",
+    desc: "Git wars, clean code architectures, sprint coding, and full-stack development.",
+    color: "#38bdf8",
+    badge: "TRACK 03",
+    order: 3,
+  },
+  {
+    icon: "Cpu",
+    title: "IoT & Hardware Hack",
+    desc: "Microcontrollers, embedded sensors, autonomous bot racing, and smart devices.",
+    color: "#2dd4bf",
+    badge: "TRACK 04",
+    order: 4,
+  },
+  {
+    icon: "Rocket",
+    title: "Startup & Innovation",
+    desc: "Pitching tech ideas in 60 seconds, business modeling, and venture validation.",
+    color: "#a855f7",
+    badge: "TRACK 05",
+    order: 5,
+  },
+  {
+    icon: "Gamepad2",
+    title: "Esports & Gaming Arena",
+    desc: "High-intensity battles in BGMI, Free Fire, and Tekken 7 tournaments.",
+    color: "#ec4899",
+    badge: "TRACK 06",
+    order: 6,
+  },
+];
+
 async function seed() {
   try {
     console.log("🌱 Connecting to MongoDB...");
@@ -484,6 +612,8 @@ async function seed() {
       Event.deleteMany({}),
       Team.deleteMany({}),
       Settings.deleteMany({}),
+      Award.deleteMany({}),
+      Domain.deleteMany({}),
     ]);
 
     // ─── Create Admin ───────────────────────────────
@@ -525,6 +655,16 @@ async function seed() {
       linkedin: "https://www.linkedin.com/school/geeta-university-official/",
     });
     console.log("✅ Settings created");
+
+    // ─── Create Awards ──────────────────────────────
+    console.log("🏆 Seeding awards...");
+    await Award.insertMany(AWARDS);
+    console.log(`✅ ${AWARDS.length} awards created`);
+
+    // ─── Create Domains ─────────────────────────────
+    console.log("🧭 Seeding domains...");
+    await Domain.insertMany(DOMAINS);
+    console.log(`✅ ${DOMAINS.length} domains created`);
 
     console.log("\n🎉 Database seeded successfully!");
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
