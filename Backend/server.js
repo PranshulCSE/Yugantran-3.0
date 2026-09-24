@@ -27,17 +27,26 @@ if (!fs.existsSync(uploadsDir)) {
 const app = express();
 
 // ─── CORS ─────────────────────────────────────────
+const configuredOrigins = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((url) => url.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
 const allowedOrigins = [
   "https://yugantran.netlify.app",
   "http://localhost:3000",
   "http://localhost:5173",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+  ...configuredOrigins,
+];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
         callback(null, true);
       } else {
         callback(new Error(`CORS: Origin ${origin} not allowed.`));
