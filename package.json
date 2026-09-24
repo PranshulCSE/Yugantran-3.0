@@ -3,7 +3,11 @@
   "version": "3.0.0",
   "private": true,
   "description": "Yugantran 3.0 Root",
+  "workspaces": [
+    "Backend"
+  ],
   "scripts": {
+    "postinstall": "npm --prefix Backend install",
     "build": "npm --prefix Backend install",
     "start": "npm --prefix Backend start",
     "seed": "npm --prefix Backend run seed"
