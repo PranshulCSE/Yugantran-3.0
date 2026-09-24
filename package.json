@@ -1,0 +1,14 @@
+{
+  "name": "yugantran-3",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Yugantran 3.0 Root",
+  "scripts": {
+    "build": "npm --prefix Backend install",
+    "start": "npm --prefix Backend start",
+    "seed": "npm --prefix Backend run seed"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
