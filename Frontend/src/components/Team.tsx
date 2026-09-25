@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
-import { Linkedin, User, Users, Mail, Sparkles, ExternalLink } from "lucide-react";
+import { Linkedin, User, Users, Mail, ExternalLink } from "lucide-react";
 
 function MemberCard({ member, index }: { member: any; index: number }) {
   return (

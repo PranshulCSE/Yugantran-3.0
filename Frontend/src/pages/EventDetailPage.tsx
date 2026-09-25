@@ -15,7 +15,7 @@ import {
   CheckCircle2,
   Calendar,
   MapPin,
-  Sparkles,
+  Flame,
 } from "lucide-react";
 
 export default function EventDetailPage() {

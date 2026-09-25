@@ -1,104 +1,48 @@
-import { motion } from 'motion/react';
-import { useEffect, useState } from 'react';
-
-interface Spark {
-  id: number;
-  x: number;
-  y: number;
-  delay: number;
-  duration: number;
-  size: number;
-}
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 export default function CircuitSparks() {
-  const [sparks, setSparks] = useState<Spark[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Generate random spark positions for the Hero section
-    const newSparks = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 3,
-      duration: 2 + Math.random() * 3,
-      size: 2 + Math.random() * 4,
-    }));
-    setSparks(newSparks);
+    setMounted(true);
   }, []);
 
+  if (!mounted) return null;
+
+  // Neon pulsing nodes positioned across the hero / background
+  const nodes = [
+    { x: "12%", y: "18%", color: "#00f2fe", delay: 0 },
+    { x: "88%", y: "22%", color: "#00ff41", delay: 1.2 },
+    { x: "50%", y: "8%", color: "#38bdf8", delay: 0.6 },
+    { x: "20%", y: "75%", color: "#00ff41", delay: 1.8 },
+    { x: "82%", y: "78%", color: "#00f2fe", delay: 2.4 },
+    { x: "92%", y: "45%", color: "#a855f7", delay: 0.9 },
+    { x: "8%", y: "48%", color: "#00f2fe", delay: 1.5 },
+  ];
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {sparks.map((spark) => (
-        <motion.div
-          key={spark.id}
-          className="absolute rounded-full"
-          style={{
-            left: `${spark.x}%`,
-            top: `${spark.y}%`,
-            width: `${spark.size}px`,
-            height: `${spark.size}px`,
-            background: 'radial-gradient(circle, #00ffff 0%, #00d4ff 50%, transparent 100%)',
-            filter: 'blur(1px)',
-          }}
-          animate={{
-            opacity: [0, 1, 1, 0],
-            scale: [0, 1.5, 1, 0],
-            boxShadow: [
-              '0 0 0px rgba(0, 255, 255, 0)',
-              '0 0 20px rgba(0, 255, 255, 0.8)',
-              '0 0 10px rgba(0, 255, 255, 0.6)',
-              '0 0 0px rgba(0, 255, 255, 0)',
-            ],
-          }}
-          transition={{
-            duration: spark.duration,
-            delay: spark.delay,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-
-      {/* Larger pulsing nodes */}
-      {[
-        { x: 20, y: 15, delay: 0 },
-        { x: 80, y: 25, delay: 1 },
-        { x: 50, y: 60, delay: 0.5 },
-        { x: 30, y: 80, delay: 1.5 },
-        { x: 70, y: 70, delay: 0.8 },
-      ].map((node, i) => (
-        <motion.div
-          key={`node-${i}`}
-          className="absolute w-3 h-3 rounded-full"
-          style={{
-            left: `${node.x}%`,
-            top: `${node.y}%`,
-            background: '#00ffff',
-            boxShadow: '0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 212, 255, 0.5)',
-          }}
-          animate={{
-            opacity: [0.4, 1, 0.4],
-            scale: [1, 1.8, 1],
-          }}
-          transition={{
-            duration: 2.5,
-            delay: node.delay,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-
-      {/* Electric arcs between nodes */}
-      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Ambient Neon Laser Beams & Pulsing Grid Paths */}
+      <svg
+        className="absolute inset-0 w-full h-full opacity-60"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <defs>
-          <linearGradient id="arc-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00ffff" stopOpacity="0" />
-            <stop offset="50%" stopColor="#00d4ff" stopOpacity="1" />
-            <stop offset="100%" stopColor="#00ffff" stopOpacity="0" />
+          <linearGradient id="neon-cyan-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#00f2fe" stopOpacity="0" />
+            <stop offset="50%" stopColor="#00f2fe" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#00ff41" stopOpacity="0" />
           </linearGradient>
-          <filter id="arc-glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+
+          <linearGradient id="neon-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0" />
+            <stop offset="50%" stopColor="#a855f7" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#00f2fe" stopOpacity="0" />
+          </linearGradient>
+
+          <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="coloredBlur" />
@@ -107,50 +51,88 @@ export default function CircuitSparks() {
           </filter>
         </defs>
 
-        {/* Animated arcs connecting the nodes */}
+        {/* Animated Neon Light Arc 1 */}
         <path
-          d="M 20 15 Q 50 30, 80 25"
-          stroke="url(#arc-gradient)"
-          strokeWidth="1"
+          d="M 50 120 Q 300 20, 600 150 T 1200 80"
+          stroke="url(#neon-cyan-grad)"
+          strokeWidth="2.5"
           fill="none"
-          filter="url(#arc-glow)"
-        >
-          <animate
-            attributeName="stroke-dasharray"
-            values="0,100;100,0;0,100"
-            dur="4s"
-            repeatCount="indefinite"
-          />
-        </path>
+          filter="url(#neon-glow)"
+          strokeDasharray="180 600"
+          className="animate-neon-laser"
+          style={{ animationDuration: "7s" }}
+        />
+
+        {/* Animated Neon Light Arc 2 */}
         <path
-          d="M 50 60 Q 40 70, 30 80"
-          stroke="url(#arc-gradient)"
-          strokeWidth="1"
+          d="M 1200 500 Q 800 650, 400 480 T 50 620"
+          stroke="url(#neon-purple-grad)"
+          strokeWidth="2.5"
           fill="none"
-          filter="url(#arc-glow)"
-        >
-          <animate
-            attributeName="stroke-dasharray"
-            values="0,80;80,0;0,80"
-            dur="3.5s"
-            repeatCount="indefinite"
-          />
-        </path>
-        <path
-          d="M 70 70 Q 60 65, 50 60"
-          stroke="url(#arc-gradient)"
-          strokeWidth="1"
-          fill="none"
-          filter="url(#arc-glow)"
-        >
-          <animate
-            attributeName="stroke-dasharray"
-            values="0,50;50,0;0,50"
-            dur="3s"
-            repeatCount="indefinite"
-          />
-        </path>
+          filter="url(#neon-glow)"
+          strokeDasharray="220 700"
+          className="animate-neon-laser"
+          style={{ animationDuration: "9s", animationDelay: "2s" }}
+        />
+
+        {/* Horizontal Laser Line Across Hero */}
+        <line
+          x1="0"
+          y1="35%"
+          x2="100%"
+          y2="35%"
+          stroke="url(#neon-cyan-grad)"
+          strokeWidth="1.5"
+          strokeDasharray="150 800"
+          filter="url(#neon-glow)"
+          className="animate-neon-laser"
+          style={{ animationDuration: "5s", animationDelay: "1s" }}
+        />
+
+        <line
+          x1="100%"
+          y1="68%"
+          x2="0"
+          y2="68%"
+          stroke="url(#neon-cyan-grad)"
+          strokeWidth="1.5"
+          strokeDasharray="160 900"
+          filter="url(#neon-glow)"
+          className="animate-neon-laser"
+          style={{ animationDuration: "6.5s", animationDelay: "3s" }}
+        />
       </svg>
+
+      {/* Pulsing Neon Circuit Nodes */}
+      {nodes.map((node, i) => (
+        <div
+          key={i}
+          className="absolute -translate-x-1/2 -translate-y-1/2"
+          style={{ left: node.x, top: node.y }}
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.8, 1],
+              opacity: [0.3, 0.9, 0.3],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 3,
+              delay: node.delay,
+              ease: "easeInOut",
+            }}
+            className="w-3.5 h-3.5 rounded-full"
+            style={{
+              background: node.color,
+              boxShadow: `0 0 15px ${node.color}, 0 0 30px ${node.color}`,
+            }}
+          />
+          <div
+            className="absolute inset-0 rounded-full animate-ping opacity-40"
+            style={{ background: node.color }}
+          />
+        </div>
+      ))}
     </div>
   );
 }

@@ -2,16 +2,16 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Bot, Shield, Terminal, Bug, GitBranch, Search, Rocket, Cpu, Zap,
-  Car, Trophy, Gamepad2, Swords, Code, ArrowRight, Sparkles, IndianRupee,
+  Bot, Shield, Terminal, Bug, Search, Rocket, Cpu, Zap,
+  Gamepad2, Swords, Code, ArrowRight, IndianRupee, Trophy,
   ShieldCheck, Users, Award, Calendar, Clock, Lightbulb, Compass,
   ChevronRight, CheckCircle2,
 } from "lucide-react";
 import { publicApi } from "../lib/api";
 
 const ICON_MAP: Record<string, any> = {
-  Bot, Shield, Terminal, Bug, GitBranch, Search,
-  Rocket, Cpu, Zap, Car, Trophy, Gamepad2, Swords, Code,
+  Bot, Shield, Terminal, Bug, Search,
+  Rocket, Cpu, Zap, Gamepad2, Swords, Code, Trophy,
 };
 
 const CATEGORY_COLOR: Record<string, string> = {
@@ -40,7 +40,7 @@ export function WhyYugantran() {
     {
       title: "COMPETE",
       subtitle: "Industry Battlegrounds",
-      desc: "Live Capture The Flag cybersecurity arenas, speed coding sprints, robotic obstacle races, and high-intensity esports.",
+      desc: "Live Cybersecurity quizzes, rapid 2-hour code sprints, blindfolded pair programming, and esports arenas.",
       icon: Swords,
       color: "#f43f5e",
       badge: "02",
@@ -48,7 +48,7 @@ export function WhyYugantran() {
     {
       title: "LEARN",
       subtitle: "Hands-on Mastery",
-      desc: "Step outside traditional textbook theory into real-time legacy debugging, prompt battlecraft, and git conflict wars.",
+      desc: "Step outside traditional textbook theory into real-time repository debugging, prompt battlecraft, and IoT prototyping.",
       icon: Compass,
       color: "#38bdf8",
       badge: "03",
@@ -74,7 +74,7 @@ export function WhyYugantran() {
           className="text-center max-w-3xl mx-auto mb-12"
         >
           <div className="section-tag mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
             <span>THE EXPERIENCE</span>
           </div>
 
@@ -149,9 +149,9 @@ export function WhyYugantran() {
 export function AboutTeaser() {
   const navigate = useNavigate();
   const highlights = [
-    { icon: Sparkles, label: "6 Tech Domains", sub: "AI, Cyber, SWE, IoT & more" },
+    { icon: Zap, label: "6 Tech Domains", sub: "AI, Cyber, SWE, IoT & more" },
     { icon: Users, label: "500+ Expected Hackers", sub: "National participation" },
-    { icon: ShieldCheck, label: "Industry-Grade Tracks", sub: "Real-world challenges" },
+    { icon: ShieldCheck, label: "10 Competitive Events", sub: "Real-world engineering challenges" },
   ];
 
   return (
@@ -169,7 +169,7 @@ export function AboutTeaser() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-7 space-y-4">
               <div className="section-tag">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Zap className="w-3.5 h-3.5 text-cyan-400" />
                 <span>ABOUT THE FEST</span>
               </div>
               <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-white">
@@ -248,7 +248,7 @@ export function FeaturedEvents() {
             onClick={() => navigate("/events")}
             className="btn-outline text-xs py-3 px-6 self-start sm:self-auto whitespace-nowrap"
           >
-            <span>VIEW ALL 14 BATTLES</span>
+            <span>VIEW ALL 10 EVENTS</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </motion.div>
@@ -324,9 +324,9 @@ export function TimelinePreview() {
 
   const previewItems = [
     { day: "DAY 1", time: "10:00 AM", title: "Grand Inaugural & Keynote", track: "CEREMONY" },
-    { day: "DAY 1", time: "11:00 AM", title: "AI Warzone & CTF Kickoff", track: "FLAGSHIP" },
-    { day: "DAY 2", time: "10:30 AM", title: "Autonomous Bot Racing & Dead Code", track: "HARDWARE" },
-    { day: "DAY 2", time: "02:30 PM", title: "Tech Olympics Grand Finale", track: "FINALS" },
+    { day: "DAY 1", time: "11:00 AM", title: "AI Warzone & Cyber Escape Kickoff", track: "AI & CYBER" },
+    { day: "DAY 2", time: "10:00 AM", title: "Code Sprint & Hardware Hack", track: "DEVELOPMENT" },
+    { day: "DAY 2", time: "02:30 PM", title: "Blind Byte & Grand Valedictory", track: "FINALS" },
   ];
 
   return (
@@ -391,7 +391,7 @@ export function TimelinePreview() {
 // ─── 5. PRIZE POOL BANNER ─────────────────────────────────────────
 export function PrizePoolBanner() {
   const navigate = useNavigate();
-  const [prizePool, setPrizePool] = useState("₹73,000+");
+  const [prizePool, setPrizePool] = useState("₹54,000+");
 
   useEffect(() => {
     publicApi
@@ -423,7 +423,7 @@ export function PrizePoolBanner() {
                   {prizePool} <span className="text-amber-400">CASH BOUNTIES</span>
                 </div>
                 <div className="text-xs sm:text-sm font-space text-slate-300 mt-1">
-                  8 Major Awards + Trophies + Official Certificates of Participation for all students
+                  Official Winner Trophies + Merit & Participation Certificates for all registered students
                 </div>
               </div>
             </div>
@@ -432,7 +432,7 @@ export function PrizePoolBanner() {
               className="btn-outline text-xs py-3 px-6 whitespace-nowrap flex-shrink-0"
             >
               <Award className="w-4 h-4 text-amber-400" />
-              <span>EXPLORE ALL AWARDS</span>
+              <span>REWARDS & RECOGNITION</span>
             </button>
           </div>
         </motion.div>
@@ -470,7 +470,7 @@ export function FinalCTA() {
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/register")}
               className="btn-primary w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm shadow-cyan-500/30 flex items-center justify-center gap-2"
@@ -480,12 +480,12 @@ export function FinalCTA() {
             </motion.button>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/events")}
               className="btn-outline w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm"
             >
-              BROWSE 14 EVENTS
+              BROWSE 10 EVENTS
             </motion.button>
           </div>
         </motion.div>

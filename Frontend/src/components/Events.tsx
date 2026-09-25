@@ -319,7 +319,7 @@ export default function Events() {
             Battle Catalog & <span className="gradient-text">Competitions</span>
           </h1>
           <p className="text-slate-300 text-sm sm:text-base font-body">
-            14 high-octane engineering events across AI, Cybersecurity, Software Engineering, IoT,
+            10 high-octane technical competitions across AI, Cybersecurity, Software Engineering, IoT,
             Startups, and Esports.
           </p>
         </motion.div>
@@ -362,7 +362,7 @@ export default function Events() {
                       : "border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200"
                   }`}
                 >
-                  {cat === "all" ? "ALL (14)" : (cfg?.label || cat).toUpperCase()}
+                  {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}
                 </button>
               );
             })}

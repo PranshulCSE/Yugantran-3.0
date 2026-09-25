@@ -197,35 +197,37 @@ export default function Dashboard() {
           </h2>
         </div>
 
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Competition Name</th>
-              <th>Total Registrations</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats?.perEvent.map((e, i) => (
-              <tr key={e._id}>
-                <td className="font-mono-matrix text-xs text-slate-500">{i + 1}</td>
-                <td className="font-semibold text-white">{e._id}</td>
-                <td>
-                  <span className="px-3 py-1 rounded-full text-xs font-orbitron font-bold bg-cyan-500/15 border border-cyan-400/30 text-cyan-300">
-                    {e.count} REGISTRATIONS
-                  </span>
-                </td>
-              </tr>
-            ))}
-            {!stats?.perEvent.length && (
+        <div className="overflow-x-auto">
+          <table className="data-table min-w-full">
+            <thead>
               <tr>
-                <td colSpan={3} className="text-center text-slate-500 py-8">
-                  No registrations recorded yet.
-                </td>
+                <th className="w-16">#</th>
+                <th>Competition Name</th>
+                <th className="text-right">Total Registrations</th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {stats?.perEvent.map((e, i) => (
+                <tr key={e._id}>
+                  <td className="font-mono-matrix text-xs text-slate-500">{i + 1}</td>
+                  <td className="font-semibold text-white">{e._id}</td>
+                  <td className="text-right">
+                    <span className="px-3 py-1 rounded-full text-xs font-orbitron font-bold bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 inline-block">
+                      {e.count} REGISTRATIONS
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              {!stats?.perEvent.length && (
+                <tr>
+                  <td colSpan={3} className="text-center text-slate-500 py-8 font-space text-sm">
+                    No registrations recorded yet.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

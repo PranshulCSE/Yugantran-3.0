@@ -1,5 +1,5 @@
-import { motion, useMotionValue, useTransform } from "motion/react";
-import { useEffect, useState, useRef } from "react";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar,
@@ -8,21 +8,16 @@ import {
   Trophy,
   ChevronDown,
   Layers,
-  Sparkles,
   ArrowRight,
   Flame,
+  Zap,
 } from "lucide-react";
 import { publicApi } from "../lib/api";
 import CircuitSparks from "./CircuitSparks";
+import LogoTicker from "./LogoTicker";
 
 export default function Hero() {
   const navigate = useNavigate();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0.5);
-  const mouseY = useMotionValue(0.5);
-  const rotateX = useTransform(mouseY, [0, 1], [3, -3]);
-  const rotateY = useTransform(mouseX, [0, 1], [-3, 3]);
-
   const [settings, setSettings] = useState<any>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -64,47 +59,38 @@ export default function Hero() {
     return () => clearInterval(id);
   }, [settings]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!heroRef.current) return;
-    const rect = heroRef.current.getBoundingClientRect();
-    mouseX.set((e.clientX - rect.left) / rect.width);
-    mouseY.set((e.clientY - rect.top) / rect.height);
-  };
-
-  const prizePool = settings?.totalPrizePool || "₹73,000+";
+  const prizePool = settings?.totalPrizePool || "₹54,000+";
   const venue = settings?.venue || "Geeta University, Panipat-Delhi NCR, Haryana";
 
   return (
     <section
       id="home"
-      ref={heroRef}
-      onMouseMove={handleMouseMove}
-      className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pt-24 pb-16"
-      style={{ perspective: "1200px" }}
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-24 pb-16"
     >
-      {/* Dynamic Circuit Sparks & Subtle Ambient Glow */}
+      {/* Dynamic Cyber Neon Lights & Circuit Sparks */}
       <CircuitSparks />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Subtle Ambient Radial Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Hero Content Layer */}
       <motion.div
-        style={{ rotateX, rotateY }}
         className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+        transition={{ duration: 0.5 }}
       >
-        <div className="space-y-6 sm:space-y-7 max-w-4xl mx-auto">
-          {/* YUGA-BOT Interactive Mascot with Cyber HUD */}
+        <div className="space-y-6 sm:space-y-8 max-w-4xl mx-auto">
+          {/* YUGA-BOT Mascot */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="flex justify-center"
           >
             <motion.div
-              animate={{ y: [-6, 6, -6] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              animate={{ y: [-5, 5, -5] }}
+              transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
               className="relative group cursor-pointer inline-block"
               onClick={() => navigate("/events")}
               title="Click to discover battles"
@@ -113,9 +99,9 @@ export default function Hero() {
               <img
                 src="/images/bot/bot.png"
                 alt="YUGANTRAN 3.0 Mascot YUGA-BOT"
-                className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_0_25px_rgba(0,242,254,0.45)] group-hover:scale-105 transition-transform duration-300"
+                className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(0,242,254,0.5)] group-hover:scale-105 transition-transform duration-300"
               />
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-0.5 rounded-full bg-[#020617]/90 border border-cyan-400/40 text-[10px] font-orbitron text-cyan-300 shadow-lg flex items-center gap-1.5 backdrop-blur-md">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-0.5 rounded-full bg-[#020617]/95 border border-cyan-400/50 text-[10px] font-orbitron text-cyan-300 shadow-lg flex items-center gap-1.5 backdrop-blur-md font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
                 <span>YUGA-BOT 3.0</span>
               </div>
@@ -126,8 +112,8 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-2 rounded-full border border-cyan-500/30 bg-cyan-950/40 backdrop-blur-md shadow-[0_0_20px_rgba(0,242,254,0.15)] max-w-full"
+            transition={{ delay: 0.15 }}
+            className="inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-2.5 rounded-full border border-cyan-400/40 bg-cyan-950/50 backdrop-blur-md shadow-[0_0_25px_rgba(0,242,254,0.2)] max-w-full"
           >
             <Flame className="w-4 h-4 text-cyan-400 animate-pulse flex-shrink-0" />
             {timeLeft.isOver ? (
@@ -148,7 +134,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.35, duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.45 }}
             className="space-y-2"
           >
             <h1
@@ -158,11 +144,11 @@ export default function Hero() {
               YUGANTRAN
             </h1>
             <div className="flex items-center justify-center gap-3 sm:gap-4">
-              <div className="h-px flex-1 max-w-[60px] sm:max-w-[120px] bg-gradient-to-r from-transparent to-cyan-400" />
-              <span className="font-orbitron text-2xl sm:text-3xl md:text-4xl text-cyan-400 tracking-[0.35em] font-black">
+              <div className="h-px flex-1 max-w-[60px] sm:max-w-[140px] bg-gradient-to-r from-transparent via-cyan-400 to-green-400" />
+              <span className="font-orbitron text-2xl sm:text-3xl md:text-4xl text-cyan-400 tracking-[0.35em] font-black drop-shadow-[0_0_15px_rgba(0,242,254,0.6)]">
                 3.0
               </span>
-              <div className="h-px flex-1 max-w-[60px] sm:max-w-[120px] bg-gradient-to-l from-transparent to-cyan-400" />
+              <div className="h-px flex-1 max-w-[60px] sm:max-w-[140px] bg-gradient-to-l from-transparent via-cyan-400 to-green-400" />
             </div>
           </motion.div>
 
@@ -170,7 +156,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.45 }}
+            transition={{ delay: 0.25 }}
             className="space-y-2"
           >
             <p className="font-orbitron text-cyan-300 text-xs sm:text-sm md:text-base tracking-[0.2em] font-bold">
@@ -181,18 +167,28 @@ export default function Hero() {
             </p>
           </motion.div>
 
+          {/* Continuous Infinite Scrolling Logo Ticker */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="pt-2"
+          >
+            <LogoTicker />
+          </motion.div>
+
           {/* Date & Venue Badges */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55 }}
+            transition={{ delay: 0.35 }}
             className="flex flex-wrap justify-center items-center gap-3 sm:gap-6 text-slate-300 font-space text-xs sm:text-sm pt-1"
           >
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md">
               <Calendar className="w-4 h-4 text-cyan-400 flex-shrink-0" />
               <span>27–28 October 2026</span>
             </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-800 shadow-md">
               <MapPin className="w-4 h-4 text-cyan-400 flex-shrink-0" />
               <span>{venue}</span>
             </div>
@@ -202,18 +198,18 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-4 max-w-3xl mx-auto"
+            transition={{ delay: 0.4 }}
+            className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 pt-2 max-w-3xl mx-auto"
           >
             {[
               { label: "Prize Pool", value: prizePool, icon: Trophy, color: "text-amber-400" },
               { label: "Expected Hackers", value: "500+", icon: Users, color: "text-cyan-400" },
-              { label: "Battles & Events", value: "14+", icon: Sparkles, color: "text-emerald-400" },
-              { label: "Tech Domains", value: "6", icon: Layers, color: "text-purple-400" },
+              { label: "Technical Events", value: "10", icon: Zap, color: "text-emerald-400" },
+              { label: "Tech Tracks", value: "6", icon: Layers, color: "text-purple-400" },
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="p-3.5 sm:p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 text-center hover:border-cyan-500/40 transition-colors"
+                className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800/90 text-center hover:border-cyan-500/50 transition-colors shadow-lg"
               >
                 <div className={`font-orbitron font-black text-xl sm:text-2xl ${stat.color}`}>
                   {stat.value}
@@ -227,26 +223,27 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.75 }}
-            className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4"
+            transition={{ delay: 0.45 }}
+            className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-3"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/register")}
-              className="btn-primary w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm flex items-center justify-center gap-2 shadow-cyan-500/30"
+              className="btn-primary w-full sm:w-auto px-9 py-4 text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-cyan-500/35 border border-cyan-300/40"
             >
+              <Zap className="w-4 h-4 text-slate-950 fill-slate-950" />
               <span>REGISTER NOW</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 text-slate-950" />
             </motion.button>
 
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/events")}
-              className="btn-outline w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm flex items-center justify-center gap-2"
+              className="btn-outline w-full sm:w-auto px-9 py-4 text-xs sm:text-sm flex items-center justify-center gap-2"
             >
-              <span>EXPLORE EVENTS</span>
+              <span>EXPLORE 10 EVENTS</span>
               <ChevronDown className="w-4 h-4 text-cyan-400" />
             </motion.button>
           </motion.div>

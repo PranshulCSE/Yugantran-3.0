@@ -34,7 +34,6 @@ import {
   Copy,
   Upload,
   AlertCircle,
-  Sparkles,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
@@ -275,7 +274,7 @@ export default function Register() {
             exit={{ opacity: 0, y: -20, x: "-50%" }}
             className="fixed top-24 left-1/2 z-50 px-5 py-2.5 rounded-full bg-slate-900/95 border border-cyan-400/50 text-cyan-300 font-mono-matrix text-xs shadow-2xl backdrop-blur-md flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <Zap className="w-4 h-4 text-cyan-400" />
             <span>{toast}</span>
           </motion.div>
         )}

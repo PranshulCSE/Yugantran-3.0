@@ -12,7 +12,7 @@ import {
   Download,
   Zap,
   ArrowRight,
-  Sparkles,
+  Flame,
   Building2,
   Award,
   Users,
@@ -101,7 +101,7 @@ export default function About() {
             {
               title: "Why Does it Exist?",
               desc: "To provide an open proving ground where students test real-world skillsets — prompt architecture, CTF defense, sprint development, and rapid product pitching under pressure.",
-              icon: Sparkles,
+              icon: Flame,
               color: "#00ff41",
             },
             {

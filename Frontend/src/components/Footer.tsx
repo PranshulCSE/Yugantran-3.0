@@ -35,7 +35,7 @@ export default function Footer() {
                   className="h-8 w-auto rounded bg-white p-0.5 object-contain"
                 />
                 <img
-                  src="/images/Geeta/univ-2.jpg"
+                  src="/images/Geeta/univ-2.png"
                   alt="GU"
                   title="Geeta University"
                   className="h-8 w-auto rounded bg-white p-0.5 object-contain"
@@ -95,7 +95,7 @@ export default function Footer() {
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-cyan-400 flex-shrink-0" />
                 <a href="tel:+919992560407" className="hover:text-cyan-300 transition-colors">
-                  +91 99925 60407 / +91 92110 67540
+                  +91 99925 60407
                 </a>
               </div>
             </div>
