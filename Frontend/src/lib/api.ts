@@ -1,10 +1,18 @@
 import axios from "axios";
+import {
+  FALLBACK_EVENTS,
+  FALLBACK_DOMAINS,
+  FALLBACK_AWARDS,
+  FALLBACK_SETTINGS,
+} from "../data/fallbackData";
+import coreTeamData from "../data/team.json";
+import subTeamData from "../data/sub.json";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 // ─── Axios instances ───────────────────────────────────────────────────────────
 
-const api = axios.create({ baseURL: BASE_URL });
+const api = axios.create({ baseURL: BASE_URL, timeout: 3500 });
 
 // Attach JWT token to every request
 api.interceptors.request.use((config) => {
@@ -29,12 +37,70 @@ api.interceptors.response.use(
 // ─── Public API ────────────────────────────────────────────────────────────────
 
 export const publicApi = {
-  getEvents: () => api.get("/api/events"),
-  getEventBySlug: (slug: string) => api.get(`/api/events/${slug}`),
-  getTeam: (category?: string) => api.get("/api/team", { params: category ? { category } : {} }),
-  getSettings: () => api.get("/api/settings"),
-  getAwards: () => api.get("/api/awards"),
-  getDomains: () => api.get("/api/domains"),
+  getEvents: async () => {
+    try {
+      const res = await api.get("/api/events");
+      if (Array.isArray(res.data) && res.data.length > 0) return res;
+      return { data: FALLBACK_EVENTS };
+    } catch {
+      return { data: FALLBACK_EVENTS };
+    }
+  },
+
+  getEventBySlug: async (slug: string) => {
+    try {
+      const res = await api.get(`/api/events/${slug}`);
+      if (res.data) return res;
+      const found = FALLBACK_EVENTS.find((e) => e.slug === slug);
+      return { data: found || null };
+    } catch {
+      const found = FALLBACK_EVENTS.find((e) => e.slug === slug);
+      return { data: found || null };
+    }
+  },
+
+  getTeam: async (category?: string) => {
+    try {
+      const res = await api.get("/api/team", { params: category ? { category } : {} });
+      if (Array.isArray(res.data) && res.data.length > 0) return res;
+      if (category === "subteam") return { data: subTeamData };
+      return { data: coreTeamData };
+    } catch {
+      if (category === "subteam") return { data: subTeamData };
+      return { data: coreTeamData };
+    }
+  },
+
+  getSettings: async () => {
+    try {
+      const res = await api.get("/api/settings");
+      if (res.data) return res;
+      return { data: FALLBACK_SETTINGS };
+    } catch {
+      return { data: FALLBACK_SETTINGS };
+    }
+  },
+
+  getAwards: async () => {
+    try {
+      const res = await api.get("/api/awards");
+      if (Array.isArray(res.data) && res.data.length > 0) return res;
+      return { data: FALLBACK_AWARDS };
+    } catch {
+      return { data: FALLBACK_AWARDS };
+    }
+  },
+
+  getDomains: async () => {
+    try {
+      const res = await api.get("/api/domains");
+      if (Array.isArray(res.data) && res.data.length > 0) return res;
+      return { data: FALLBACK_DOMAINS };
+    } catch {
+      return { data: FALLBACK_DOMAINS };
+    }
+  },
+
   register: (formData: FormData) =>
     api.post("/api/register", formData, { headers: { "Content-Type": "multipart/form-data" } }),
 };
@@ -60,7 +126,7 @@ export const adminApi = {
     api.get("/api/registrations/admin/export", { params, responseType: "blob" }),
   getStats: () => api.get("/api/registrations/admin/stats"),
 
-  // Team (route is /api/team/admin not /api/team/admin/all)
+  // Team
   getAllTeam: () => api.get("/api/team/admin"),
   createTeamMember: (data: any) => api.post("/api/team/admin", data),
   updateTeamMember: (id: string, data: any) => api.put(`/api/team/admin/${id}`, data),
@@ -76,7 +142,7 @@ export const adminApi = {
   updateAward: (id: string, data: any) => api.put(`/api/awards/admin/${id}`, data),
   deleteAward: (id: string) => api.delete(`/api/awards/admin/${id}`),
 
-  // Domains (About / Tracks)
+  // Domains
   getAllDomains: () => api.get("/api/domains/admin"),
   createDomain: (data: any) => api.post("/api/domains/admin", data),
   updateDomain: (id: string, data: any) => api.put(`/api/domains/admin/${id}`, data),

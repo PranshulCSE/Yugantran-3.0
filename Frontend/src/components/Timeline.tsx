@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { useRef, useState } from "react";
 import { Clock, Calendar, Zap, MapPin, CheckCircle } from "lucide-react";
 
@@ -14,7 +14,7 @@ const SCHEDULE_DAY1 = [
     time: "10:00 AM",
     title: "Grand Inaugural & Keynote Address",
     category: "CEREMONY",
-    desc: "Welcome speech by Dr. Meenu Gupta (HoS SCSE), dignitary address, and fest inauguration.",
+    desc: "Welcome address by Dr. Meenu Gupta (HoS SCSE), dignitary address, and fest inauguration.",
     location: "Auditorium",
   },
   {
@@ -87,7 +87,7 @@ const SCHEDULE_DAY2 = [
     time: "02:30 PM",
     title: "Tech Olympics Grand Finale",
     category: "FINALS",
-    desc: "Top 5 multidisciplinary teams clash across all domains for the ultimate championship.",
+    desc: "Top multidisciplinary teams clash across all domains for the ultimate championship.",
     location: "Auditorium",
   },
   {
@@ -106,37 +106,37 @@ export default function Timeline() {
   const currentSchedule = activeDay === 1 ? SCHEDULE_DAY1 : SCHEDULE_DAY2;
 
   return (
-    <section id="timeline" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+    <section id="timeline" ref={ref} className="relative py-0 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-center max-w-2xl mx-auto mb-10"
+          className="text-center max-w-2xl mx-auto"
         >
           <div className="section-tag mb-4">
-            <Zap className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5 text-cyan-400" />
             <span>EVENT SCHEDULE</span>
           </div>
 
-          <h2 className="font-orbitron text-4xl sm:text-5xl font-black text-white mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             Festival <span className="gradient-text">Timeline</span>
-          </h2>
+          </h1>
 
-          <p className="text-slate-300 font-space text-sm">
+          <p className="text-slate-300 font-space text-sm sm:text-base">
             2 Days of Pure Innovation • October 27–28, 2026 • Geeta University, Panipat
           </p>
         </motion.div>
 
-        {/* Day Toggle Pills */}
-        <div className="flex justify-center mb-16">
-          <div className="p-1.5 rounded-2xl bg-slate-900/80 border border-slate-700/60 backdrop-blur-xl flex items-center gap-2">
+        {/* Day Toggle Selector */}
+        <div className="flex justify-center">
+          <div className="p-1.5 rounded-2xl bg-slate-900/80 border border-slate-700/60 backdrop-blur-xl flex items-center gap-2 shadow-lg">
             <button
               onClick={() => setActiveDay(1)}
               className={`px-6 py-3 rounded-xl font-orbitron font-bold text-xs tracking-wider transition-all duration-300 flex items-center gap-2.5 ${
                 activeDay === 1
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
+                  ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -148,7 +148,7 @@ export default function Timeline() {
               onClick={() => setActiveDay(2)}
               className={`px-6 py-3 rounded-xl font-orbitron font-bold text-xs tracking-wider transition-all duration-300 flex items-center gap-2.5 ${
                 activeDay === 2
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
+                  ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -161,7 +161,7 @@ export default function Timeline() {
         {/* Timeline Items in Circuit Style */}
         <div className="max-w-4xl mx-auto relative">
           {/* Vertical Glowing Circuit Line */}
-          <div className="absolute left-4 sm:left-1/2 top-4 bottom-4 -translate-x-1/2 w-0.5 bg-gradient-to-b from-cyan-500 via-blue-500 to-purple-500 opacity-40" />
+          <div className="absolute left-4 sm:left-1/2 top-4 bottom-4 -translate-x-1/2 w-0.5 bg-gradient-to-b from-cyan-400 via-blue-500 to-emerald-400 opacity-40" />
 
           <div className="space-y-8">
             {currentSchedule.map((item, idx) => {
@@ -172,19 +172,19 @@ export default function Timeline() {
                   key={`${activeDay}-${idx}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: idx * 0.06 }}
+                  transition={{ duration: 0.35, delay: idx * 0.05 }}
                   className={`relative flex flex-col sm:flex-row items-start ${
                     isEven ? "sm:flex-row-reverse" : ""
                   } gap-6 sm:gap-12`}
                 >
                   {/* Central Node Indicator */}
-                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-slate-950 border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,242,254,0.6)] z-20">
+                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#020617] border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,242,254,0.6)] z-20">
                     <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
                   </div>
 
                   {/* Content Card */}
                   <div className={`w-full sm:w-1/2 pl-12 sm:pl-0 ${isEven ? "sm:text-right" : ""}`}>
-                    <div className="glass glass-hover p-6 rounded-2xl border-cyan-500/20">
+                    <div className="glass glass-hover p-6 rounded-3xl border-cyan-500/20">
                       <div
                         className={`flex flex-wrap items-center gap-2.5 mb-3 ${
                           isEven ? "sm:justify-end" : "justify-start"
@@ -200,11 +200,11 @@ export default function Timeline() {
                         </span>
                       </div>
 
-                      <h3 className="font-orbitron font-bold text-lg text-white mb-2">
+                      <h3 className="font-orbitron font-bold text-base sm:text-lg text-white mb-2">
                         {item.title}
                       </h3>
 
-                      <p className="text-slate-300 text-sm font-body mb-3">{item.desc}</p>
+                      <p className="text-slate-300 text-xs sm:text-sm font-body mb-3">{item.desc}</p>
 
                       <div
                         className={`flex items-center gap-1.5 text-xs font-mono-matrix text-slate-400 ${

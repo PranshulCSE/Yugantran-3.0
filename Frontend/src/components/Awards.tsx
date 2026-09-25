@@ -1,123 +1,99 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award } from "lucide-react";
+import { Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award, CheckCircle2, Sparkles } from "lucide-react";
 import { publicApi } from "../lib/api";
 
 const ICON_MAP: Record<string, any> = {
   Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award,
 };
 
-// Fallback data — used only if the API is unreachable or the admin hasn't
-// added any awards yet, so the section never renders empty.
-const FALLBACK_AWARDS = [
-  {
-    icon: "Trophy",
-    title: "Grand Champion",
-    subtitle: "Tech Olympics Victor",
-    desc: "Awarded to the ultimate multi-disciplinary team conquering all engineering challenges.",
-    color: "#fbbf24",
-    prize: "₹12,000 + Trophy",
-  },
-  {
-    icon: "Bot",
-    title: "Best AI Solution",
-    subtitle: "AI Warzone Track",
-    desc: "Most innovative real-world generative AI application and prompt architecture.",
-    color: "#00f2fe",
-    prize: "₹8,000 + Trophy",
-  },
-  {
-    icon: "Shield",
-    title: "Best Cyber Unit",
-    subtitle: "Cyber Escape CTF",
-    desc: "Top security team with flawless exploit breakdown and flag capture speed.",
-    color: "#f43f5e",
-    prize: "₹6,000 + Trophy",
-  },
-  {
-    icon: "Code",
-    title: "Master Developer",
-    subtitle: "Code Sprint & Git Wars",
-    desc: "Exceptional algorithmic efficiency, pristine git workflow, and speed.",
-    color: "#38bdf8",
-    prize: "₹5,000 + Trophy",
-  },
-];
-
 export default function Awards() {
   const ref = useRef(null);
-  const [awards, setAwards] = useState<any[]>(FALLBACK_AWARDS);
-  const [loading, setLoading] = useState(true);
+  const [awards, setAwards] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
-    let mounted = true;
     publicApi
       .getAwards()
-      .then((r) => {
-        if (mounted && Array.isArray(r.data) && r.data.length > 0) {
-          setAwards(r.data);
-        }
-      })
-      .catch(() => {
-        // Keep fallback data on error — section stays populated.
-      })
-      .finally(() => mounted && setLoading(false));
-    return () => {
-      mounted = false;
-    };
+      .then((r) => setAwards(r.data))
+      .catch(() => {});
+    publicApi
+      .getSettings()
+      .then((r) => setSettings(r.data))
+      .catch(() => {});
   }, []);
 
+  const totalPrizePool = settings?.totalPrizePool || "₹73,000+";
+
   return (
-    <section id="awards" ref={ref} className="relative pt-6 pb-20 md:pt-8 md:pb-24 overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="awards" ref={ref} className="relative py-0 overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="text-center max-w-3xl mx-auto mb-10 md:mb-14"
+          className="text-center max-w-3xl mx-auto"
         >
           <div className="section-tag mb-4">
-            <Award className="w-3.5 h-3.5" />
+            <Award className="w-3.5 h-3.5 text-cyan-400" />
             <span>HONORS & RECOGNITION</span>
           </div>
 
-          <h2 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             Bounties & <span className="gradient-text">Special Awards</span>
-          </h2>
+          </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg font-body px-2">
-            Recognition that goes beyond trophies — celebrating engineering mastery, innovation, and perseverance.
+          <p className="text-slate-300 text-sm sm:text-base md:text-lg font-body">
+            Recognition that goes beyond trophies — celebrating engineering mastery, algorithmic speed,
+            innovation, and teamwork.
           </p>
         </motion.div>
 
-        {/* Award Cards Grid */}
-        <div
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 transition-opacity duration-300 ${
-            loading ? "opacity-70" : "opacity-100"
-          }`}
+        {/* Mega Prize Pool Showcase */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="glass p-6 sm:p-10 rounded-3xl border-amber-400/40 shadow-[0_0_50px_rgba(251,191,36,0.15)] text-center relative overflow-hidden"
         >
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="max-w-2xl mx-auto space-y-3 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center mx-auto text-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.3)]">
+              <Trophy className="w-8 h-8" />
+            </div>
+            <div className="font-orbitron font-black text-3xl sm:text-5xl text-white">
+              {totalPrizePool} <span className="text-amber-400">TOTAL PRIZE POOL</span>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm font-space">
+              Direct cash prizes + Official Winner Trophies + Merit & Participation Certificates for all registered students.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Award Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {awards.map((award, i) => {
             const Icon = ICON_MAP[award.icon] || Trophy;
             return (
               <motion.div
-                key={award._id || award.title}
+                key={award._id || award.title || i}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: Math.min(i * 0.04, 0.32), duration: 0.3 }}
-                className="glass glass-hover p-5 sm:p-6 rounded-3xl text-center flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
+                className="glass glass-hover p-6 rounded-3xl text-center flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
               >
                 <div>
                   <div
-                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl mx-auto mb-4 sm:mb-5 flex items-center justify-center transition-transform group-hover:scale-110"
+                    className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center transition-transform group-hover:scale-110"
                     style={{
                       background: `${award.color}15`,
                       border: `1px solid ${award.color}35`,
                       boxShadow: `0 0 25px ${award.color}20`,
                     }}
                   >
-                    <Icon className="w-7 h-7 sm:w-8 sm:h-8" style={{ color: award.color }} />
+                    <Icon className="w-7 h-7" style={{ color: award.color }} />
                   </div>
 
                   <span
@@ -140,7 +116,7 @@ export default function Awards() {
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800/80">
+                <div className="pt-3.5 border-t border-slate-800/80">
                   <span className="text-xs font-orbitron font-bold" style={{ color: award.color }}>
                     {award.prize}
                   </span>
@@ -150,26 +126,38 @@ export default function Awards() {
           })}
         </div>
 
-        {/* Grand Total Callout */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.15, duration: 0.35 }}
-          className="mt-10 md:mt-14 text-center"
-        >
-          <div className="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-4 px-6 sm:px-8 py-4 sm:py-5 rounded-3xl glass border-cyan-400/40 shadow-[0_0_40px_rgba(0,242,254,0.15)] max-w-full">
-            <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400 flex-shrink-0" />
-            <div className="text-center sm:text-left">
-              <div className="font-orbitron font-black text-base sm:text-xl text-white">
-                TOTAL FESTIVAL POOL: <span className="text-amber-400">₹73,000+ CASH</span>
+        {/* Participation Perks Section */}
+        <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
+            {[
+              {
+                title: "Official Certificates",
+                desc: "Verified digital and physical certificates accredited by School of Computer Science & Engineering, Geeta University.",
+                icon: CheckCircle2,
+              },
+              {
+                title: "Industry Mentorship",
+                desc: "Direct networking with startup mentors, hackathon judges, and industry professionals.",
+                icon: Sparkles,
+              },
+              {
+                title: "Grand Trophies & Swag",
+                desc: "Custom engraved YUGANTRAN 3.0 championship trophies, medals, and hacker swag kits.",
+                icon: Trophy,
+              },
+            ].map((perk, idx) => (
+              <div key={idx} className="flex flex-col md:flex-row items-center md:items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center flex-shrink-0 text-cyan-400">
+                  <perk.icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-orbitron font-bold text-sm text-white mb-1">{perk.title}</h4>
+                  <p className="text-slate-400 text-xs font-body leading-relaxed">{perk.desc}</p>
+                </div>
               </div>
-              <div className="text-xs font-space text-slate-300">
-                + Official Participation & Winner Certificates for all students + Mentor Networking
-              </div>
-            </div>
+            ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

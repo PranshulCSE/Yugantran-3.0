@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import MatrixRain from "./MatrixRain";
+import CyberBackground from "./CyberBackground";
 import Header from "./Header";
 import Footer from "./Footer";
 import FloatingBot from "./FloatingBot";
@@ -15,14 +16,24 @@ function ScrollToTop() {
 
 export default function Layout() {
   return (
-    <div className="relative min-h-screen bg-[#000000] text-[#b0ffb0] overflow-x-hidden">
+    <div className="relative min-h-screen bg-[#020617] text-slate-100 overflow-x-hidden selection:bg-cyan-500 selection:text-black">
+      {/* Layered Cyber Backgrounds */}
+      <CyberBackground />
       <MatrixRain />
+      
+      {/* Global Shared Navigation */}
       <Header />
       <ScrollToTop />
+
+      {/* Main Routed Content */}
       <main className="relative z-10 min-h-screen flex flex-col">
         <Outlet />
       </main>
+
+      {/* Global Shared Footer */}
       <Footer />
+
+      {/* YUGA-BOT Mascot Quick Assistant */}
       <FloatingBot />
     </div>
   );

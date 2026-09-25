@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { publicApi } from "../lib/api";
-import { motion } from "motion/react";
+import PageWrapper from "../components/PageWrapper";
 import {
   Zap,
   IndianRupee,
@@ -13,8 +13,9 @@ import {
   Shield,
   Bot,
   CheckCircle2,
-  Share2,
-  ExternalLink,
+  Calendar,
+  MapPin,
+  Sparkles,
 } from "lucide-react";
 
 export default function EventDetailPage() {
@@ -31,7 +32,6 @@ export default function EventDetailPage() {
       .getEventBySlug(slug)
       .then((res) => setEvent(res.data))
       .catch(() => {
-        // Fallback: search in all events list
         publicApi.getEvents().then((r) => {
           const found = r.data.find((e: any) => e.slug === slug);
           setEvent(found || null);
@@ -42,40 +42,44 @@ export default function EventDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-28">
-        <div className="w-10 h-10 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-      </div>
+      <PageWrapper>
+        <div className="min-h-[50vh] flex items-center justify-center">
+          <div className="w-10 h-10 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </PageWrapper>
     );
   }
 
   if (!event) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pt-28 px-4 text-center">
-        <h2 className="font-orbitron font-bold text-3xl text-white mb-4">Event Not Found</h2>
-        <p className="text-slate-400 text-sm font-space mb-8">
-          The competition you are looking for does not exist or has been modified.
-        </p>
-        <Link to="/events" className="btn-primary text-xs py-3 px-6">
-          <span>← BACK TO ALL EVENTS</span>
-        </Link>
-      </div>
+      <PageWrapper>
+        <div className="min-h-[50vh] flex flex-col items-center justify-center px-4 text-center">
+          <h2 className="font-orbitron font-bold text-3xl text-white mb-4">Event Not Found</h2>
+          <p className="text-slate-400 text-sm font-space mb-8">
+            The competition you are looking for does not exist or has been modified.
+          </p>
+          <Link to="/events" className="btn-primary text-xs py-3 px-6">
+            <span>← BACK TO ALL EVENTS</span>
+          </Link>
+        </div>
+      </PageWrapper>
     );
   }
 
   return (
-    <div className="pt-28 pb-20 space-y-12">
-      <div className="container mx-auto px-4 lg:px-8 max-w-4xl">
+    <PageWrapper>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl space-y-8">
         {/* Back navigation */}
         <Link
           to="/events"
-          className="inline-flex items-center gap-2 text-xs font-space font-semibold text-slate-400 hover:text-cyan-300 transition-colors mb-6"
+          className="inline-flex items-center gap-2 text-xs font-space font-semibold text-slate-400 hover:text-cyan-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>BACK TO ALL COMPETITIONS</span>
         </Link>
 
         {/* Main Event Header Card */}
-        <div className="glass p-8 sm:p-10 rounded-3xl border-cyan-500/30 shadow-2xl relative overflow-hidden mb-8">
+        <div className="glass p-6 sm:p-10 rounded-3xl border-cyan-500/30 shadow-2xl relative overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
             <span className="px-3.5 py-1 rounded-full text-xs font-orbitron font-bold bg-cyan-950/80 border border-cyan-400/40 text-cyan-300">
               {event.category?.toUpperCase()} TRACK
@@ -95,25 +99,27 @@ export default function EventDetailPage() {
           </p>
 
           {/* Key Metric Specs */}
-          <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-800">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-slate-800">
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl text-emerald-400">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-emerald-400">
                 ₹{event.fee}
               </div>
               <div className="text-xs font-space text-slate-400 mt-0.5">Registration Fee</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl text-amber-400">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-amber-400">
                 {event.prize}
               </div>
               <div className="text-xs font-space text-slate-400 mt-0.5">Bounty Prize</div>
             </div>
 
             <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl text-cyan-400">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-cyan-400">
                 {event.teamType === "individual"
                   ? "Solo"
+                  : event.minTeam === event.maxTeam
+                  ? `${event.minTeam} Players`
                   : `${event.minTeam}–${event.maxTeam} P`}
               </div>
               <div className="text-xs font-space text-slate-400 mt-0.5">Team Size</div>
@@ -123,7 +129,7 @@ export default function EventDetailPage() {
 
         {/* Rounds Breakdown */}
         {event.rounds && event.rounds.length > 0 && (
-          <div className="glass p-8 sm:p-10 rounded-3xl border-cyan-500/20 shadow-xl mb-8">
+          <div className="glass p-6 sm:p-10 rounded-3xl border-cyan-500/20 shadow-xl">
             <h3 className="font-orbitron font-bold text-xl text-white mb-6 flex items-center gap-2.5">
               <Layers className="w-5 h-5 text-cyan-400" />
               <span>ROUND-BY-ROUND FORMAT ({event.rounds.length} ROUNDS)</span>
@@ -152,12 +158,30 @@ export default function EventDetailPage() {
           </div>
         )}
 
+        {/* Venue & Date Info */}
+        <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/20 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex items-center gap-3">
+            <Calendar className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+            <div>
+              <div className="text-xs font-space text-slate-400">Date & Schedule</div>
+              <div className="font-orbitron font-bold text-sm text-white">27–28 October 2026</div>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <MapPin className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+            <div>
+              <div className="text-xs font-space text-slate-400">Venue Location</div>
+              <div className="font-orbitron font-bold text-sm text-white">Geeta University Campus</div>
+            </div>
+          </div>
+        </div>
+
         {/* Action Bar */}
         <div className="glass p-6 rounded-3xl border-cyan-400/40 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <div className="font-orbitron font-bold text-lg text-white">Ready To Compete?</div>
             <div className="text-xs font-space text-slate-400">
-              Instant spot booking with UPI payment
+              Instant spot booking with UPI payment verification
             </div>
           </div>
 
@@ -173,6 +197,6 @@ export default function EventDetailPage() {
           </button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
