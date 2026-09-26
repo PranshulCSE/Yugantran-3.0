@@ -1,7 +1,9 @@
 import { useEffect, useRef, memo } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -11,17 +13,23 @@ function MatrixRain() {
 
     let animId: number;
     let lastTime = 0;
-    const frameInterval = 50; // ~20fps for classic matrix feel
+    const frameInterval = 65; // ~15fps for matrix feel without CPU drain
 
+    let resizeTimer: any = null;
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
-    window.addEventListener("resize", resize);
+    const handleResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 150);
+    };
+    window.addEventListener("resize", handleResize);
 
-    const fontSize = 14;
-    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEFGHIJKLMNOP<>{}[]|/\\";
+    const isLight = theme === "light";
+    const fontSize = 16;
+    const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF<>{}[]|/";
     const columns = Math.floor(canvas.width / fontSize);
     const drops: number[] = Array(columns).fill(1);
 
@@ -32,7 +40,7 @@ function MatrixRain() {
       lastTime = currentTime;
 
       // Fade effect
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillStyle = isLight ? "rgba(248, 250, 252, 0.08)" : "rgba(2, 6, 23, 0.06)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.font = `${fontSize}px 'Share Tech Mono', monospace`;
@@ -41,16 +49,18 @@ function MatrixRain() {
         const char = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize;
 
-        // Bright head char
-        if (y * fontSize < canvas.height * 0.1 || Math.random() > 0.97) {
-          ctx.fillStyle = "#aaffaa";
+        if (isLight) {
+          ctx.fillStyle = y * fontSize < canvas.height * 0.1 || Math.random() > 0.96
+            ? "#0284c7"
+            : "rgba(5, 150, 105, 0.45)";
         } else {
-          ctx.fillStyle = "rgba(0, 180, 50, 0.7)";
+          ctx.fillStyle = y * fontSize < canvas.height * 0.1 || Math.random() > 0.96
+            ? "#aaffaa"
+            : "rgba(0, 180, 50, 0.6)";
         }
 
         ctx.fillText(char, x, y * fontSize);
 
-        // Reset drop
         if (y * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
@@ -62,14 +72,15 @@ function MatrixRain() {
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(resizeTimer);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none opacity-[0.12]"
+      className="fixed inset-0 z-0 pointer-events-none opacity-[0.08] dark:opacity-[0.12]"
       aria-hidden="true"
     />
   );

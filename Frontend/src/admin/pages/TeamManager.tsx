@@ -9,6 +9,7 @@ const EMPTY = {
   department: "SCSE",
   image: "",
   linkedin: "",
+  email: "",
   category: "core",
   order: 0,
   isActive: true,
@@ -299,6 +300,7 @@ export default function TeamManager() {
                   <FormField label="Department / Batch" value={form.department} onChange={(v) => updateField("department", v)} />
                   <FormField label="Profile Image Path / URL" value={form.image} onChange={(v) => updateField("image", v)} />
                   <FormField label="LinkedIn Profile URL" value={form.linkedin} onChange={(v) => updateField("linkedin", v)} />
+                  <FormField label="Email Address" value={form.email} onChange={(v) => updateField("email", v)} type="email" />
 
                   <div>
                     <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">

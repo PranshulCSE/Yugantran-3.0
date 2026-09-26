@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 export default function CyberBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,15 +21,19 @@ export default function CyberBackground() {
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
 
+    let resizeTimer: any = null;
     const handleResize = () => {
-      if (!canvas) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (!canvas) return;
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, 150);
     };
     window.addEventListener("resize", handleResize);
 
-    // Optimized particle nodes for cyber constellation
-    const particleCount = Math.min(Math.floor(width / 35), 40);
+    // Optimized particle count
+    const particleCount = Math.min(Math.floor(width / 50), 28);
     const particles: {
       x: number;
       y: number;
@@ -38,21 +44,24 @@ export default function CyberBackground() {
       color: string;
     }[] = [];
 
-    const colors = ["#00f2fe", "#38bdf8", "#818cf8", "#00ff41"];
+    const isLight = theme === "light";
+    const colors = isLight
+      ? ["#0284c7", "#0891b2", "#6366f1", "#059669"]
+      : ["#00f2fe", "#38bdf8", "#818cf8", "#00ff41"];
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        size: Math.random() * 1.8 + 0.8,
-        alpha: Math.random() * 0.45 + 0.15,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        size: Math.random() * 1.5 + 0.8,
+        alpha: Math.random() * 0.35 + 0.15,
         color: colors[i % colors.length],
       });
     }
 
-    // Floating cyber data stream packets
+    // Floating cyber data stream packets (capped to 6 for speed)
     const streams: {
       x: number;
       y: number;
@@ -62,21 +71,21 @@ export default function CyberBackground() {
       opacity: number;
     }[] = [];
 
-    const hexChars = "0123456789ABCDEF<>{}[]/*";
-    const streamCount = Math.min(Math.floor(width / 110), 12);
+    const hexChars = "0123456789ABCDEF<>/";
+    const streamCount = Math.min(Math.floor(width / 180), 6);
 
     for (let i = 0; i < streamCount; i++) {
-      const length = Math.floor(Math.random() * 8) + 4;
+      const length = Math.floor(Math.random() * 6) + 3;
       const chars = Array.from({ length }, () =>
         hexChars[Math.floor(Math.random() * hexChars.length)]
       );
       streams.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        speed: Math.random() * 1.2 + 0.5,
+        speed: Math.random() * 0.8 + 0.4,
         chars,
         length,
-        opacity: Math.random() * 0.2 + 0.06,
+        opacity: Math.random() * 0.18 + 0.05,
       });
     }
 
@@ -95,25 +104,28 @@ export default function CyberBackground() {
       ctx.clearRect(0, 0, width, height);
 
       // Render faint data streams
-      ctx.font = "11px 'Share Tech Mono', monospace";
+      ctx.font = "10px 'Share Tech Mono', monospace";
       for (let s of streams) {
         s.y += s.speed;
-        if (s.y > height + 150) {
-          s.y = -100;
+        if (s.y > height + 100) {
+          s.y = -80;
           s.x = Math.random() * width;
         }
 
         for (let j = 0; j < s.chars.length; j++) {
-          const cy = s.y - j * 15;
+          const cy = s.y - j * 14;
           if (cy > 0 && cy < height) {
             const charAlpha = (1 - j / s.length) * s.opacity;
-            ctx.fillStyle = j === 0 ? `rgba(255, 255, 255, ${charAlpha * 1.4})` : `rgba(0, 242, 254, ${charAlpha})`;
+            ctx.fillStyle = isLight
+              ? `rgba(2, 132, 199, ${charAlpha * 0.8})`
+              : `rgba(0, 242, 254, ${charAlpha})`;
             ctx.fillText(s.chars[j], s.x, cy);
           }
         }
       }
 
       // Update particle constellation
+      const maxDistSq = 6400; // 80px squared
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -127,7 +139,7 @@ export default function CyberBackground() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
-        ctx.globalAlpha = p.alpha;
+        ctx.globalAlpha = isLight ? p.alpha * 0.8 : p.alpha;
         ctx.fill();
 
         for (let j = i + 1; j < particles.length; j++) {
@@ -136,14 +148,15 @@ export default function CyberBackground() {
           const dy = p.y - p2.y;
           const distSq = dx * dx + dy * dy;
 
-          if (distSq < 10000) { // 100px squared
-            const dist = Math.sqrt(distSq);
+          if (distSq < maxDistSq) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = "rgba(56, 189, 248, 0.12)";
-            ctx.globalAlpha = (1 - dist / 100) * 0.35;
-            ctx.lineWidth = 0.7;
+            ctx.strokeStyle = isLight
+              ? "rgba(2, 132, 199, 0.12)"
+              : "rgba(56, 189, 248, 0.12)";
+            ctx.globalAlpha = (1 - Math.sqrt(distSq) / 80) * 0.25;
+            ctx.lineWidth = 0.6;
             ctx.stroke();
           }
         }
@@ -157,21 +170,22 @@ export default function CyberBackground() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      clearTimeout(resizeTimer);
     };
-  }, []);
+  }, [theme]);
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden transform-gpu">
       {/* Deep Cyber Ambient Glow Orbs */}
-      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-3xl" />
-      <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl" />
-      <div className="absolute -bottom-40 left-1/3 w-[600px] h-[500px] bg-blue-600/10 rounded-full blur-3xl" />
+      <div className="absolute -top-40 -left-40 w-[400px] h-[400px] bg-cyan-500/10 dark:bg-cyan-500/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/3 -right-40 w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-40 left-1/3 w-[450px] h-[400px] bg-blue-600/10 dark:bg-blue-600/10 rounded-full blur-3xl" />
 
       {/* Interactive Cyber Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-70" />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full opacity-60 dark:opacity-70" />
 
       {/* Cyber Vignette Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/50 via-transparent to-[#020617]/90 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-50/40 via-transparent to-slate-100/80 dark:from-[#020617]/50 dark:via-transparent dark:to-[#020617]/90 pointer-events-none" />
     </div>
   );
 }

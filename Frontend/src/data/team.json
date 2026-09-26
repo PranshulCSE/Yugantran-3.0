@@ -3,8 +3,8 @@
     "id": 1,
     "name": "Pranshul",
     "role": "Event Director",
-    "image": "/images/team/pranshul.jpg",
-    "linkedin": "#",
+    "image": "/images/team/pranshul.png",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "pranshul@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -13,8 +13,8 @@
     "id": 2,
     "name": "Garima",
     "role": "Co-Director",
-    "image": "/images/team/garima.jpg",
-    "linkedin": "#",
+    "image": "/images/team/Garima.jpeg",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "garima@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -24,7 +24,7 @@
     "name": "Urmika",
     "role": "Support & Documentation Head",
     "image": "/images/team/urmika.jpg",
-    "linkedin": "#",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "urmika@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -34,7 +34,7 @@
     "name": "Hemank",
     "role": "Registration & Participant Head",
     "image": "/images/team/hemank.jpg",
-    "linkedin": "#",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "hemank@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -43,8 +43,8 @@
     "id": 5,
     "name": "Ashish",
     "role": "Social Media & Outreach Head",
-    "image": "/images/team/ashish.jpg",
-    "linkedin": "#",
+    "image": "/images/team/Ashish.jpeg",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "ashish@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -54,7 +54,7 @@
     "name": "Sidharth",
     "role": "Technical Lead",
     "image": "/images/team/sidharth.jpg",
-    "linkedin": "#",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "sidharth@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -63,8 +63,8 @@
     "id": 7,
     "name": "Sanya",
     "role": "Design & Creativity Head",
-    "image": "/images/team/sanya.jpg",
-    "linkedin": "#",
+    "image": "/images/team/Sania.jpeg",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "sanya@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"
@@ -73,8 +73,8 @@
     "id": 8,
     "name": "Sneha",
     "role": "Discipline & Event Manager",
-    "image": "/images/team/sneha.jpg",
-    "linkedin": "#",
+    "image": "/images/team/Sneha.jpeg",
+    "linkedin": "https://linkedin.com",
     "github": "#",
     "email": "sneha@geetauniversity.edu.in",
     "department": "School of Computer Science & Engineering"

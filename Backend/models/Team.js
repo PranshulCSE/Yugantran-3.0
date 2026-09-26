@@ -7,6 +7,8 @@ const TeamSchema = new mongoose.Schema(
     department: { type: String, default: "SCSE", trim: true },
     image: { type: String, default: "" }, // URL or path
     linkedin: { type: String, default: "" },
+    github: { type: String, default: "" },
+    email: { type: String, default: "" },
     category: {
       type: String,
       enum: ["core", "subteam"],

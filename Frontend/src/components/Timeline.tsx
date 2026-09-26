@@ -120,24 +120,24 @@ export default function Timeline() {
             <span>EVENT SCHEDULE</span>
           </div>
 
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
             Festival <span className="gradient-text">Timeline</span>
           </h1>
 
-          <p className="text-slate-300 font-space text-sm sm:text-base">
+          <p className="text-slate-600 dark:text-slate-300 font-space text-sm sm:text-base">
             2 Days of Pure Innovation • October 27–28, 2026 • Geeta University, Panipat
           </p>
         </motion.div>
 
         {/* Day Toggle Selector */}
         <div className="flex justify-center">
-          <div className="p-1.5 rounded-2xl bg-slate-900/80 border border-slate-700/60 backdrop-blur-xl flex items-center gap-2 shadow-lg">
+          <div className="p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700/60 backdrop-blur-xl flex items-center gap-2 shadow-lg">
             <button
               onClick={() => setActiveDay(1)}
               className={`px-6 py-3 rounded-xl font-orbitron font-bold text-xs tracking-wider transition-all duration-300 flex items-center gap-2.5 ${
                 activeDay === 1
                   ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
-                  : "text-slate-400 hover:text-white"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               <Calendar className="w-4 h-4" />
@@ -149,7 +149,7 @@ export default function Timeline() {
               className={`px-6 py-3 rounded-xl font-orbitron font-bold text-xs tracking-wider transition-all duration-300 flex items-center gap-2.5 ${
                 activeDay === 2
                   ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-[0_0_20px_rgba(0,242,254,0.4)]"
-                  : "text-slate-400 hover:text-white"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
               <Calendar className="w-4 h-4" />
@@ -178,40 +178,40 @@ export default function Timeline() {
                   } gap-6 sm:gap-12`}
                 >
                   {/* Central Node Indicator */}
-                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[#020617] border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,242,254,0.6)] z-20">
+                  <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-slate-100 dark:bg-[#020617] border-2 border-cyan-400 flex items-center justify-center shadow-[0_0_15px_rgba(0,242,254,0.6)] z-20">
                     <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
                   </div>
 
                   {/* Content Card */}
                   <div className={`w-full sm:w-1/2 pl-12 sm:pl-0 ${isEven ? "sm:text-right" : ""}`}>
-                    <div className="glass glass-hover p-6 rounded-3xl border-cyan-500/20">
+                    <div className="glass glass-hover p-6 rounded-3xl border-cyan-500/20 shadow-lg">
                       <div
                         className={`flex flex-wrap items-center gap-2.5 mb-3 ${
                           isEven ? "sm:justify-end" : "justify-start"
                         }`}
                       >
-                        <span className="px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 font-mono-matrix text-xs font-bold flex items-center gap-1.5">
+                        <span className="px-3 py-1 rounded-full bg-cyan-100 dark:bg-cyan-500/15 border border-cyan-300 dark:border-cyan-400/30 text-cyan-800 dark:text-cyan-300 font-mono-matrix text-xs font-bold flex items-center gap-1.5">
                           <Clock className="w-3.5 h-3.5" />
                           {item.time}
                         </span>
 
-                        <span className="px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 font-space text-[10px] font-semibold tracking-wider">
+                        <span className="px-2.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-space text-[10px] font-semibold tracking-wider">
                           {item.category}
                         </span>
                       </div>
 
-                      <h3 className="font-orbitron font-bold text-base sm:text-lg text-white mb-2">
+                      <h3 className="font-orbitron font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-2">
                         {item.title}
                       </h3>
 
-                      <p className="text-slate-300 text-xs sm:text-sm font-body mb-3">{item.desc}</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body mb-3">{item.desc}</p>
 
                       <div
-                        className={`flex items-center gap-1.5 text-xs font-mono-matrix text-slate-400 ${
+                        className={`flex items-center gap-1.5 text-xs font-mono-matrix text-slate-500 dark:text-slate-400 ${
                           isEven ? "sm:justify-end" : "justify-start"
                         }`}
                       >
-                        <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+                        <MapPin className="w-3.5 h-3.5 text-cyan-500 dark:text-cyan-400" />
                         <span>{item.location}</span>
                       </div>
                     </div>

@@ -23,56 +23,53 @@ export default function CircuitSparks() {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Ambient Neon Laser Beams & Pulsing Grid Paths */}
+      {/* Ambient Neon Laser Beams & Pulsing Grid Paths (Hardware-accelerated) */}
       <svg
-        className="absolute inset-0 w-full h-full opacity-60"
+        className="absolute inset-0 w-full h-full opacity-40 dark:opacity-60"
         xmlns="http://www.w3.org/2000/svg"
+        style={{ willChange: "transform" }}
       >
         <defs>
           <linearGradient id="neon-cyan-grad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00f2fe" stopOpacity="0" />
-            <stop offset="50%" stopColor="#00f2fe" stopOpacity="0.9" />
+            <stop offset="50%" stopColor="#00f2fe" stopOpacity="0.8" />
             <stop offset="100%" stopColor="#00ff41" stopOpacity="0" />
           </linearGradient>
 
           <linearGradient id="neon-purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#38bdf8" stopOpacity="0" />
-            <stop offset="50%" stopColor="#a855f7" stopOpacity="0.85" />
+            <stop offset="50%" stopColor="#a855f7" stopOpacity="0.75" />
             <stop offset="100%" stopColor="#00f2fe" stopOpacity="0" />
           </linearGradient>
-
-          <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
 
         {/* Animated Neon Light Arc 1 */}
         <path
           d="M 50 120 Q 300 20, 600 150 T 1200 80"
           stroke="url(#neon-cyan-grad)"
-          strokeWidth="2.5"
+          strokeWidth="2"
           fill="none"
-          filter="url(#neon-glow)"
           strokeDasharray="180 600"
           className="animate-neon-laser"
-          style={{ animationDuration: "7s" }}
+          style={{
+            animationDuration: "7s",
+            filter: "drop-shadow(0 0 6px rgba(0, 242, 254, 0.6))",
+          }}
         />
 
         {/* Animated Neon Light Arc 2 */}
         <path
           d="M 1200 500 Q 800 650, 400 480 T 50 620"
           stroke="url(#neon-purple-grad)"
-          strokeWidth="2.5"
+          strokeWidth="2"
           fill="none"
-          filter="url(#neon-glow)"
           strokeDasharray="220 700"
           className="animate-neon-laser"
-          style={{ animationDuration: "9s", animationDelay: "2s" }}
+          style={{
+            animationDuration: "9s",
+            animationDelay: "2s",
+            filter: "drop-shadow(0 0 6px rgba(168, 85, 247, 0.6))",
+          }}
         />
 
         {/* Horizontal Laser Line Across Hero */}
@@ -84,9 +81,12 @@ export default function CircuitSparks() {
           stroke="url(#neon-cyan-grad)"
           strokeWidth="1.5"
           strokeDasharray="150 800"
-          filter="url(#neon-glow)"
           className="animate-neon-laser"
-          style={{ animationDuration: "5s", animationDelay: "1s" }}
+          style={{
+            animationDuration: "5s",
+            animationDelay: "1s",
+            filter: "drop-shadow(0 0 5px rgba(0, 242, 254, 0.5))",
+          }}
         />
 
         <line
@@ -97,9 +97,12 @@ export default function CircuitSparks() {
           stroke="url(#neon-cyan-grad)"
           strokeWidth="1.5"
           strokeDasharray="160 900"
-          filter="url(#neon-glow)"
           className="animate-neon-laser"
-          style={{ animationDuration: "6.5s", animationDelay: "3s" }}
+          style={{
+            animationDuration: "6.5s",
+            animationDelay: "3s",
+            filter: "drop-shadow(0 0 5px rgba(0, 242, 254, 0.5))",
+          }}
         />
       </svg>
 
@@ -112,24 +115,20 @@ export default function CircuitSparks() {
         >
           <motion.div
             animate={{
-              scale: [1, 1.8, 1],
-              opacity: [0.3, 0.9, 0.3],
+              scale: [1, 1.5, 1],
+              opacity: [0.3, 0.8, 0.3],
             }}
             transition={{
               repeat: Infinity,
-              duration: 3,
+              duration: 3.5,
               delay: node.delay,
               ease: "easeInOut",
             }}
-            className="w-3.5 h-3.5 rounded-full"
+            className="w-3 h-3 rounded-full"
             style={{
               background: node.color,
-              boxShadow: `0 0 15px ${node.color}, 0 0 30px ${node.color}`,
+              boxShadow: `0 0 10px ${node.color}`,
             }}
-          />
-          <div
-            className="absolute inset-0 rounded-full animate-ping opacity-40"
-            style={{ background: node.color }}
           />
         </div>
       ))}

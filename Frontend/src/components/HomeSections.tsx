@@ -78,11 +78,11 @@ export function WhyYugantran() {
             <span>THE EXPERIENCE</span>
           </div>
 
-          <h2 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
             Why <span className="gradient-text">YUGANTRAN 3.0</span>?
           </h2>
 
-          <p className="text-slate-300 text-sm sm:text-base font-body">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body">
             Not just another college festival — an engineered ecosystem built to test your logic,
             creativity, speed, and engineering stamina under competitive pressure.
           </p>
@@ -96,7 +96,7 @@ export function WhyYugantran() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: idx * 0.08, duration: 0.35 }}
-              className="glass glass-hover p-6 rounded-3xl border-cyan-500/20 flex flex-col justify-between group"
+              className="glass glass-hover p-6 rounded-3xl border-cyan-500/20 flex flex-col justify-between group shadow-lg"
             >
               <div>
                 <div className="flex items-center justify-between mb-5">
@@ -122,18 +122,18 @@ export function WhyYugantran() {
                   </span>
                 </div>
 
-                <h3 className="font-orbitron font-black text-xl text-white mb-1 group-hover:text-cyan-300 transition-colors">
+                <h3 className="font-orbitron font-black text-xl text-slate-900 dark:text-white mb-1 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-xs font-space font-semibold mb-3" style={{ color: item.color }}>
                   {item.subtitle}
                 </p>
-                <p className="text-slate-300 text-xs sm:text-sm font-body leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed">
                   {item.desc}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-800/80 flex items-center gap-1.5 text-[11px] font-mono-matrix text-slate-400 group-hover:text-cyan-300 transition-colors">
+              <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center gap-1.5 text-[11px] font-mono-matrix text-slate-500 dark:text-slate-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
                 <span>CORE PILLAR</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
@@ -172,12 +172,12 @@ export function AboutTeaser() {
                 <Zap className="w-3.5 h-3.5 text-cyan-400" />
                 <span>ABOUT THE FEST</span>
               </div>
-              <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-white">
+              <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
                 Where <span className="gradient-text">Innovation</span> Meets Extreme Competition
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base font-body leading-relaxed">
-                Organized by the <strong className="text-cyan-300 font-semibold">School of Computer Science & Engineering (SCSE)</strong> at{" "}
-                <strong className="text-white font-semibold">Geeta University</strong>, Panipat — YUGANTRAN 3.0 pushes beyond conventional college tech fests into industry-grade battlegrounds across AI, Cybersecurity, Software Engineering, IoT, Startups and Gaming.
+              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body leading-relaxed">
+                Organized by the <strong className="text-cyan-700 dark:text-cyan-300 font-semibold">School of Computer Science & Engineering (SCSE)</strong> at{" "}
+                <strong className="text-slate-900 dark:text-white font-semibold">Geeta University</strong>, Panipat — YUGANTRAN 3.0 pushes beyond conventional college tech fests into industry-grade battlegrounds across AI, Cybersecurity, Software Engineering, IoT, Startups and Gaming.
               </p>
               <div className="pt-2">
                 <button
@@ -194,14 +194,14 @@ export function AboutTeaser() {
               {highlights.map((h, i) => (
                 <div
                   key={i}
-                  className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800 flex items-center gap-4 text-left"
+                  className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 flex items-center gap-4 text-left"
                 >
                   <div className="w-11 h-11 rounded-xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center flex-shrink-0">
-                    <h.icon className="w-5 h-5 text-cyan-400" />
+                    <h.icon className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
                   </div>
                   <div>
-                    <div className="font-orbitron font-bold text-sm text-white">{h.label}</div>
-                    <div className="text-xs text-slate-400 font-space mt-0.5">{h.sub}</div>
+                    <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">{h.label}</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 font-space mt-0.5">{h.sub}</div>
                   </div>
                 </div>
               ))}
@@ -240,7 +240,7 @@ export function FeaturedEvents() {
               <Zap className="w-3.5 h-3.5 text-cyan-400" />
               <span>FEATURED BATTLES</span>
             </div>
-            <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-white">
+            <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
               A Glimpse of the <span className="gradient-text">Arena</span>
             </h2>
           </div>
@@ -265,7 +265,7 @@ export function FeaturedEvents() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ delay: Math.min(i * 0.06, 0.24), duration: 0.3 }}
                 onClick={() => navigate(`/events/${event.slug || ""}`)}
-                className="glass glass-hover rounded-3xl p-6 cursor-pointer group flex flex-col justify-between border-cyan-500/20"
+                className="glass glass-hover rounded-3xl p-6 cursor-pointer group flex flex-col justify-between border-cyan-500/20 shadow-lg"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4">
@@ -288,24 +288,24 @@ export function FeaturedEvents() {
                     </span>
                   </div>
 
-                  <h3 className="font-orbitron font-bold text-base sm:text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors line-clamp-1">
+                  <h3 className="font-orbitron font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-2 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors line-clamp-1">
                     {event.name}
                   </h3>
 
-                  <p className="text-slate-400 text-xs font-body leading-relaxed line-clamp-2 mb-4">
+                  <p className="text-slate-600 dark:text-slate-400 text-xs font-body leading-relaxed line-clamp-2 mb-4">
                     {event.description}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center justify-between">
                   <div>
-                    <div className="text-xs font-orbitron font-bold text-amber-400">
+                    <div className="text-xs font-orbitron font-bold text-amber-500 dark:text-amber-400">
                       {event.prize}
                     </div>
-                    <div className="text-[11px] font-space text-slate-400">Entry: ₹{event.fee}</div>
+                    <div className="text-[11px] font-space text-slate-500 dark:text-slate-400">Entry: ₹{event.fee}</div>
                   </div>
 
-                  <span className="text-xs font-space font-medium text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                  <span className="text-xs font-space font-medium text-cyan-600 dark:text-cyan-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
                     Details <ArrowRight className="w-3 h-3" />
                   </span>
                 </div>
@@ -344,7 +344,7 @@ export function TimelinePreview() {
               <Calendar className="w-3.5 h-3.5 text-cyan-400" />
               <span>OCTOBER 27–28, 2026</span>
             </div>
-            <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-white">
+            <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
               Schedule <span className="gradient-text">Snapshot</span>
             </h2>
           </div>
@@ -365,19 +365,19 @@ export function TimelinePreview() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: idx * 0.06, duration: 0.3 }}
-              className="glass p-5 rounded-2xl border-cyan-500/20 relative"
+              className="glass p-5 rounded-2xl border-cyan-500/20 relative shadow-md"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-400/30 text-[10px] font-orbitron font-bold text-cyan-300">
+                <span className="px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-400/30 text-[10px] font-orbitron font-bold text-cyan-900 dark:text-cyan-300">
                   {item.day}
                 </span>
-                <span className="text-xs font-mono-matrix text-slate-400 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-cyan-400" />
+                <span className="text-xs font-mono-matrix text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-cyan-500 dark:text-cyan-400" />
                   {item.time}
                 </span>
               </div>
-              <h4 className="font-orbitron font-bold text-sm text-white mb-2">{item.title}</h4>
-              <span className="text-[10px] font-space text-slate-400 px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
+              <h4 className="font-orbitron font-bold text-sm text-slate-900 dark:text-white mb-2">{item.title}</h4>
+              <span className="text-[10px] font-space text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                 {item.track}
               </span>
             </motion.div>
@@ -416,13 +416,13 @@ export function PrizePoolBanner() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 text-center md:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center flex-shrink-0 shadow-[0_0_25px_rgba(251,191,36,0.3)]">
-                <Trophy className="w-8 h-8 text-amber-400" />
+                <Trophy className="w-8 h-8 text-amber-500 dark:text-amber-400" />
               </div>
               <div>
-                <div className="font-orbitron font-black text-2xl sm:text-3xl text-white">
-                  {prizePool} <span className="text-amber-400">CASH BOUNTIES</span>
+                <div className="font-orbitron font-black text-2xl sm:text-3xl text-slate-900 dark:text-white">
+                  {prizePool} <span className="text-amber-500 dark:text-amber-400">CASH BOUNTIES</span>
                 </div>
-                <div className="text-xs sm:text-sm font-space text-slate-300 mt-1">
+                <div className="text-xs sm:text-sm font-space text-slate-600 dark:text-slate-300 mt-1">
                   Official Winner Trophies + Merit & Participation Certificates for all registered students
                 </div>
               </div>
@@ -431,7 +431,7 @@ export function PrizePoolBanner() {
               onClick={() => navigate("/awards")}
               className="btn-outline text-xs py-3 px-6 whitespace-nowrap flex-shrink-0"
             >
-              <Award className="w-4 h-4 text-amber-400" />
+              <Award className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span>REWARDS & RECOGNITION</span>
             </button>
           </div>
@@ -454,17 +454,17 @@ export function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.4 }}
-          className="glass p-8 sm:p-12 rounded-3xl border-cyan-400/30 shadow-[0_0_50px_rgba(0,242,254,0.15)]"
+          className="glass p-8 sm:p-12 rounded-3xl border-cyan-400/30 shadow-2xl"
         >
-          <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center mx-auto mb-6 text-cyan-300">
+          <div className="w-14 h-14 rounded-2xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center mx-auto mb-6 text-cyan-600 dark:text-cyan-300">
             <Bot className="w-7 h-7" />
           </div>
 
-          <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4">
+          <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4">
             Ready to <span className="gradient-text">Transform</span> the Game?
           </h2>
 
-          <p className="text-slate-300 text-sm sm:text-base font-body mb-8 max-w-xl mx-auto">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body mb-8 max-w-xl mx-auto">
             Limited slots per battle. Assemble your squad, sharpen your tools, and register before spots run out.
           </p>
 

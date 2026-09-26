@@ -58,11 +58,11 @@ export default function Awards() {
             <span>HONORS & RECOGNITION</span>
           </div>
 
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
             Winners & <span className="gradient-text">Certificates</span>
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg font-body">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base md:text-lg font-body">
             Rewarding technical excellence across all 10 competitions with cash bounties, official winner trophies,
             and accredited certificates for all participants.
           </p>
@@ -77,13 +77,13 @@ export default function Awards() {
         >
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
           <div className="max-w-2xl mx-auto space-y-3 relative z-10">
-            <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center mx-auto text-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.3)]">
+            <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center mx-auto text-amber-500 dark:text-amber-400 shadow-[0_0_25px_rgba(251,191,36,0.3)]">
               <Trophy className="w-8 h-8" />
             </div>
-            <div className="font-orbitron font-black text-3xl sm:text-5xl text-white">
-              {totalPrizePool} <span className="text-amber-400">TOTAL PRIZE POOL</span>
+            <div className="font-orbitron font-black text-3xl sm:text-5xl text-slate-900 dark:text-white">
+              {totalPrizePool} <span className="text-amber-500 dark:text-amber-400">TOTAL PRIZE POOL</span>
             </div>
-            <p className="text-slate-300 text-xs sm:text-sm font-space">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-space">
               Direct cash prizes + Official Winner Trophies + Merit & Participation Certificates for all registered students.
             </p>
           </div>
@@ -125,16 +125,16 @@ export default function Awards() {
                     {tier.subtitle.toUpperCase()}
                   </span>
 
-                  <h3 className="font-orbitron font-bold text-lg sm:text-xl text-white mb-2 group-hover:text-cyan-300 transition-colors">
+                  <h3 className="font-orbitron font-bold text-lg sm:text-xl text-slate-900 dark:text-white mb-2 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
                     {tier.title}
                   </h3>
 
-                  <p className="text-slate-300 text-xs sm:text-sm font-body leading-relaxed mb-6">
+                  <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed mb-6">
                     {tier.desc}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-800/80">
+                <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80">
                   <span className="text-xs font-orbitron font-bold" style={{ color: tier.color }}>
                     {tier.highlight}
                   </span>
@@ -147,14 +147,14 @@ export default function Awards() {
         {/* Certificate Assurance */}
         <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/20">
           <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center flex-shrink-0 text-cyan-400">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center flex-shrink-0 text-cyan-600 dark:text-cyan-400">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-orbitron font-bold text-sm sm:text-base text-white mb-1">
+              <h4 className="font-orbitron font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-1">
                 Verified Accreditation & Certificates
               </h4>
-              <p className="text-slate-300 text-xs sm:text-sm font-body leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed">
                 Every student registered for any of the 10 competitions receives an accredited Certificate of Participation
                 endorsed by the School of Computer Science & Engineering, Geeta University.
               </p>
