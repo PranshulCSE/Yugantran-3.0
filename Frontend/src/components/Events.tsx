@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect, useRef, useState, useMemo } from "react";
+import React, { forwardRef, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { publicApi } from "../lib/api";
 import {
@@ -65,13 +65,13 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
               >
                 {cfg.label.toUpperCase()}
               </span>
-              <h2 className="font-orbitron font-bold text-2xl sm:text-3xl text-white">
+              <h2 className="font-orbitron font-bold text-2xl sm:text-3xl text-slate-900 dark:text-white">
                 {event.name}
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -79,38 +79,38 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
 
           {/* Key Metrics */}
           <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 text-center">
-              <div className="font-orbitron font-black text-lg sm:text-xl text-emerald-400">
+            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+              <div className="font-orbitron font-black text-lg sm:text-xl text-emerald-600 dark:text-emerald-400">
                 ₹{event.fee}
               </div>
-              <div className="font-space text-xs text-slate-400 mt-0.5">Registration Fee</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Registration Fee</div>
             </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 text-center">
-              <div className="font-orbitron font-black text-lg sm:text-xl text-amber-400">
+            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+              <div className="font-orbitron font-black text-lg sm:text-xl text-amber-600 dark:text-amber-400">
                 {event.prize}
               </div>
-              <div className="font-space text-xs text-slate-400 mt-0.5">Bounty Prize</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Bounty Prize</div>
             </div>
 
-            <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 text-center">
-              <div className="font-orbitron font-black text-lg sm:text-xl text-cyan-400">
+            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+              <div className="font-orbitron font-black text-lg sm:text-xl text-cyan-600 dark:text-cyan-400">
                 {event.teamType === "individual"
                   ? "Solo"
                   : event.minTeam === event.maxTeam
                   ? `${event.minTeam} Players`
                   : `${event.minTeam}–${event.maxTeam} P`}
               </div>
-              <div className="font-space text-xs text-slate-400 mt-0.5">Team Size</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Team Size</div>
             </div>
           </div>
 
           {/* Description */}
           <div className="space-y-3 mb-6">
-            <h4 className="font-orbitron font-bold text-xs text-cyan-400 tracking-wider">
+            <h4 className="font-orbitron font-bold text-xs text-cyan-600 dark:text-cyan-400 tracking-wider">
               ABOUT THE BATTLE
             </h4>
-            <p className="text-slate-300 text-sm sm:text-base font-body leading-relaxed">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body leading-relaxed">
               {event.longDescription || event.description}
             </p>
           </div>
@@ -118,7 +118,7 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
           {/* Rounds */}
           {event.rounds && event.rounds.length > 0 && (
             <div className="mb-6 space-y-3">
-              <h4 className="font-orbitron font-bold text-xs text-cyan-400 tracking-wider flex items-center gap-2">
+              <h4 className="font-orbitron font-bold text-xs text-cyan-600 dark:text-cyan-400 tracking-wider flex items-center gap-2">
                 <Layers className="w-4 h-4" />
                 ROUND-BY-ROUND FORMAT
               </h4>
@@ -126,16 +126,16 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
                 {event.rounds.map((round: any, i: number) => (
                   <div
                     key={i}
-                    className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 flex gap-3.5 items-start"
+                    className="p-3.5 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex gap-3.5 items-start"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 font-orbitron font-bold text-xs flex items-center justify-center flex-shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-700 dark:text-cyan-300 font-orbitron font-bold text-xs flex items-center justify-center flex-shrink-0">
                       {i + 1}
                     </div>
                     <div>
-                      <div className="font-orbitron font-bold text-xs sm:text-sm text-white mb-0.5">
+                      <div className="font-orbitron font-bold text-xs sm:text-sm text-slate-900 dark:text-white mb-0.5">
                         {round.name}
                       </div>
-                      <p className="text-slate-300 text-xs font-body leading-relaxed">
+                      <p className="text-slate-600 dark:text-slate-300 text-xs font-body leading-relaxed">
                         {round.description}
                       </p>
                     </div>
@@ -176,99 +176,102 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
   );
 }
 
-function EventCard({
-  event,
-  onClick,
-  onRegister,
-}: {
+interface EventCardProps {
   event: any;
   onClick: () => void;
   onRegister: () => void;
-}) {
-  const Icon = ICON_MAP[event.icon] || Code;
-  const cfg = CATEGORY_CONFIG[event.category] || {
-    color: "#00f2fe",
-    badge: "badge-ai",
-    label: event.category,
-  };
+}
 
-  return (
-    <motion.div
-      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-      whileHover={{ y: -6, scale: 1.015 }}
-      transition={{ duration: 0.25 }}
-      className="glass glass-hover rounded-3xl p-6 flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
-    >
-      <div>
-        {/* Card Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
-            style={{ background: `${cfg.color}15`, border: `1px solid ${cfg.color}35` }}
-          >
-            <Icon className="w-6 h-6" style={{ color: cfg.color }} />
+const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
+  ({ event, onClick, onRegister }, ref) => {
+    const Icon = ICON_MAP[event.icon] || Code;
+    const cfg = CATEGORY_CONFIG[event.category] || {
+      color: "#00f2fe",
+      badge: "badge-ai",
+      label: event.category,
+    };
+
+    return (
+      <motion.div
+        ref={ref}
+        variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+        whileHover={{ y: -6, scale: 1.015 }}
+        transition={{ duration: 0.25 }}
+        className="glass glass-hover rounded-3xl p-6 flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
+      >
+        <div>
+          {/* Card Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
+              style={{ background: `${cfg.color}15`, border: `1px solid ${cfg.color}35` }}
+            >
+              <Icon className="w-6 h-6" style={{ color: cfg.color }} />
+            </div>
+
+            <span
+              className="text-[10px] font-orbitron font-bold px-2.5 py-0.5 rounded-full border"
+              style={{
+                color: cfg.color,
+                borderColor: `${cfg.color}35`,
+                background: `${cfg.color}10`,
+              }}
+            >
+              {cfg.label}
+            </span>
           </div>
 
-          <span
-            className="text-[10px] font-orbitron font-bold px-2.5 py-0.5 rounded-full border"
-            style={{
-              color: cfg.color,
-              borderColor: `${cfg.color}35`,
-              background: `${cfg.color}10`,
-            }}
-          >
-            {cfg.label}
-          </span>
-        </div>
+          {/* Title & Short Description */}
+          <h3 className="font-orbitron font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+            {event.name}
+          </h3>
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed mb-4 line-clamp-2">
+            {event.description}
+          </p>
 
-        {/* Title & Short Description */}
-        <h3 className="font-orbitron font-bold text-lg text-white mb-2 group-hover:text-cyan-300 transition-colors">
-          {event.name}
-        </h3>
-        <p className="text-slate-300 text-xs sm:text-sm font-body leading-relaxed mb-4 line-clamp-2">
-          {event.description}
-        </p>
-
-        {/* Format details pill */}
-        <div className="flex items-center gap-2 mb-4 text-[11px] font-space text-slate-400">
-          <Users className="w-3.5 h-3.5 text-cyan-400" />
-          <span>
-            {event.teamType === "individual"
-              ? "Solo Battle"
-              : event.minTeam === event.maxTeam
-              ? `Team (${event.minTeam} Members)`
-              : `Team (${event.minTeam}–${event.maxTeam} Members)`}
-          </span>
-        </div>
-      </div>
-
-      {/* Footer Info & Actions */}
-      <div className="pt-4 border-t border-slate-800/80">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="text-xs font-orbitron font-black text-amber-400">{event.prize}</div>
-            <div className="text-[11px] font-space text-slate-400">Fee: ₹{event.fee}</div>
+          {/* Format details pill */}
+          <div className="flex items-center gap-2 mb-4 text-[11px] font-space text-slate-500 dark:text-slate-400">
+            <Users className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
+            <span>
+              {event.teamType === "individual"
+                ? "Solo Battle"
+                : event.minTeam === event.maxTeam
+                ? `Team (${event.minTeam} Members)`
+                : `Team (${event.minTeam}–${event.maxTeam} Members)`}
+            </span>
           </div>
+        </div>
+
+        {/* Footer Info & Actions */}
+        <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-xs font-orbitron font-black text-amber-600 dark:text-amber-400">{event.prize}</div>
+              <div className="text-[11px] font-space text-slate-500 dark:text-slate-400">Fee: ₹{event.fee}</div>
+            </div>
+            <button
+              onClick={onClick}
+              className="text-xs font-space font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-white transition-colors inline-flex items-center gap-1"
+            >
+              <span>View Details</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
           <button
-            onClick={onClick}
-            className="text-xs font-space font-semibold text-cyan-400 hover:text-white transition-colors inline-flex items-center gap-1"
+            onClick={onRegister}
+            className="btn-primary w-full py-2.5 text-xs justify-center shadow-cyan-500/20 font-bold"
           >
-            <span>View Details</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <span>REGISTER NOW</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
+      </motion.div>
+    );
+  }
+);
 
-        <button
-          onClick={onRegister}
-          className="btn-primary w-full py-2.5 text-xs justify-center shadow-cyan-500/20"
-        >
-          <span>REGISTER NOW</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-    </motion.div>
-  );
-}
+EventCard.displayName = "EventCard";
 
 export default function Events() {
   const ref = useRef(null);
@@ -315,10 +318,10 @@ export default function Events() {
             <Zap className="w-3.5 h-3.5 text-cyan-400" />
             <span>THE ARENA</span>
           </div>
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
             Battle Catalog & <span className="gradient-text">Competitions</span>
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base font-body">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body">
             10 high-octane technical competitions across AI, Cybersecurity, Software Engineering, IoT,
             Startups, and Esports.
           </p>
@@ -339,7 +342,7 @@ export default function Events() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               >
                 Clear ×
               </button>
@@ -358,8 +361,8 @@ export default function Events() {
                   onClick={() => setActiveFilter(cat)}
                   className={`px-4 py-2 rounded-full font-mono-matrix text-xs tracking-wider border transition-all duration-200 ${
                     isSel
-                      ? "bg-cyan-950/80 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,242,254,0.3)] font-bold"
-                      : "border-slate-800 bg-slate-900/60 text-slate-400 hover:border-slate-700 hover:text-slate-200"
+                      ? "bg-cyan-600 dark:bg-cyan-950/80 border-cyan-500 dark:border-cyan-400 text-white dark:text-cyan-300 shadow-[0_0_15px_rgba(0,242,254,0.3)] font-bold"
+                      : "border-slate-300 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 hover:border-slate-400 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-slate-200 shadow-sm"
                   }`}
                 >
                   {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}

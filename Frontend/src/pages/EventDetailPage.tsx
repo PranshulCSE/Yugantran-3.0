@@ -81,48 +81,48 @@ export default function EventDetailPage() {
         {/* Main Event Header Card */}
         <div className="glass p-6 sm:p-10 rounded-3xl border-cyan-500/30 shadow-2xl relative overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <span className="px-3.5 py-1 rounded-full text-xs font-orbitron font-bold bg-cyan-950/80 border border-cyan-400/40 text-cyan-300">
+            <span className="px-3.5 py-1 rounded-full text-xs font-orbitron font-bold bg-cyan-100 dark:bg-cyan-950/80 border border-cyan-300 dark:border-cyan-400/40 text-cyan-800 dark:text-cyan-300">
               {event.category?.toUpperCase()} TRACK
             </span>
 
-            <span className="text-xs font-mono-matrix text-slate-400">
+            <span className="text-xs font-mono-matrix text-slate-500 dark:text-slate-400">
               EVENT ID: #{event.slug?.toUpperCase()}
             </span>
           </div>
 
-          <h1 className="font-orbitron font-black text-3xl sm:text-5xl text-white mb-4">
+          <h1 className="font-orbitron font-black text-3xl sm:text-5xl text-slate-900 dark:text-white mb-4">
             {event.name}
           </h1>
 
-          <p className="text-slate-300 text-base sm:text-lg font-body leading-relaxed mb-8">
+          <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-body leading-relaxed mb-8">
             {event.longDescription || event.description}
           </p>
 
           {/* Key Metric Specs */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-slate-800">
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl sm:text-2xl text-emerald-400">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
+            <div className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-center">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-emerald-600 dark:text-emerald-400">
                 ₹{event.fee}
               </div>
-              <div className="text-xs font-space text-slate-400 mt-0.5">Registration Fee</div>
+              <div className="text-xs font-space text-slate-500 dark:text-slate-400 mt-0.5">Registration Fee</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl sm:text-2xl text-amber-400">
+            <div className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-center">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-amber-600 dark:text-amber-400">
                 {event.prize}
               </div>
-              <div className="text-xs font-space text-slate-400 mt-0.5">Bounty Prize</div>
+              <div className="text-xs font-space text-slate-500 dark:text-slate-400 mt-0.5">Bounty Prize</div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 text-center">
-              <div className="font-orbitron font-black text-xl sm:text-2xl text-cyan-400">
+            <div className="p-4 rounded-2xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-center">
+              <div className="font-orbitron font-black text-xl sm:text-2xl text-cyan-700 dark:text-cyan-400">
                 {event.teamType === "individual"
                   ? "Solo"
                   : event.minTeam === event.maxTeam
                   ? `${event.minTeam} Players`
                   : `${event.minTeam}–${event.maxTeam} P`}
               </div>
-              <div className="text-xs font-space text-slate-400 mt-0.5">Team Size</div>
+              <div className="text-xs font-space text-slate-500 dark:text-slate-400 mt-0.5">Team Size</div>
             </div>
           </div>
         </div>
@@ -130,8 +130,8 @@ export default function EventDetailPage() {
         {/* Rounds Breakdown */}
         {event.rounds && event.rounds.length > 0 && (
           <div className="glass p-6 sm:p-10 rounded-3xl border-cyan-500/20 shadow-xl">
-            <h3 className="font-orbitron font-bold text-xl text-white mb-6 flex items-center gap-2.5">
-              <Layers className="w-5 h-5 text-cyan-400" />
+            <h3 className="font-orbitron font-bold text-xl text-slate-900 dark:text-white mb-6 flex items-center gap-2.5">
+              <Layers className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
               <span>ROUND-BY-ROUND FORMAT ({event.rounds.length} ROUNDS)</span>
             </h3>
 
@@ -139,16 +139,16 @@ export default function EventDetailPage() {
               {event.rounds.map((round: any, idx: number) => (
                 <div
                   key={idx}
-                  className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex gap-4 items-start"
+                  className="p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex gap-4 items-start"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 font-orbitron font-black text-sm flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-cyan-500/15 border border-cyan-400/40 text-cyan-700 dark:text-cyan-300 font-orbitron font-black text-sm flex items-center justify-center flex-shrink-0">
                     {idx + 1}
                   </div>
                   <div>
-                    <h4 className="font-orbitron font-bold text-base text-white mb-1">
+                    <h4 className="font-orbitron font-bold text-base text-slate-900 dark:text-white mb-1">
                       {round.name}
                     </h4>
-                    <p className="text-slate-300 text-sm font-body leading-relaxed">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm font-body leading-relaxed">
                       {round.description}
                     </p>
                   </div>
@@ -161,17 +161,17 @@ export default function EventDetailPage() {
         {/* Venue & Date Info */}
         <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/20 grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex items-center gap-3">
-            <Calendar className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+            <Calendar className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
             <div>
-              <div className="text-xs font-space text-slate-400">Date & Schedule</div>
-              <div className="font-orbitron font-bold text-sm text-white">27–28 October 2026</div>
+              <div className="text-xs font-space text-slate-500 dark:text-slate-400">Date & Schedule</div>
+              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">27–28 October 2026</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <MapPin className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+            <MapPin className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
             <div>
-              <div className="text-xs font-space text-slate-400">Venue Location</div>
-              <div className="font-orbitron font-bold text-sm text-white">Geeta University Campus</div>
+              <div className="text-xs font-space text-slate-500 dark:text-slate-400">Venue Location</div>
+              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">Geeta University Campus</div>
             </div>
           </div>
         </div>
@@ -179,8 +179,8 @@ export default function EventDetailPage() {
         {/* Action Bar */}
         <div className="glass p-6 rounded-3xl border-cyan-400/40 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <div className="font-orbitron font-bold text-lg text-white">Ready To Compete?</div>
-            <div className="text-xs font-space text-slate-400">
+            <div className="font-orbitron font-bold text-lg text-slate-900 dark:text-white">Ready To Compete?</div>
+            <div className="text-xs font-space text-slate-500 dark:text-slate-400">
               Instant spot booking with UPI payment verification
             </div>
           </div>

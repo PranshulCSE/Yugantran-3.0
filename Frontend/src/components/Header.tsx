@@ -34,9 +34,13 @@ export default function Header() {
       animate={{ y: 0 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 dark:bg-[#020617]/92 backdrop-blur-2xl border-b border-slate-200/80 dark:border-cyan-400/30 shadow-md dark:shadow-[0_10px_35px_rgba(0,242,254,0.12)] py-2.5"
-          : "bg-white/70 dark:bg-[#020617]/60 backdrop-blur-xl border-b border-slate-200/60 dark:border-cyan-500/15 py-3.5"
+        isDark
+          ? scrolled
+            ? "bg-[#020617]/95 backdrop-blur-2xl border-b border-cyan-400/30 shadow-[0_10px_35px_rgba(0,242,254,0.12)] py-2.5"
+            : "bg-[#020617]/70 backdrop-blur-xl border-b border-cyan-500/15 py-3.5"
+          : scrolled
+            ? "bg-white/95 backdrop-blur-2xl border-b border-slate-200/90 shadow-md py-2.5"
+            : "bg-white/80 backdrop-blur-xl border-b border-slate-200/60 py-3.5"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,7 +167,9 @@ export default function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="md:hidden bg-white/98 dark:bg-[#020617]/98 backdrop-blur-2xl border-t border-slate-200 dark:border-cyan-500/25 overflow-hidden shadow-2xl"
+            className={`md:hidden backdrop-blur-2xl border-t overflow-hidden shadow-2xl ${
+              isDark ? "bg-[#020617]/98 border-cyan-500/25" : "bg-white/98 border-slate-200"
+            }`}
           >
             <div className="container mx-auto px-4 py-5 space-y-2">
               {NAV_ROUTES.map((item) => (

@@ -17,6 +17,41 @@ const router = express.Router();
 
 // ─── PUBLIC ─────────────────────────────────────────
 
+// GET /api/registrations/receipt/:id — Stream receipt image directly from DB/disk
+router.get("/receipt/:id", async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg) return res.status(404).json({ error: "Registration not found." });
+
+    // 1. If stored in DB as base64
+    if (reg.paymentReceiptData) {
+      const buffer = Buffer.from(reg.paymentReceiptData, "base64");
+      const mime = reg.paymentReceiptMimeType || "image/jpeg";
+      res.setHeader("Content-Type", mime);
+      res.setHeader("Cache-Control", "public, max-age=86400");
+      return res.send(buffer);
+    }
+
+    // 2. If drive link exists
+    if (reg.paymentReceiptUrl && reg.paymentReceiptUrl.startsWith("http")) {
+      return res.redirect(reg.paymentReceiptUrl);
+    }
+
+    // 3. Check local uploads dir
+    if (reg.paymentReceiptUrl) {
+      const filename = path.basename(reg.paymentReceiptUrl);
+      const filePath = path.join(uploadsDir, filename);
+      if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+      }
+    }
+
+    res.status(404).json({ error: "Receipt image not available." });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load receipt image." });
+  }
+});
+
 // POST /api/register — Submit registration
 router.post("/", upload.single("paymentReceipt"), async (req, res) => {
   try {
@@ -51,13 +86,14 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
     const uniqueLocalName = `${Date.now()}-${cleanBaseName}${ext}`;
     const filename = `${cleanBaseName}${ext}`;
 
-    // Respond immediately to user for best UX
-    res.status(200).json({ message: "Registration received! Confirmation email will be sent shortly." });
+    // Base64 buffer for guaranteed database persistence (works on Vercel serverless & local)
+    const base64Data = req.file.buffer.toString("base64");
+    const mimeType = req.file.mimetype || "image/jpeg";
 
-    // Save locally first so receipt is NEVER lost
     let paymentReceiptUrl = "";
     let paymentReceiptFileId = "";
 
+    // Save locally if disk is writable
     try {
       if (!fs.existsSync(uploadsDir)) {
         fs.mkdirSync(uploadsDir, { recursive: true });
@@ -69,7 +105,7 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
       const host = req.get("host") || `localhost:${process.env.PORT || 5005}`;
       paymentReceiptUrl = `${protocol}://${host}/uploads/${uniqueLocalName}`;
     } catch (saveErr) {
-      console.error("⚠️ Local file save warning:", saveErr.message);
+      console.warn("⚠️ Local file write skipped:", saveErr.message);
     }
 
     // Upload to Google Drive (if configured)
@@ -81,11 +117,11 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
           paymentReceiptFileId = driveResult.fileId;
         }
       } catch (driveErr) {
-        console.warn("⚠️ Google Drive upload skipped/failed (using local receipt URL):", driveErr.message);
+        console.warn("⚠️ Google Drive upload failed:", driveErr.message);
       }
     }
 
-    // Save to MongoDB
+    // Save to MongoDB with base64 embedded so receipt never 404s
     const registration = new Registration({
       name, rollNumber, program, semester, mobileNumber,
       college, email,
@@ -95,15 +131,32 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
       teamName: teamName || "",
       teamMembers: parsedMembers,
       upiId, transactionId,
-      paymentReceiptUrl,
+      paymentReceiptUrl: paymentReceiptUrl || `/api/registrations/receipt/temp`,
       paymentReceiptFileId,
+      paymentReceiptData: base64Data,
+      paymentReceiptMimeType: mimeType,
       whatsappLink: whatsappLink || "#",
     });
+
     await registration.save();
 
-    // Send confirmation email
-    await sendConfirmationEmail(email, {
+    // Set canonical receipt url pointing to DB stream
+    if (!paymentReceiptUrl || paymentReceiptUrl.includes("/uploads/")) {
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol || "http";
+      const host = req.get("host") || `localhost:${process.env.PORT || 5005}`;
+      registration.paymentReceiptUrl = `${protocol}://${host}/api/registrations/receipt/${registration._id}`;
+      await registration.save();
+    }
+
+    // Send initial confirmation email asynchronously
+    sendConfirmationEmail(email, {
       name, event: eventName, teamName, transactionId, whatsappLink,
+    }).catch((e) => console.error("Initial email error:", e.message));
+
+    // Respond immediately to user
+    res.status(200).json({
+      message: "Registration received! Confirmation email will be sent shortly.",
+      registrationId: registration._id,
     });
   } catch (err) {
     console.error("Registration error:", err);
@@ -125,6 +178,7 @@ router.get("/admin", authMiddleware, async (req, res) => {
 
     const total = await Registration.countDocuments(filter);
     const registrations = await Registration.find(filter)
+      .select("-paymentReceiptData") // omit heavy base64 from listing
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit));
@@ -149,7 +203,7 @@ router.get("/admin/stats", authMiddleware, async (req, res) => {
       { $sort: { count: -1 } },
     ]);
 
-    // Revenue estimate (sum fees from events)
+    // Revenue estimate
     const revenueData = await Registration.aggregate([
       {
         $lookup: {
@@ -170,18 +224,36 @@ router.get("/admin/stats", authMiddleware, async (req, res) => {
   }
 });
 
-// PUT /api/admin/registrations/:id — Update status
+// PUT /api/admin/registrations/:id — Update status & TRIGGER CONFIRMATION EMAIL
 router.put("/admin/:id", authMiddleware, async (req, res) => {
   try {
     const { status, adminNote } = req.body;
+    const previous = await Registration.findById(req.params.id);
+    if (!previous) return res.status(404).json({ error: "Registration not found." });
+
     const reg = await Registration.findByIdAndUpdate(
       req.params.id,
       { status, adminNote },
       { new: true }
     );
-    if (!reg) return res.status(404).json({ error: "Registration not found." });
+
+    // If admin confirmed registration, trigger official confirmation email
+    if (status === "confirmed" && previous.status !== "confirmed") {
+      console.log(`🚀 Admin approved registration for ${reg.name} (${reg.email}). Sending confirmation email...`);
+      sendConfirmationEmail(reg.email, {
+        name: reg.name,
+        event: reg.eventName,
+        teamName: reg.teamName,
+        transactionId: reg.transactionId,
+        whatsappLink: reg.whatsappLink,
+      })
+        .then((result) => console.log("✅ Approval email sent result:", result))
+        .catch((e) => console.error("❌ Approval email error:", e.message));
+    }
+
     res.json(reg);
   } catch (err) {
+    console.error("Update registration error:", err);
     res.status(500).json({ error: "Failed to update registration." });
   }
 });

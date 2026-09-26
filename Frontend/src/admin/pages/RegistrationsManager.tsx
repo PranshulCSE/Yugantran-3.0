@@ -166,9 +166,13 @@ export default function RegistrationsManager() {
                     </span>
                   </td>
                   <td>
-                    {r.paymentReceiptUrl ? (
+                    {r.paymentReceiptUrl || r._id ? (
                       <a
-                        href={r.paymentReceiptUrl}
+                        href={
+                          r.paymentReceiptUrl?.startsWith("http") && !r.paymentReceiptUrl.includes("/uploads/")
+                            ? r.paymentReceiptUrl
+                            : `${import.meta.env.VITE_BACKEND_URL || ""}/api/registrations/receipt/${r._id}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 text-xs font-space transition-colors"

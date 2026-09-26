@@ -29,8 +29,10 @@ const RegistrationSchema = new mongoose.Schema(
     // Payment Info
     upiId: { type: String, required: true },
     transactionId: { type: String, required: true },
-    paymentReceiptUrl: { type: String, default: "" }, // Google Drive link
+    paymentReceiptUrl: { type: String, default: "" }, // Google Drive / static link
     paymentReceiptFileId: { type: String, default: "" }, // Drive file ID
+    paymentReceiptData: { type: String, default: "" }, // Base64 fallback (persisted in DB)
+    paymentReceiptMimeType: { type: String, default: "" },
 
     // Links
     whatsappLink: { type: String, default: "#" },
