@@ -6,7 +6,7 @@ import {
   FALLBACK_SETTINGS,
 } from "../data/fallbackData";
 import coreTeamData from "../data/team.json";
-import subTeamData from "../data/sub.json";
+
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
@@ -63,10 +63,7 @@ export const publicApi = {
     try {
       const res = await api.get("/api/team", { params: category ? { category } : {} });
       if (Array.isArray(res.data) && res.data.length > 0) return res;
-      if (category === "subteam") return { data: subTeamData };
-      return { data: coreTeamData };
     } catch {
-      if (category === "subteam") return { data: subTeamData };
       return { data: coreTeamData };
     }
   },
