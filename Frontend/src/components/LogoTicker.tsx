@@ -23,22 +23,42 @@ export const PARTNER_LOGOS: PartnerLogo[] = [
     name: "Geeta Technical Hub",
     image: "/images/Geeta/univ-3.jpg",
   },
-  // Seamless loop duplicates
   {
-    id: "scse-2",
+    id: "iee",
+    name: "IEEE Geeta Uniersity",
+    image: "/images/Geeta/univ-4.png",
+  },
+  {
+    id: "ieedelhi",
+    name: "IEEE Delhi Branch",
+    image: "/images/Geeta/univ-5.png",
+  },
+  {
+    id: "scse",
     name: "School of Computer Science & Engineering",
     image: "/images/Geeta/univ-1.jpg",
   },
   {
-    id: "gu-2",
+    id: "gu",
     name: "Geeta University",
     image: "/images/Geeta/univ-2.png",
   },
   {
-    id: "gth-2",
+    id: "gth",
     name: "Geeta Technical Hub",
     image: "/images/Geeta/univ-3.jpg",
   },
+  {
+    id: "iee",
+    name: "IEEE Geeta Uniersity",
+    image: "/images/Geeta/univ-4.png",
+  },
+  {
+    id: "ieedelhi",
+    name: "IEEE Delhi Branch",
+    image: "/images/Geeta/univ-5.png",
+  }
+  
 ];
 
 export default function LogoTicker() {
