@@ -150,7 +150,7 @@ export function AboutTeaser() {
   const navigate = useNavigate();
   const highlights = [
     { icon: Zap, label: "6 Tech Domains", sub: "AI, Cyber, SWE, IoT & more" },
-    { icon: Users, label: "500+ Expected Hackers", sub: "National participation" },
+    { icon: Users, label: "500+ Expected Innovaters", sub: "National participation" },
     { icon: ShieldCheck, label: "10 Competitive Events", sub: "Real-world engineering challenges" },
   ];
 

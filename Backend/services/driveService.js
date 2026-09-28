@@ -21,57 +21,97 @@ const getAuthClient = () => {
  * @returns {{ fileId: string, webViewLink: string, directLink: string }}
  */
 export async function uploadToDrive(buffer, filename, mimeType) {
-  const auth = getAuthClient();
-  const drive = google.drive({ version: "v3", auth });
+  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID || "";
 
-  const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+  // 1. Primary Method: Google Apps Script Webhook (Works with personal 15GB Gmail, 0 MB quota bypass)
+  const webhookUrl = process.env.GOOGLE_DRIVE_WEBHOOK_URL;
+  if (webhookUrl && webhookUrl.startsWith("http")) {
+    try {
+      const base64 = buffer.toString("base64");
+      const res = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify({
+          base64,
+          filename,
+          mimeType,
+          folderId,
+        }),
+        redirect: "follow",
+      });
 
-  // Convert buffer to readable stream
-  const stream = new Readable();
-  stream.push(buffer);
-  stream.push(null);
-
-  const response = await drive.files.create({
-    requestBody: {
-      name: filename,
-      parents: folderId ? [folderId] : [],
-    },
-    media: {
-      mimeType,
-      body: stream,
-    },
-    fields: "id, webViewLink, webContentLink",
-    supportsAllDrives: true,
-  });
-
-  const fileId = response.data.id;
-
-  // Make file publicly viewable (so admins can click link)
-  try {
-    await drive.permissions.create({
-      fileId,
-      supportsAllDrives: true,
-      requestBody: {
-        role: "reader",
-        type: "anyone",
-      },
-    });
-  } catch (permErr) {
-    console.warn("⚠️ Drive permission warning:", permErr.message);
+      const data = await res.json();
+      if (data && data.success) {
+        console.log(`✅ [Google Drive Webhook] File uploaded successfully: ${filename} (ID: ${data.fileId})`);
+        return {
+          fileId: data.fileId,
+          webViewLink: data.webViewLink,
+          directLink: data.directLink || `https://drive.google.com/uc?export=view&id=${data.fileId}`,
+        };
+      } else {
+        throw new Error(data?.error || "Apps Script returned unsuccessful status");
+      }
+    } catch (webhookErr) {
+      console.warn("⚠️ Google Apps Script Webhook upload failed:", webhookErr.message);
+      // Fall through to try Service Account or other fallbacks
+    }
   }
 
-  // Get updated link
-  const file = await drive.files.get({
-    fileId,
-    supportsAllDrives: true,
-    fields: "id, webViewLink, webContentLink",
-  });
+  // 2. Secondary Method: Google Service Account (for Workspace Shared Drives)
+  if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
+    const auth = getAuthClient();
+    const drive = google.drive({ version: "v3", auth });
 
-  return {
-    fileId: file.data.id,
-    webViewLink: file.data.webViewLink || `https://drive.google.com/file/d/${file.data.id}/view`,
-    directLink: `https://drive.google.com/uc?export=view&id=${file.data.id}`,
-  };
+    // Convert buffer to readable stream
+    const stream = new Readable();
+    stream.push(buffer);
+    stream.push(null);
+
+    const response = await drive.files.create({
+      requestBody: {
+        name: filename,
+        parents: folderId ? [folderId] : [],
+      },
+      media: {
+        mimeType,
+        body: stream,
+      },
+      fields: "id, webViewLink, webContentLink",
+      supportsAllDrives: true,
+    });
+
+    const fileId = response.data.id;
+
+    // Make file publicly viewable
+    try {
+      await drive.permissions.create({
+        fileId,
+        supportsAllDrives: true,
+        requestBody: {
+          role: "reader",
+          type: "anyone",
+        },
+      });
+    } catch (permErr) {
+      console.warn("⚠️ Drive permission warning:", permErr.message);
+    }
+
+    const file = await drive.files.get({
+      fileId,
+      supportsAllDrives: true,
+      fields: "id, webViewLink, webContentLink",
+    });
+
+    return {
+      fileId: file.data.id,
+      webViewLink: file.data.webViewLink || `https://drive.google.com/file/d/${file.data.id}/view`,
+      directLink: `https://drive.google.com/uc?export=view&id=${file.data.id}`,
+    };
+  }
+
+  throw new Error("No Google Drive configuration found (neither GOOGLE_DRIVE_WEBHOOK_URL nor GOOGLE_CLIENT_EMAIL).");
 }
 
 /**

@@ -8,7 +8,7 @@ import {
 import coreTeamData from "../data/team.json";
 
 
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const BASE_URL = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
 
 // ─── Axios instances ───────────────────────────────────────────────────────────
 

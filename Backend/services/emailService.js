@@ -13,12 +13,15 @@ let nodemailerTransporter = null;
 function getNodemailerTransporter() {
   if (nodemailerTransporter) return nodemailerTransporter;
 
-  if (process.env.GMAIL_USER && (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS)) {
+  const gmailUser = (process.env.GMAIL_USER || "").trim();
+  const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
+
+  if (gmailUser && gmailPass) {
     nodemailerTransporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS,
+        user: gmailUser,
+        pass: gmailPass,
       },
     });
     return nodemailerTransporter;
@@ -26,12 +29,12 @@ function getNodemailerTransporter() {
 
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     nodemailerTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
+      host: process.env.SMTP_HOST.trim(),
       port: Number(process.env.SMTP_PORT) || 587,
       secure: process.env.SMTP_SECURE === "true",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.SMTP_USER.trim(),
+        pass: process.env.SMTP_PASS.trim(),
       },
     });
     return nodemailerTransporter;
@@ -249,17 +252,18 @@ export async function sendConfirmationEmail(to, payload) {
   const transporter = getNodemailerTransporter();
   if (transporter) {
     try {
-      const fromAddress = process.env.EMAIL_FROM || process.env.GMAIL_USER || "YUGANTRAN 3.0 <yugantran@geetauniversity.edu.in>";
+      const gmailUser = (process.env.GMAIL_USER || "").trim();
+      const fromAddress = process.env.EMAIL_FROM || (gmailUser ? `"YUGANTRAN 3.0" <${gmailUser}>` : "YUGANTRAN 3.0 <yugantran@geetauniversity.edu.in>");
       const info = await transporter.sendMail({
         from: fromAddress,
         to,
         subject,
         html,
       });
-      console.log(`📧 [SMTP/Gmail] Email sent to ${to} | ID: ${info.messageId}`);
+      console.log(`📧 [SMTP/Gmail] Confirmation email sent successfully to ${to} | ID: ${info.messageId}`);
       return { success: true, messageId: info.messageId };
     } catch (smtpErr) {
-      console.error("❌ SMTP/Gmail Email Failed:", smtpErr.message);
+      console.error("❌ [SMTP/Gmail] Email Failed to send:", smtpErr.message);
     }
   }
 

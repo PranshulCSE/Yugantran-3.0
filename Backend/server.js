@@ -61,6 +61,14 @@ app.use(
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 
+// ─── Normalize Duplicate Slashes in Request URLs ─────
+app.use((req, res, next) => {
+  if (req.url && req.url.includes("//")) {
+    req.url = req.url.replace(/\/{2,}/g, "/");
+  }
+  next();
+});
+
 // ─── Static Uploads ─────────────────────────────────
 app.use("/uploads", express.static(uploadsDir));
 
