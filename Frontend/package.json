@@ -20,7 +20,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.55.0",
-    "react-router-dom": "^6.30.0",
+    "react-router-dom": "^7.18.4",
     "recharts": "^2.15.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "*",
@@ -36,11 +36,15 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
-    "vite": "6.3.5"
+    "vite": "^6.4.3"
   },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "allowScripts": {
+    "@swc/core@1.14.0": true,
+    "esbuild@0.25.11": true
   }
 }

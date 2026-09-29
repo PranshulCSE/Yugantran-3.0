@@ -38,10 +38,7 @@ export default function AdminSidebar() {
       <div>
         {/* Logo */}
         <div className="p-6 border-b border-cyan-500/15">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-[0_0_15px_rgba(0,242,254,0.3)]">
-              <Zap className="w-5 h-5 text-slate-950" />
-            </div>
+          <div className="flex items-center gap-2">
             <div>
               <div className="font-orbitron font-black text-sm text-white tracking-wider">
                 YUGANTRAN 3.0
