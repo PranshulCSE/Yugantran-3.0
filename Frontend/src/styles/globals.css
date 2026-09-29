@@ -115,7 +115,13 @@ html.light body {
 
 /* ─── Gradient Texts & Neon Glows ──────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #0284c7 0%, #00f2fe 45%, #059669 85%, #0284c7 100%);
+  /* Using gradient--1 for light mode */
+  background:
+    radial-gradient(ellipse 95% 120% at 82% 92%, rgba(31, 54, 95, 0.95) 0%, rgba(31, 54, 95, 0.7) 28%, rgba(31, 54, 95, 0.28) 56%, rgba(31, 54, 95, 0) 78%),
+    radial-gradient(ellipse 100% 120% at 0% 0%, rgba(31, 54, 95, 0.95) 0%, rgba(31, 54, 95, 0.65) 30%, rgba(31, 54, 95, 0.25) 58%, rgba(31, 54, 95, 0) 80%),
+    radial-gradient(ellipse 85% 90% at 0% 100%, rgba(12, 146, 241, 0.8) 0%, rgba(12, 146, 241, 0.5) 28%, rgba(12, 146, 241, 0.18) 56%, rgba(12, 146, 241, 0) 78%),
+    radial-gradient(ellipse 70% 70% at 100% 0%, rgba(12, 146, 241, 0.75) 0%, rgba(12, 146, 241, 0.45) 30%, rgba(12, 146, 241, 0.16) 58%, rgba(12, 146, 241, 0) 80%),
+    #1F365F;
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -124,7 +130,13 @@ html.light body {
 }
 
 html.dark .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #00f2fe 45%, #00ff41 75%, #38bdf8 100%);
+  /* Using gradient--3 for dark mode */
+  background:
+    radial-gradient(ellipse 95% 120% at 82% 92%, rgba(242, 237, 255, 0.95) 0%, rgba(242, 237, 255, 0.7) 28%, rgba(242, 237, 255, 0.28) 56%, rgba(242, 237, 255, 0) 78%),
+    radial-gradient(ellipse 100% 120% at 0% 0%, rgba(242, 237, 255, 0.95) 0%, rgba(242, 237, 255, 0.65) 30%, rgba(242, 237, 255, 0.25) 58%, rgba(242, 237, 255, 0) 80%),
+    radial-gradient(ellipse 85% 90% at 0% 100%, rgba(154, 206, 243, 0.8) 0%, rgba(154, 206, 243, 0.5) 28%, rgba(154, 206, 243, 0.18) 56%, rgba(154, 206, 243, 0) 78%),
+    radial-gradient(ellipse 70% 70% at 100% 0%, rgba(154, 206, 243, 0.75) 0%, rgba(154, 206, 243, 0.45) 30%, rgba(154, 206, 243, 0.16) 58%, rgba(154, 206, 243, 0) 80%),
+    #F2EDFF;
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

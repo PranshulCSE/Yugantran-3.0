@@ -75,8 +75,17 @@ export default function LogoTicker() {
       </div>
 
       {/* Infinite Scrolling Marquee Track with Gradient Edge Masking */}
-      <div className="relative w-full overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
-        <div className="animate-marquee flex items-center gap-6 sm:gap-8 py-3">
+      <div 
+        className="relative w-full max-w-[90vw] md:max-w-5xl mx-auto overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+        }}
+      >
+        <div 
+          className="animate-marquee flex items-center gap-6 sm:gap-8 py-3 w-max"
+          style={{ animationDuration: '40s' }}
+        >
           {tickerItems.map((logo, idx) => (
             <div
               key={`${logo.id}-${idx}`}

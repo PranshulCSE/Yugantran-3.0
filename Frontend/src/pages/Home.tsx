@@ -3,10 +3,6 @@ import Hero from "../components/Hero";
 import {
   WhyYugantran,
   AboutTeaser,
-  FeaturedEvents,
-  TimelinePreview,
-  PrizePoolBanner,
-  FinalCTA,
 } from "../components/HomeSections";
 
 export default function Home() {
@@ -16,15 +12,10 @@ export default function Home() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="w-full"
-    >
+      >
       <Hero />
       <WhyYugantran />
       <AboutTeaser />
-      <FeaturedEvents />
-      <TimelinePreview />
-      <PrizePoolBanner />
-      <FinalCTA />
     </motion.div>
   );
 }

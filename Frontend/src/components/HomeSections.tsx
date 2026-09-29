@@ -164,7 +164,6 @@ export function AboutTeaser() {
           transition={{ duration: 0.4 }}
           className="glass p-6 sm:p-10 md:p-12 rounded-3xl border-cyan-500/25 shadow-2xl relative overflow-hidden"
         >
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-7 space-y-4">
@@ -412,7 +411,6 @@ export function PrizePoolBanner() {
           transition={{ duration: 0.4 }}
           className="glass rounded-3xl border-amber-400/30 shadow-[0_0_50px_rgba(251,191,36,0.12)] p-6 sm:p-10 relative overflow-hidden"
         >
-          <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 text-center md:text-left">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center flex-shrink-0 shadow-[0_0_25px_rgba(251,191,36,0.3)]">
