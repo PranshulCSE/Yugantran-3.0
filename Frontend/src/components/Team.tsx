@@ -89,13 +89,17 @@ function MemberCard({ member, index }: { member: any; index: number }) {
 export default function Team() {
   const ref = useRef(null);
   const [members, setMembers] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<"core" | "volunteer">("core");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     publicApi
-      .getTeam("core")
+      .getTeam(activeTab)
       .then((r) => setMembers(r.data))
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [activeTab]);
 
   return (
     <section id="team" ref={ref} className="relative py-0 overflow-hidden">
@@ -117,12 +121,60 @@ export default function Team() {
           </p>
         </motion.div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {members.map((m, i) => (
-            <MemberCard key={m._id || m.id || i} member={m} index={i} />
-          ))}
+        {/* Tabs */}
+        <div className="flex justify-center items-center gap-4 mt-4 mb-8">
+          <button
+            onClick={() => setActiveTab("core")}
+            className={`px-6 py-2.5 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all ${
+              activeTab === "core"
+                ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700"
+            }`}
+          >
+            CORE TEAM
+          </button>
+          <button
+            onClick={() => setActiveTab("volunteer")}
+            className={`px-6 py-2.5 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all ${
+              activeTab === "volunteer"
+                ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
+                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700"
+            }`}
+          >
+            VOLUNTEERS
+          </button>
         </div>
+
+        {/* Grid */}
+        {loading ? (
+          <div className="flex justify-center items-center py-20 min-h-[300px]">
+            <div className="w-10 h-10 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : members.length === 0 ? (
+          <div className="text-center flex flex-col items-center justify-center py-20 min-h-[300px] text-slate-500 dark:text-slate-400 font-space">
+            {activeTab === "volunteer" ? (
+              <div className="space-y-3">
+                <div className="text-4xl">✨</div>
+                <p className="text-lg">Plot twist: We are all the Core Team!</p>
+                <p className="text-sm opacity-70">Volunteer applications will open closer to the event.</p>
+              </div>
+            ) : (
+              <p>No team members found for this category.</p>
+            )}
+          </div>
+        ) : (
+          <motion.div 
+            key={activeTab}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {members.map((m, i) => (
+              <MemberCard key={m._id || m.id || i} member={m} index={i} />
+            ))}
+          </motion.div>
+        )}
       </div>
     </section>
   );

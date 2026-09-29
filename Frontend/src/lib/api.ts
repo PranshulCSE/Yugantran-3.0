@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import axios from "axios";
 import {
   FALLBACK_EVENTS,
@@ -62,9 +63,14 @@ export const publicApi = {
   getTeam: async (category?: string) => {
     try {
       const res = await api.get("/api/team", { params: category ? { category } : {} });
-      if (Array.isArray(res.data) && res.data.length > 0) return res;
+      if (Array.isArray(res.data)) return res;
+      return { data: [] };
     } catch {
-      return { data: coreTeamData };
+      let filtered = coreTeamData as any[];
+      if (category) {
+        filtered = filtered.filter((m: any) => (m.category || "core") === category);
+      }
+      return { data: filtered };
     }
   },
 
