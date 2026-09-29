@@ -115,7 +115,13 @@ html.light body {
 
 /* ─── Gradient Texts & Neon Glows ──────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #0284c7 0%, #00f2fe 45%, #059669 85%, #0284c7 100%);
+  /* Using gradient--1 for light mode */
+  background:
+    radial-gradient(ellipse 95% 120% at 82% 92%, rgba(31, 54, 95, 0.95) 0%, rgba(31, 54, 95, 0.7) 28%, rgba(31, 54, 95, 0.28) 56%, rgba(31, 54, 95, 0) 78%),
+    radial-gradient(ellipse 100% 120% at 0% 0%, rgba(31, 54, 95, 0.95) 0%, rgba(31, 54, 95, 0.65) 30%, rgba(31, 54, 95, 0.25) 58%, rgba(31, 54, 95, 0) 80%),
+    radial-gradient(ellipse 85% 90% at 0% 100%, rgba(12, 146, 241, 0.8) 0%, rgba(12, 146, 241, 0.5) 28%, rgba(12, 146, 241, 0.18) 56%, rgba(12, 146, 241, 0) 78%),
+    radial-gradient(ellipse 70% 70% at 100% 0%, rgba(12, 146, 241, 0.75) 0%, rgba(12, 146, 241, 0.45) 30%, rgba(12, 146, 241, 0.16) 58%, rgba(12, 146, 241, 0) 80%),
+    #1F365F;
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -124,7 +130,13 @@ html.light body {
 }
 
 html.dark .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #00f2fe 45%, #00ff41 75%, #38bdf8 100%);
+  /* Using gradient--3 for dark mode */
+  background:
+    radial-gradient(ellipse 95% 120% at 82% 92%, rgba(242, 237, 255, 0.95) 0%, rgba(242, 237, 255, 0.7) 28%, rgba(242, 237, 255, 0.28) 56%, rgba(242, 237, 255, 0) 78%),
+    radial-gradient(ellipse 100% 120% at 0% 0%, rgba(242, 237, 255, 0.95) 0%, rgba(242, 237, 255, 0.65) 30%, rgba(242, 237, 255, 0.25) 58%, rgba(242, 237, 255, 0) 80%),
+    radial-gradient(ellipse 85% 90% at 0% 100%, rgba(154, 206, 243, 0.8) 0%, rgba(154, 206, 243, 0.5) 28%, rgba(154, 206, 243, 0.18) 56%, rgba(154, 206, 243, 0) 78%),
+    radial-gradient(ellipse 70% 70% at 100% 0%, rgba(154, 206, 243, 0.75) 0%, rgba(154, 206, 243, 0.45) 30%, rgba(154, 206, 243, 0.16) 58%, rgba(154, 206, 243, 0) 80%),
+    #F2EDFF;
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -537,4 +549,128 @@ html.dark .admin-input::placeholder {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ─── Glassy Navbar Items (Dribbble Inspired) ────────────────────────── */
+.glassy-nav-item {
+  --_transition-speed: 200ms;
+  --_hover-opacity: 0.15;
+  --_pressed-opacity: 0.1;
+  --_hover-blurriness: 5px;
+  --_pressed-blurriness: 10px;
+  --_frostiness: 0.15;
+  --_hover-offset: 0.2rem;
+  --_pressed-offset: 0.1rem;
+  --_motion-factor: 0.1;
+
+  outline: 0;
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+  display: inline-flex;
+  border-radius: 9999px; /* full rounded */
+}
+
+.glassy-nav-item .glassy-content {
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background-color: transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background-color var(--_transition-speed),
+    backdrop-filter var(--_transition-speed),
+    translate var(--_transition-speed),
+    -webkit-backdrop-filter var(--_transition-speed),
+    border var(--_transition-speed);
+  border: 1px solid transparent;
+}
+
+.glassy-nav-item .glassy-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml, %3Csvg viewBox='0 0 171 171' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='3.74' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0;
+  transition: opacity var(--_transition-speed);
+}
+
+/* Base surface layer for hover/active effect */
+.glassy-nav-item::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background-color: rgba(0, 242, 254, 0.20); /* cyan tint to blend */
+  transition: scale var(--_transition-speed),
+    translate var(--_transition-speed);
+  animation: exit forwards var(--_transition-speed);
+  opacity: 0;
+}
+
+html.light .glassy-nav-item::after {
+  background-color: rgba(6, 182, 212, 0.20); /* lighter cyan for light mode */
+}
+
+/* Hover & Focus state */
+.glassy-nav-item:hover .glassy-content,
+.glassy-nav-item:focus-visible .glassy-content {
+  background-color: rgba(255, 255, 255, var(--_hover-opacity));
+  -webkit-backdrop-filter: blur(var(--_hover-blurriness));
+  backdrop-filter: blur(var(--_hover-blurriness));
+  translate: 0 calc(var(--_hover-offset) * -1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glassy-nav-item:hover .glassy-content::before,
+.glassy-nav-item:focus-visible .glassy-content::before {
+  opacity: var(--_frostiness);
+}
+
+.glassy-nav-item:hover::after,
+.glassy-nav-item:focus-visible::after {
+  opacity: 1;
+  scale: 0.95;
+  translate: 0 0.125rem;
+  animation: enter forwards var(--_transition-speed);
+}
+
+/* Active State (the current page) */
+.glassy-nav-item.active .glassy-content {
+  background-color: rgba(0, 242, 254, 0.1);
+  -webkit-backdrop-filter: blur(var(--_hover-blurriness));
+  backdrop-filter: blur(var(--_hover-blurriness));
+  border: 1px solid rgba(0, 242, 254, 0.4);
+  box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.1);
+}
+
+html.light .glassy-nav-item.active .glassy-content {
+  background-color: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
+}
+
+/* Pressed/Active state for click */
+.glassy-nav-item:active .glassy-content {
+  -webkit-backdrop-filter: blur(var(--_pressed-blurriness));
+  backdrop-filter: blur(var(--_pressed-blurriness));
+  background-color: rgba(255, 255, 255, var(--_pressed-opacity));
+  translate: 0 calc(var(--_pressed-offset) * -1);
+}
+
+.glassy-nav-item:active::after {
+  scale: 0.875;
+  translate: 0 0.25rem;
+}
+
+@keyframes enter {
+  from { transform: translate(0, 0); }
+  to { transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1)); }
+}
+
+@keyframes exit {
+  from { transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1)); }
+  to { transform: translate(0, 0); }
 }

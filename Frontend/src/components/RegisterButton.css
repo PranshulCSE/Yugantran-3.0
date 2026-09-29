@@ -1,0 +1,393 @@
+.yug-register-btn-wrap {
+  position: relative;
+  width: 220px;
+  max-width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.yug-register-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  padding: 0 10px;
+  letter-spacing: 1px;
+  text-decoration: none;
+  overflow: hidden;
+  font-weight: 700;
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  z-index: 1;
+  transition: 0.5s;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  white-space: nowrap;
+  text-align: center;
+  
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  color: #0f172a;
+}
+
+.dark .yug-register-btn {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.yug-register-btn-wrap:hover .yug-register-btn {
+  letter-spacing: 2px;
+}
+
+.yug-register-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.3), transparent);
+  transform: skewX(45deg) translate(-150%);
+  transition: 0.5s;
+  filter: blur(0px);
+}
+
+.dark .yug-register-btn::before {
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+}
+
+.yug-register-btn-wrap:hover .yug-register-btn::before {
+  transform: skewX(45deg) translate(250%);
+}
+
+.yug-register-btn-wrap::before,
+.yug-register-btn-wrap::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 10px;
+  background: #00f2fe;
+  border-radius: 10px;
+  transition: 0.5s;
+  transition-delay: 0.2s;
+  box-shadow: 0 0 5px #00f2fe, 0 0 15px rgba(0, 242, 254, 0.6), 0 0 25px rgba(0, 242, 254, 0.2);
+}
+
+.yug-register-btn-wrap::before {
+  bottom: -5px;
+}
+
+.yug-register-btn-wrap::after {
+  top: -5px;
+}
+
+.yug-register-btn-wrap:hover::before,
+.yug-register-btn-wrap:hover::after {
+  height: 50%;
+  width: 80%;
+  border-radius: 30px;
+}
+
+.yug-register-btn-wrap:hover::before {
+  bottom: 0;
+}
+
+.yug-register-btn-wrap:hover::after {
+  top: 0;
+}
+
+@property --angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45deg;
+}
+
+/* Explore Button Wrap Container */
+.explore-btn-wrap {
+  --global--size: 1rem;
+  --anim--hover-time: 400ms;
+  --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+  z-index: 2;
+  border-radius: 999vw;
+  background: transparent;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  font-size: var(--global--size);
+}
+
+/* Button Shadow Container */
+.explore-btn-wrap .button-shadow {
+  --shadow-cuttoff-fix: 2em;
+  position: absolute;
+  width: calc(100% + var(--shadow-cuttoff-fix));
+  height: calc(100% + var(--shadow-cuttoff-fix));
+  top: calc(0% - var(--shadow-cuttoff-fix) / 2);
+  left: calc(0% - var(--shadow-cuttoff-fix) / 2);
+  filter: blur(clamp(2px, 0.125em, 12px));
+  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Shadow */
+.explore-btn-wrap .button-shadow::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: 999vw;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
+  padding: 0.125em;
+  box-sizing: border-box;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  overflow: visible;
+  opacity: 1;
+}
+
+/* Button */
+.explore-glass-btn {
+  --border-width: clamp(1px, 0.0625em, 4px);
+  all: unset;
+  cursor: pointer;
+  position: relative;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  pointer-events: auto;
+  z-index: 3;
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+  border-radius: 999vw;
+  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
+    0 0 0 0 rgba(255, 255, 255, 1);
+  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.dark .explore-glass-btn {
+  background: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.02)
+  );
+  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.2),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.2),
+    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.5),
+    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.05),
+    0 0 0 0 rgba(255, 255, 255, 1);
+}
+
+.explore-glass-btn:hover {
+  transform: scale(0.975);
+  backdrop-filter: blur(0.01em);
+  -webkit-backdrop-filter: blur(0.01em);
+  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
+    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
+    0 0 0 0 rgba(255, 255, 255, 1);
+}
+
+.dark .explore-glass-btn:hover {
+  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.2),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.2),
+    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.6),
+    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.2),
+    0 0 0 0 rgba(255, 255, 255, 1);
+}
+
+/* Button Text */
+.explore-glass-btn span {
+  position: relative;
+  display: block;
+  user-select: none;
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  color: #0f172a;
+  text-shadow: 0em 0.25em 0.05em rgba(255, 255, 255, 0.1);
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  padding: 0 1.5em;
+  white-space: nowrap;
+}
+
+.dark .explore-glass-btn span {
+  color: #fff;
+  text-shadow: 0em 0.25em 0.05em rgba(0, 0, 0, 0.3);
+}
+
+.explore-glass-btn:hover span {
+  text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12);
+}
+
+.dark .explore-glass-btn:hover span {
+  text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.5);
+}
+
+/* Text glow gradient sweep */
+.explore-glass-btn::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  box-sizing: border-box;
+  border-radius: 999vw;
+  overflow: clip;
+  background: linear-gradient(
+    var(--angle-2),
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.15) 40% 50%,
+    rgba(255, 255, 255, 0) 55%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  transition: background-position calc(var(--anim--hover-time) * 1.25)
+      var(--anim--hover-ease),
+    --angle-2 calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease);
+}
+
+.explore-glass-btn:hover::before {
+  background-position: 25% 50%;
+}
+
+.explore-glass-btn:active::before {
+  background-position: 50% 15%;
+  --angle-2: -15deg;
+}
+
+/* Outline */
+.explore-glass-btn::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border-radius: 999vw;
+  width: calc(100% + var(--border-width));
+  height: calc(100% + var(--border-width));
+  top: calc(0% - var(--border-width) / 2);
+  left: calc(0% - var(--border-width) / 2);
+  padding: var(--border-width);
+  box-sizing: border-box;
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0) 5% 40%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0) 60% 95%,
+      rgba(0, 0, 0, 0.5)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease),
+    --angle-1 500ms ease;
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
+}
+
+.dark .explore-glass-btn::after {
+  background: conic-gradient(
+      from var(--angle-1) at 50% 50%,
+      rgba(0, 242, 254, 0.8),
+      rgba(0, 242, 254, 0) 5% 40%,
+      rgba(0, 242, 254, 0.8) 50%,
+      rgba(0, 242, 254, 0) 60% 95%,
+      rgba(0, 242, 254, 0.8)
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
+  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.2);
+}
+
+.explore-glass-btn:hover::after {
+  --angle-1: -125deg;
+}
+
+.explore-glass-btn:active::after {
+  --angle-1: -75deg;
+}
+
+/* Shadow Hover */
+.explore-btn-wrap:has(.explore-glass-btn:hover) .button-shadow {
+  filter: blur(clamp(2px, 0.0625em, 6px));
+  -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
+  transition: filter var(--anim--hover-time) var(--anim--hover-ease);
+}
+
+.explore-btn-wrap:has(.explore-glass-btn:hover) .button-shadow::after {
+  top: calc(var(--shadow-cuttoff-fix) - 0.875em);
+  opacity: 1;
+}
+
+/* Rotation */
+.explore-btn-wrap:has(.explore-glass-btn:active) {
+  transform: rotate3d(1, 0, 0, 25deg);
+}
+
+.explore-btn-wrap:has(.explore-glass-btn:active) .explore-glass-btn {
+  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.125em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
+    0 0.225em 0.05em 0 rgba(0, 0, 0, 0.05),
+    0 0.25em 0 0 rgba(255, 255, 255, 0.75),
+    inset 0 0.25em 0.05em 0 rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 640px) {
+  .explore-glass-btn {
+    height: 42px;
+  }
+  .explore-glass-btn span {
+    font-size: 0.85rem;
+    padding: 0 1.25em;
+  }
+}

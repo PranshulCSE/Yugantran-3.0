@@ -8,7 +8,7 @@ export default function FloatingBot() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex flex-col items-start">
+    <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end">
       {/* Speech Bubble Popup */}
       <AnimatePresence>
         {open && (
@@ -86,7 +86,7 @@ export default function FloatingBot() {
         />
 
         {/* Pulse Indicator */}
-        <span className="absolute top-1 left-1 flex h-3 w-3">
+        <span className="absolute top-1 right-1 flex h-3 w-3">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
           <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500 border border-black" />
         </span>
