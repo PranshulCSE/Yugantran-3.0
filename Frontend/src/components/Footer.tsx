@@ -5,8 +5,8 @@ import { NAV_ROUTES } from "../routes";
 export default function Footer() {
   return (
     <footer id="contact" className="relative border-t border-slate-200 dark:border-cyan-500/20 bg-white/90 dark:bg-[#020617]/90 backdrop-blur-2xl z-20 transition-colors duration-300">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 sm:gap-12 mb-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8 sm:pt-16 sm:pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 sm:gap-12 mb-12">
           {/* Brand & Organizing Bodies */}
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
@@ -23,11 +23,11 @@ export default function Footer() {
             </p>
 
             {/* University & Department Logo Badges */}
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col items-center md:items-start text-center md:text-left">
               <div className="text-[11px] font-mono-matrix text-cyan-600 dark:text-cyan-400/80 uppercase tracking-widest mb-2 font-bold">
                 Organizing Institutions
               </div>
-              <div className="inline-flex items-center gap-3 bg-slate-100 dark:bg-slate-900/80 p-2.5 rounded-2xl border border-slate-200 dark:border-cyan-500/20 shadow-md">
+              <div className="inline-flex flex-wrap justify-center md:justify-start items-center gap-3 bg-slate-100 dark:bg-slate-900/80 p-2.5 rounded-2xl border border-slate-200 dark:border-cyan-500/20 shadow-md">
                 <img
                   src="/images/Geeta/univ-1.jpg"
                   alt="SCSE"
@@ -62,26 +62,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Navigation */}
-          <div>
-            <h3 className="font-orbitron text-xs text-cyan-600 dark:text-cyan-400 font-bold tracking-widest mb-4 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              PORTAL NAVIGATION
-            </h3>
-            <ul className="grid grid-cols-2 gap-2.5">
-              {NAV_ROUTES.map((item) => (
-                <li key={item.path}>
-                  <Link
-                    to={item.path}
-                    className="text-slate-600 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 font-mono-matrix text-xs tracking-wider transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <span className="text-cyan-500/60">&gt;</span> {item.name.toUpperCase()}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           {/* Contact & Socials */}
           <div>
             <h3 className="font-orbitron text-xs text-cyan-600 dark:text-cyan-400 font-bold tracking-widest mb-4 flex items-center gap-2">
@@ -106,8 +86,8 @@ export default function Footer() {
 
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-cyan-500 dark:text-cyan-400 flex-shrink-0" />
-                <a href="tel:+919992560407" className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors font-semibold">
-                  +91 99925 60407
+                <a href="tel:+919999238013" className="hover:text-cyan-600 dark:hover:text-cyan-300 transition-colors font-semibold">
+                  +91 99992 38013
                 </a>
               </div>
             </div>
@@ -140,7 +120,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-slate-200 dark:border-slate-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
+        <div className="border-t border-slate-200 dark:border-slate-800 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
           <p className="font-mono-matrix text-xs text-slate-500 dark:text-slate-400 tracking-wider">
             © 2026 SCHOOL OF COMPUTER SCIENCE & ENGINEERING, GEETA UNIVERSITY. ALL RIGHTS RESERVED.
           </p>

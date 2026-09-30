@@ -66,10 +66,9 @@ export default function LogoTicker() {
   const tickerItems = [...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS];
 
   return (
-    <div className="w-full py-4 relative">
-      <div className="text-center mb-3">
-        <span className="font-mono-matrix text-[11px] sm:text-xs text-cyan-400 font-bold uppercase tracking-[0.25em] px-3.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(0,242,254,0.15)] inline-flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+    <div className="w-full py-1 relative">
+      <div className="text-center mb-2">
+        <span className="font-mono-matrix text-[11px] sm:text-xs text-cyan-400 font-bold uppercase tracking-[0.25em] px-4 py-1.5 rounded-full glass inline-flex items-center">
           ORGANIZING INSTITUTIONS & PARTNERS
         </span>
       </div>

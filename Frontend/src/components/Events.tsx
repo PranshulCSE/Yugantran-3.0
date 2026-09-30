@@ -6,7 +6,7 @@ import {
   Bot, Shield, Terminal, Bug, GitBranch, Search,
   Rocket, Cpu, Zap, Car, Trophy, Gamepad2, Swords,
   Code, X, Users, IndianRupee, ChevronRight, ArrowRight,
-  Layers, CheckCircle2,
+  Layers, CheckCircle2, ChevronDown,
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
@@ -46,18 +46,28 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 pt-24 sm:p-6 sm:pt-28 pb-6 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md"
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 20 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
           transition={{ type: "spring", damping: 25 }}
           onClick={(e) => e.stopPropagation()}
-          className="glass w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-3xl p-6 sm:p-8 border-cyan-500/30 shadow-[0_0_50px_rgba(0,242,254,0.2)]"
+          className="relative w-full max-w-2xl max-h-[85vh] rounded-[2rem] bg-slate-50/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/30 dark:border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] shadow-2xl flex flex-col overflow-hidden"
         >
-          {/* Header */}
+          {/* Ambient Glow */}
+          <div 
+            className="absolute -top-32 -right-32 w-64 h-64 rounded-full blur-[4rem] opacity-20 dark:opacity-30 pointer-events-none"
+            style={{ background: cfg.color }}
+          />
+
+          <div 
+            className="p-6 sm:p-8 overflow-y-auto overflow-x-hidden w-full h-full [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-600 [&::-webkit-scrollbar-thumb]:rounded-full"
+            style={{ scrollbarWidth: "thin" }}
+          >
+            {/* Header */}
           <div className="flex items-start justify-between mb-6">
             <div>
               <span
@@ -78,22 +88,22 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
           </div>
 
           {/* Key Metrics */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
-            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+            <div className="bg-white/40 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-sm rounded-2xl p-4 text-center backdrop-blur-sm">
               <div className="font-orbitron font-black text-lg sm:text-xl text-emerald-600 dark:text-emerald-400">
                 ₹{event.fee}
               </div>
-              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Registration Fee</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-1">Reg. Fee</div>
             </div>
 
-            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+            <div className="bg-white/40 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-sm rounded-2xl p-4 text-center backdrop-blur-sm">
               <div className="font-orbitron font-black text-lg sm:text-xl text-amber-600 dark:text-amber-400">
                 {event.prize}
               </div>
-              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Bounty Prize</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-1">Bounty Prize</div>
             </div>
 
-            <div className="bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 text-center">
+            <div className="bg-white/40 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-sm rounded-2xl p-4 text-center backdrop-blur-sm">
               <div className="font-orbitron font-black text-lg sm:text-xl text-cyan-600 dark:text-cyan-400">
                 {event.teamType === "individual"
                   ? "Solo"
@@ -101,7 +111,7 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
                   ? `${event.minTeam} Players`
                   : `${event.minTeam}–${event.maxTeam} P`}
               </div>
-              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-0.5">Team Size</div>
+              <div className="font-space text-xs text-slate-500 dark:text-slate-400 mt-1">Team Size</div>
             </div>
           </div>
 
@@ -117,25 +127,25 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
 
           {/* Rounds */}
           {event.rounds && event.rounds.length > 0 && (
-            <div className="mb-6 space-y-3">
+            <div className="mb-8 space-y-3">
               <h4 className="font-orbitron font-bold text-xs text-cyan-600 dark:text-cyan-400 tracking-wider flex items-center gap-2">
                 <Layers className="w-4 h-4" />
                 ROUND-BY-ROUND FORMAT
               </h4>
-              <div className="space-y-2.5">
+              <div className="space-y-3">
                 {event.rounds.map((round: any, i: number) => (
                   <div
                     key={i}
-                    className="p-3.5 rounded-xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex gap-3.5 items-start"
+                    className="p-4 rounded-2xl bg-white/30 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-sm flex gap-4 items-start"
                   >
-                    <div className="w-7 h-7 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-700 dark:text-cyan-300 font-orbitron font-bold text-xs flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-white/50 dark:bg-black/20 border border-white/40 dark:border-white/10 text-cyan-700 dark:text-cyan-400 font-orbitron font-black text-sm flex items-center justify-center flex-shrink-0 shadow-inner">
                       {i + 1}
                     </div>
                     <div>
-                      <div className="font-orbitron font-bold text-xs sm:text-sm text-slate-900 dark:text-white mb-0.5">
+                      <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white mb-1 tracking-wide">
                         {round.name}
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300 text-xs font-body leading-relaxed">
+                      <p className="text-slate-600 dark:text-slate-300 text-sm font-body leading-relaxed">
                         {round.description}
                       </p>
                     </div>
@@ -146,29 +156,23 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
           )}
 
           {/* Register CTA */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-3">
+          <div className="pt-5 flex justify-center border-t border-slate-200/50 dark:border-slate-700/50">
             <button
               onClick={() => {
                 onClose();
                 window.dispatchEvent(new CustomEvent("eventSelected", { detail: event.name }));
                 navigate("/register");
               }}
-              className="btn-primary w-full py-3.5 text-xs justify-center shadow-cyan-500/25 flex items-center gap-2"
+              className="py-3.5 px-8 sm:px-12 rounded-xl text-sm font-orbitron font-black tracking-widest text-slate-900 dark:text-white transition-all duration-300 flex items-center justify-center gap-2 group/modalbtn hover:scale-[1.02]"
+              style={{
+                background: `linear-gradient(to right, ${cfg.color}20, ${cfg.color}10)`,
+                border: `1px solid ${cfg.color}40`,
+              }}
             >
               <span>REGISTER FOR {event.name.toUpperCase()}</span>
-              <ChevronRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 transition-transform group-hover/modalbtn:translate-x-1" style={{ color: cfg.color }} />
             </button>
-            {event.slug && (
-              <button
-                onClick={() => {
-                  onClose();
-                  navigate(`/events/${event.slug}`);
-                }}
-                className="btn-outline w-full sm:w-auto py-3.5 text-xs justify-center whitespace-nowrap"
-              >
-                FULL PAGE VIEW
-              </button>
-            )}
+          </div>
           </div>
         </motion.div>
       </motion.div>
@@ -195,76 +199,91 @@ const EventCard = forwardRef<HTMLDivElement, EventCardProps>(
       <motion.div
         ref={ref}
         variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-        whileHover={{ y: -6, scale: 1.015 }}
-        transition={{ duration: 0.25 }}
-        className="glass glass-hover rounded-3xl p-6 flex flex-col justify-between group border-cyan-500/20 hover:border-cyan-400/50"
+        whileHover={{ y: -4, scale: 1.01 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="relative group glass glass-hover rounded-[2rem] p-6 flex flex-col justify-between overflow-hidden"
       >
+        
+        {/* Glowing Ambient Gradient behind card (Subtle) */}
+        <div 
+          className="absolute -top-24 -right-24 w-48 h-48 rounded-full blur-[3rem] opacity-0 group-hover:opacity-20 transition-opacity duration-700 -z-10"
+          style={{ background: cfg.color }}
+        />
+
         <div>
-          {/* Card Header */}
-          <div className="flex items-center justify-between mb-4">
+          {/* Card Header: Icon + Category */}
+          <div className="flex items-start justify-between mb-6">
             <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
-              style={{ background: `${cfg.color}15`, border: `1px solid ${cfg.color}35` }}
+              className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3"
+              style={{ 
+                background: `linear-gradient(135deg, ${cfg.color}20, transparent)`, 
+                border: `1px solid ${cfg.color}40`,
+                boxShadow: `0 8px 32px ${cfg.color}15`
+              }}
             >
-              <Icon className="w-6 h-6" style={{ color: cfg.color }} />
+              <Icon className="w-7 h-7" style={{ color: cfg.color }} />
             </div>
 
             <span
-              className="text-[10px] font-orbitron font-bold px-2.5 py-0.5 rounded-full border"
+              className="text-[10px] font-orbitron font-bold px-3 py-1 rounded-full uppercase tracking-wider"
               style={{
                 color: cfg.color,
-                borderColor: `${cfg.color}35`,
                 background: `${cfg.color}10`,
+                border: `1px solid ${cfg.color}20`,
               }}
             >
               {cfg.label}
             </span>
           </div>
 
-          {/* Title & Short Description */}
-          <h3 className="font-orbitron font-bold text-lg text-slate-900 dark:text-white mb-2 group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
+          {/* Title & Description */}
+          <h3 className="font-orbitron font-black text-xl text-slate-900 dark:text-white mb-3 tracking-wide group-hover:text-cyan-600 dark:group-hover:text-cyan-300 transition-colors">
             {event.name}
           </h3>
-          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed mb-4 line-clamp-2">
+          <p className="text-slate-600 dark:text-slate-300 text-sm font-body leading-relaxed mb-6 line-clamp-2">
             {event.description}
           </p>
-
-          {/* Format details pill */}
-          <div className="flex items-center gap-2 mb-4 text-[11px] font-space text-slate-500 dark:text-slate-400">
-            <Users className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" />
-            <span>
-              {event.teamType === "individual"
-                ? "Solo Battle"
-                : event.minTeam === event.maxTeam
-                ? `Team (${event.minTeam} Members)`
-                : `Team (${event.minTeam}–${event.maxTeam} Members)`}
-            </span>
-          </div>
         </div>
 
         {/* Footer Info & Actions */}
-        <div className="pt-4 border-t border-slate-200 dark:border-slate-800/80">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <div className="text-xs font-orbitron font-black text-amber-600 dark:text-amber-400">{event.prize}</div>
-              <div className="text-[11px] font-space text-slate-500 dark:text-slate-400">Fee: ₹{event.fee}</div>
+        <div className="pt-5 mt-auto border-t border-slate-200/50 dark:border-slate-700/50 flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-space font-medium text-slate-500 dark:text-slate-400">
+              <Users className="w-3.5 h-3.5" style={{ color: cfg.color }} />
+              <span>
+                {event.teamType === "individual"
+                  ? "Solo"
+                  : event.minTeam === event.maxTeam
+                  ? `Team of ${event.minTeam}`
+                  : `${event.minTeam}–${event.maxTeam} Members`}
+              </span>
             </div>
-            <button
-              onClick={onClick}
-              className="text-xs font-space font-semibold text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-white transition-colors inline-flex items-center gap-1"
-            >
-              <span>View Details</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="text-right">
+              <div className="text-xs font-orbitron font-black text-slate-900 dark:text-white">Prize: {event.prize}</div>
+              <div className="text-[10px] font-space text-slate-500 dark:text-slate-400">Fee: ₹{event.fee}</div>
+            </div>
           </div>
 
-          <button
-            onClick={onRegister}
-            className="btn-primary w-full py-2.5 text-xs justify-center shadow-cyan-500/20 font-bold"
-          >
-            <span>REGISTER NOW</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onRegister}
+              className="flex-1 py-3 px-4 rounded-xl text-xs font-orbitron font-bold tracking-wider text-slate-900 dark:text-white transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+              style={{
+                background: `linear-gradient(to right, ${cfg.color}20, ${cfg.color}10)`,
+                border: `1px solid ${cfg.color}40`,
+              }}
+            >
+              <span>REGISTER</span>
+              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" style={{ color: cfg.color }} />
+            </button>
+            <button
+              onClick={onClick}
+              className="p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="View Details"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </motion.div>
     );
@@ -280,6 +299,7 @@ export default function Events() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     publicApi
@@ -314,43 +334,62 @@ export default function Events() {
           transition={{ duration: 0.4 }}
           className="text-center max-w-3xl mx-auto"
         >
-          <div className="section-tag mb-4">
-            <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>THE ARENA</span>
-          </div>
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
-            Battle Catalog & <span className="gradient-text">Competitions</span>
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+            <span className="anim-silver-royal">Battle Catalog & Competitions</span>
           </h1>
           <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body">
-            10 high-octane technical competitions across AI, Cybersecurity, Software Engineering, IoT,
-            Startups, and Esports.
+            The ultimate technical battleground. Choose your arena and prove your mettle.
           </p>
         </motion.div>
 
-        {/* Search & Domain Filter Bar */}
-        <div className="space-y-4 max-w-4xl mx-auto">
-          {/* Search bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Search competitions by name, keywords, or tech stack..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="admin-input pl-11 !rounded-2xl !py-3.5"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              >
-                Clear ×
-              </button>
-            )}
+        {/* Domain Filter Bar */}
+        <div className="space-y-4 max-w-4xl mx-auto relative z-20">
+          {/* Mobile Dropdown */}
+          <div className="md:hidden relative">
+            <button
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl glass !bg-black/10 dark:!bg-black/40 text-sm font-semibold tracking-wide shadow-sm !border-white/10 text-slate-800 dark:text-slate-200"
+            >
+              <span>
+                {activeFilter === "all" ? `ALL (${events.length || 10})` : (CATEGORY_CONFIG[activeFilter]?.label || activeFilter).toUpperCase()}
+              </span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl glass !bg-white/60 dark:!bg-black/60 backdrop-blur-3xl shadow-2xl !border-white/10 z-50 flex flex-col gap-1 max-h-[60vh] overflow-y-auto"
+                >
+                  {categories.map((cat) => {
+                    const cfg = cat === "all" ? null : CATEGORY_CONFIG[cat];
+                    const isSel = activeFilter === cat;
+                    return (
+                      <button
+                        key={cat}
+                        onClick={() => {
+                          setActiveFilter(cat);
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`text-left px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-colors ${
+                          isSel
+                            ? "bg-black/10 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm"
+                            : "text-slate-800 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-slate-200"
+                        }`}
+                      >
+                        {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap justify-center gap-2">
+          {/* Desktop Filter Pills */}
+          <div className="hidden md:flex flex-wrap justify-center gap-2">
             {categories.map((cat) => {
               const cfg = cat === "all" ? null : CATEGORY_CONFIG[cat];
               const isSel = activeFilter === cat;
@@ -359,10 +398,10 @@ export default function Events() {
                 <button
                   key={cat}
                   onClick={() => setActiveFilter(cat)}
-                  className={`px-4 py-2 rounded-full font-mono-matrix text-xs tracking-wider border transition-all duration-200 ${
+                  className={`px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide transition-all duration-300 glass hover:scale-105 ${
                     isSel
-                      ? "bg-cyan-600 dark:bg-cyan-950/80 border-cyan-500 dark:border-cyan-400 text-white dark:text-cyan-300 shadow-[0_0_15px_rgba(0,242,254,0.3)] font-bold"
-                      : "border-slate-300 dark:border-slate-800 bg-white/80 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 hover:border-slate-400 dark:hover:border-slate-700 hover:text-slate-900 dark:hover:text-slate-200 shadow-sm"
+                      ? "!bg-black/10 dark:!bg-white/15 text-slate-900 dark:text-white shadow-md !border-slate-400 dark:!border-white/30"
+                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
                   {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}
