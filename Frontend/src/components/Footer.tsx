@@ -32,19 +32,31 @@ export default function Footer() {
                   src="/images/Geeta/univ-1.jpg"
                   alt="SCSE"
                   title="School of Computer Science & Engineering"
-                  className="h-8 w-auto rounded bg-white p-0.5 object-contain"
+                  className="h-10 w-auto rounded bg-white p-0.5 object-contain"
                 />
                 <img
                   src="/images/Geeta/univ-2.png"
                   alt="GU"
                   title="Geeta University"
-                  className="h-8 w-auto rounded bg-white p-0.5 object-contain"
+                  className="h-10 w-auto rounded bg-white p-0.5 object-contain"
                 />
                 <img
                   src="/images/Geeta/univ-3.jpg"
                   alt="GTH"
                   title="Geeta Technical Hub"
-                  className="h-8 w-auto rounded bg-white p-0.5 object-contain"
+                  className="h-10 w-auto rounded bg-white p-0.5 object-contain"
+                />
+                <img
+                  src="/images/Geeta/univ-4.png"
+                  alt="GU IEEE Student Branch"
+                  title="Geeta University IEEE Student Branch"
+                  className="h-10 w-auto rounded bg-white p-0.5 object-contain"
+                />
+                <img
+                  src="/images/Geeta/univ-5.png"
+                  alt="IEEE Delhi Branch"
+                  title="IEEE Delhi Branch"
+                  className="h-10 w-auto rounded bg-white p-0.5 object-contain"
                 />
               </div>
             </div>
