@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { Eye, EyeOff, Lock, Mail, Zap, Shield, ArrowRight } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Zap, Shield, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function Login() {
@@ -29,6 +29,14 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Return to Site Button */}
+      <button 
+        onClick={() => navigate('/')} 
+        className="absolute top-6 left-6 flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors font-space text-xs tracking-widest uppercase font-semibold z-20 group"
+      >
+        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+        <span>RETURN TO SITE</span>
+      </button>
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -38,8 +46,8 @@ export default function Login() {
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(0,242,254,0.4)]">
-            <Shield className="w-8 h-8 text-slate-950" />
+          <div className="w-16 h-16 rounded-2xl glass flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-cyan-600 dark:text-cyan-400" />
           </div>
 
           <h1 className="font-orbitron font-black text-3xl text-white tracking-wider">
@@ -51,7 +59,7 @@ export default function Login() {
         </div>
 
         {/* Login Card */}
-        <div className="glass p-8 sm:p-9 rounded-3xl border-cyan-500/30 shadow-2xl">
+        <div className="glass p-8 sm:p-9 rounded-3xl shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Username */}
             <div>
@@ -109,7 +117,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-4 text-sm justify-center shadow-cyan-500/40 mt-2"
+              className="glass glass-hover w-full py-4 text-sm font-orbitron font-bold tracking-widest text-slate-800 dark:text-slate-200 flex items-center justify-center gap-2 mt-2 rounded-xl transition-all"
             >
               {loading ? (
                 <span>AUTHENTICATING...</span>

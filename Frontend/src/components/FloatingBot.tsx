@@ -8,7 +8,7 @@ export default function FloatingBot() {
   const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end">
+    <div className="fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 flex flex-col items-start">
       {/* Speech Bubble Popup */}
       <AnimatePresence>
         {open && (

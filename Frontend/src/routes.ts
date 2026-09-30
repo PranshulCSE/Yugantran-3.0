@@ -5,5 +5,4 @@ export const NAV_ROUTES = [
   { name: "Events", path: "/events" },
   { name: "Awards", path: "/awards" },
   { name: "Team", path: "/team" },
-  { name: "Register", path: "/register" },
 ];

@@ -2,7 +2,6 @@ import { motion } from "motion/react";
 import Hero from "../components/Hero";
 import {
   WhyYugantran,
-  AboutTeaser,
 } from "../components/HomeSections";
 
 export default function Home() {
@@ -15,7 +14,6 @@ export default function Home() {
       >
       <Hero />
       <WhyYugantran />
-      <AboutTeaser />
     </motion.div>
   );
 }

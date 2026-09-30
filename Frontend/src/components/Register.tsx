@@ -34,6 +34,8 @@ import {
   Copy,
   Upload,
   AlertCircle,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
@@ -82,6 +84,7 @@ export default function Register() {
     transactionId: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isEventDropdownOpen, setIsEventDropdownOpen] = useState(false);
 
   useEffect(() => {
     publicApi
@@ -272,7 +275,7 @@ export default function Register() {
             initial={{ opacity: 0, y: -20, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: -20, x: "-50%" }}
-            className="fixed top-24 left-1/2 z-50 px-5 py-2.5 rounded-full bg-slate-900/95 border border-cyan-400/50 text-cyan-300 font-mono-matrix text-xs shadow-2xl backdrop-blur-md flex items-center gap-2"
+            className="fixed top-24 left-1/2 z-50 px-5 py-2.5 rounded-full bg-slate-900/95 border border-white/30/50 text-white font-mono-matrix text-xs shadow-2xl backdrop-blur-md flex items-center gap-2"
           >
             <Zap className="w-4 h-4 text-cyan-400" />
             <span>{toast}</span>
@@ -293,11 +296,11 @@ export default function Register() {
             <span>JOIN THE BATTLE</span>
           </div>
 
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
-            Official <span className="gradient-text">Registration</span>
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+            <span className="anim-silver-royal">Official Registration</span>
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base font-body">
+          <p className="text-slate-200 text-opacity-90 text-sm sm:text-base font-body max-w-xl mx-auto text-balance leading-relaxed">
             Lock in your spot for YUGANTRAN 3.0. Select your competition, complete payment via UPI, and
             upload your receipt for verification.
           </p>
@@ -308,7 +311,7 @@ export default function Register() {
           <div className="glass p-12 rounded-3xl text-center border-rose-500/30">
             <XCircle className="w-16 h-16 text-rose-400 mx-auto mb-4" />
             <h3 className="font-orbitron font-bold text-2xl text-white mb-2">Registration Closed</h3>
-            <p className="text-slate-300">
+            <p className="text-slate-200 text-opacity-90">
               Registrations for YUGANTRAN 3.0 have officially concluded. See you at the arena!
             </p>
           </div>
@@ -330,9 +333,9 @@ export default function Register() {
               <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white">
                 Registration Confirmed!
               </h3>
-              <p className="text-slate-300 text-sm sm:text-base max-w-lg mx-auto">
+              <p className="text-slate-200 text-opacity-90 text-sm sm:text-base max-w-lg mx-auto">
                 Your entry for{" "}
-                <strong className="text-cyan-300 font-semibold">{formData.selectedEvent?.name}</strong>{" "}
+                <strong className="text-white font-semibold">{formData.selectedEvent?.name}</strong>{" "}
                 has been logged with Transaction ID:{" "}
                 <strong className="text-white font-mono">{formData.transactionId || "VERIFIED"}</strong>.
               </p>
@@ -349,7 +352,7 @@ export default function Register() {
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Event:</span>
-                <span className="text-cyan-300 font-semibold">{formData.selectedEvent?.name}</span>
+                <span className="text-white font-semibold">{formData.selectedEvent?.name}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-400">Fee Paid:</span>
@@ -373,10 +376,10 @@ export default function Register() {
             className="space-y-8"
           >
             {/* 1. Event Selector */}
-            <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/25">
+            <div className="relative z-50 p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-cyan-300 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-white" />
                   STEP 1: SELECT YOUR COMPETITION
                 </h3>
                 {selectedEvent && (
@@ -392,66 +395,110 @@ export default function Register() {
                 </p>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {events.map((ev) => {
-                  const Icon = ICON_MAP[ev.icon] || Code;
-                  const isSel = selectedEvent?._id === ev._id || selectedEvent?.slug === ev.slug;
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
+                  className={`w-full p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between ${
+                    selectedEvent
+                      ? "border-white/30 bg-white/10 shadow-[0_0_20px_rgba(0,242,254,0.3)]"
+                      : "border-slate-800 bg-slate-900/60 hover:border-slate-700"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {selectedEvent ? (
+                      <>
+                        {(() => {
+                          const SelectedIcon = ICON_MAP[selectedEvent.icon] || Code;
+                          return <SelectedIcon className="w-5 h-5 text-cyan-400" />;
+                        })()}
+                        <span className="font-orbitron text-sm sm:text-base font-bold text-white">
+                          {selectedEvent.name}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="font-orbitron text-sm sm:text-base font-bold text-slate-400">
+                        Select an Event...
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {isEventDropdownOpen ? (
+                      <ChevronUp className="w-5 h-5 text-slate-400" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5 text-slate-400" />
+                    )}
+                  </div>
+                </button>
 
-                  return (
-                    <motion.button
-                      key={ev._id || ev.slug}
-                      type="button"
-                      whileHover={{ scale: 1.015 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() =>
-                        isSel
-                          ? setFormData((p) => ({ ...p, selectedEvent: null }))
-                          : selectEvent(ev)
-                      }
-                      className={`p-4 rounded-2xl border text-left transition-all duration-200 flex flex-col justify-between ${
-                        isSel
-                          ? "border-cyan-400 bg-cyan-950/70 shadow-[0_0_20px_rgba(0,242,254,0.3)]"
-                          : "border-slate-800 bg-slate-900/60 hover:border-slate-700"
-                      }`}
+                <AnimatePresence>
+                  {isEventDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl max-h-[300px] overflow-y-auto"
                     >
-                      <div className="flex items-center gap-2.5 mb-2">
-                        <Icon
-                          className="w-5 h-5 flex-shrink-0"
-                          style={{ color: isSel ? "#00f2fe" : "#94a3b8" }}
-                        />
-                        <span
-                          className="font-orbitron text-xs font-bold truncate"
-                          style={{ color: isSel ? "#ffffff" : "#cbd5e1" }}
-                        >
-                          {ev.name}
-                        </span>
-                        {isSel && <Check className="w-4 h-4 text-cyan-400 ml-auto flex-shrink-0" />}
-                      </div>
+                      {events.map((ev) => {
+                        const Icon = ICON_MAP[ev.icon] || Code;
+                        const isSel = selectedEvent?._id === ev._id || selectedEvent?.slug === ev.slug;
 
-                      <div className="flex items-center justify-between text-[11px] font-space text-slate-400">
-                        <span className="text-emerald-400 font-semibold">₹{ev.fee}</span>
-                        <span>
-                          {ev.teamType === "individual"
-                            ? "Solo"
-                            : `Team (${ev.minTeam}-${ev.maxTeam})`}
-                        </span>
-                      </div>
-                    </motion.button>
-                  );
-                })}
+                        return (
+                          <button
+                            key={ev._id || ev.slug}
+                            type="button"
+                            onClick={() => {
+                              if (!isSel) selectEvent(ev);
+                              setIsEventDropdownOpen(false);
+                            }}
+                            className={`w-full p-4 flex items-center justify-between transition-colors border-b border-slate-800/50 last:border-0 ${
+                              isSel ? "bg-white/10" : "hover:bg-slate-800/60"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Icon
+                                className="w-5 h-5"
+                                style={{ color: isSel ? "#00f2fe" : "#94a3b8" }}
+                              />
+                              <div className="flex flex-col items-start">
+                                <span
+                                  className="font-orbitron text-sm font-bold"
+                                  style={{ color: isSel ? "#ffffff" : "#cbd5e1" }}
+                                >
+                                  {ev.name}
+                                </span>
+                                <span className="text-[10px] font-space text-slate-500">
+                                  {ev.teamType === "individual"
+                                    ? "Solo"
+                                    : `Team (${ev.minTeam}-${ev.maxTeam})`}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <span className="text-emerald-400 font-semibold text-xs">
+                                ₹{ev.fee}
+                              </span>
+                              {isSel && <Check className="w-4 h-4 text-cyan-400" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
             {/* 2. Personal Information */}
-            <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/25">
-              <h3 className="font-orbitron font-bold text-sm sm:text-base text-cyan-300 mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+              <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-white" />
                 STEP 2: PARTICIPANT INTEL
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     FULL NAME *
                   </label>
                   <div className="relative">
@@ -459,17 +506,17 @@ export default function Register() {
                     <input
                       type="text"
                       name="name"
+                      placeholder="e.g. Rahul Sharma"
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="e.g. Rahul Sharma"
-                      className={`admin-input pl-11 ${errors.name ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.name ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.name && <p className="text-rose-400 text-xs mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     ROLL NUMBER / ENROLLMENT ID *
                   </label>
                   <div className="relative">
@@ -477,17 +524,17 @@ export default function Register() {
                     <input
                       type="text"
                       name="rollNumber"
+                      placeholder="e.g. GU21MCA001"
                       value={formData.rollNumber}
                       onChange={handleChange}
-                      placeholder="e.g. GU21MCA001"
-                      className={`admin-input pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.rollNumber && <p className="text-rose-400 text-xs mt-1">{errors.rollNumber}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     PROGRAM / BRANCH *
                   </label>
                   <div className="relative">
@@ -495,17 +542,17 @@ export default function Register() {
                     <input
                       type="text"
                       name="program"
+                      placeholder="e.g. B.Tech CSE"
                       value={formData.program}
                       onChange={handleChange}
-                      placeholder="e.g. B.Tech CSE / MCA / BCA"
-                      className={`admin-input pl-11 ${errors.program ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.program ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.program && <p className="text-rose-400 text-xs mt-1">{errors.program}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     SEMESTER / YEAR *
                   </label>
                   <div className="relative">
@@ -513,17 +560,17 @@ export default function Register() {
                     <input
                       type="text"
                       name="semester"
+                      placeholder="e.g. 5th Sem"
                       value={formData.semester}
                       onChange={handleChange}
-                      placeholder="e.g. 5th Sem / 3rd Year"
-                      className={`admin-input pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.semester && <p className="text-rose-400 text-xs mt-1">{errors.semester}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     PHONE / WHATSAPP NUMBER *
                   </label>
                   <div className="relative">
@@ -531,17 +578,17 @@ export default function Register() {
                     <input
                       type="tel"
                       name="mobileNumber"
+                      placeholder="10-digit number"
                       value={formData.mobileNumber}
                       onChange={handleChange}
-                      placeholder="10-digit mobile number"
-                      className={`admin-input pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.mobileNumber && <p className="text-rose-400 text-xs mt-1">{errors.mobileNumber}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     EMAIL ADDRESS *
                   </label>
                   <div className="relative">
@@ -549,17 +596,17 @@ export default function Register() {
                     <input
                       type="email"
                       name="email"
+                      placeholder="student@example.com"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="student@example.com"
-                      className={`admin-input pl-11 ${errors.email ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.email ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email}</p>}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     COLLEGE / UNIVERSITY *
                   </label>
                   <div className="relative">
@@ -567,10 +614,10 @@ export default function Register() {
                     <input
                       type="text"
                       name="college"
+                      placeholder="e.g. Geeta University"
                       value={formData.college}
                       onChange={handleChange}
-                      placeholder="e.g. Geeta University, Panipat"
-                      className={`admin-input pl-11 ${errors.college ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.college ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.college && <p className="text-rose-400 text-xs mt-1">{errors.college}</p>}
@@ -580,23 +627,23 @@ export default function Register() {
 
             {/* 3. Team Details (If team event) */}
             {isTeamEvent && (
-              <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/25">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-cyan-300 mb-5 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+              <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-white" />
                   STEP 3: TEAM SQUAD DETAILS
                 </h3>
 
                 <div className="mb-6">
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                     TEAM NAME *
                   </label>
                   <input
                     type="text"
                     name="teamName"
+                      placeholder="e.g. Code Ninjas"
                     value={formData.teamName}
                     onChange={handleChange}
-                    placeholder="e.g. CyberKnights"
-                    className={`admin-input ${errors.teamName ? "!border-rose-500" : ""}`}
+                    className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.teamName ? "!border-rose-500" : ""}`}
                   />
                   {errors.teamName && (
                     <p className="text-rose-400 text-xs mt-1">{errors.teamName}</p>
@@ -636,36 +683,36 @@ export default function Register() {
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <input
                           type="text"
-                          placeholder="Full Name *"
                           value={member.name}
+                          placeholder="Member Name"
                           onChange={(e) => {
                             const arr = [...formData.teamMembers];
                             arr[idx].name = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="admin-input text-xs"
+                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
-                          placeholder="Roll Number *"
                           value={member.rollNumber}
+                          placeholder="Member Roll No"
                           onChange={(e) => {
                             const arr = [...formData.teamMembers];
                             arr[idx].rollNumber = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="admin-input text-xs"
+                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
-                          placeholder="Program / Branch *"
                           value={member.program}
+                          placeholder="Branch"
                           onChange={(e) => {
                             const arr = [...formData.teamMembers];
                             arr[idx].program = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="admin-input text-xs"
+                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                       </div>
                     </div>
@@ -694,9 +741,9 @@ export default function Register() {
 
             {/* 4. Payment & Receipt Dropzone */}
             {selectedEvent && (
-              <div className="glass p-6 sm:p-8 rounded-3xl border-cyan-500/25">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-cyan-300 mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
+              <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-6 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-white" />
                   STEP {isTeamEvent ? "4" : "3"}: UPI PAYMENT & RECEIPT
                 </h3>
 
@@ -715,7 +762,7 @@ export default function Register() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-950/60 border border-cyan-500/30 text-xs font-mono-matrix text-cyan-300 mb-2">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-950/60 border border-white/20 text-xs font-mono-matrix text-white mb-2">
                       <span>{upiId}</span>
                       <button
                         type="button"
@@ -735,31 +782,31 @@ export default function Register() {
                   {/* Right: Payment Inputs */}
                   <div className="md:col-span-7 space-y-4">
                     <div>
-                      <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                         YOUR UPI ID / UTR NUMBER *
                       </label>
                       <input
                         type="text"
                         name="upiId"
+                      placeholder="e.g. name@okicici"
                         value={formData.upiId}
                         onChange={handleChange}
-                        placeholder="e.g. yourname@okaxis or UTR123456"
-                        className={`admin-input ${errors.upiId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.upiId ? "!border-rose-500" : ""}`}
                       />
                       {errors.upiId && <p className="text-rose-400 text-xs mt-1">{errors.upiId}</p>}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
                         TRANSACTION / REFERENCE ID *
                       </label>
                       <input
                         type="text"
                         name="transactionId"
+                      placeholder="e.g. 123456789012"
                         value={formData.transactionId}
                         onChange={handleChange}
-                        placeholder="e.g. 428901238910"
-                        className={`admin-input ${errors.transactionId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.transactionId ? "!border-rose-500" : ""}`}
                       />
                       {errors.transactionId && (
                         <p className="text-rose-400 text-xs mt-1">{errors.transactionId}</p>
@@ -770,7 +817,7 @@ export default function Register() {
 
                 {/* Drag & Drop Receipt Dropzone */}
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-300 uppercase tracking-wider mb-2.5">
+                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2.5">
                     PAYMENT SCREENSHOT / RECEIPT (PNG, JPG, PDF) *
                   </label>
 
@@ -788,10 +835,10 @@ export default function Register() {
                     onDragLeave={() => setIsDragActive(false)}
                     className={`flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
                       isDragActive
-                        ? "border-cyan-400 bg-cyan-950/40 shadow-[0_0_30px_rgba(0,242,254,0.3)]"
+                        ? "border-white/30 bg-white/10 shadow-[0_0_30px_rgba(0,242,254,0.3)]"
                         : errors.paymentReceipt
                         ? "border-rose-500 bg-slate-900/60"
-                        : "border-slate-700 bg-slate-900/60 hover:border-cyan-500/50"
+                        : "border-slate-700 bg-slate-900/60 hover:border-white/30"
                     }`}
                   >
                     {previewUrl ? (
@@ -801,13 +848,13 @@ export default function Register() {
                           alt="Receipt Preview"
                           className="max-h-48 rounded-xl mx-auto shadow-lg"
                         />
-                        <p className="text-xs font-mono-matrix text-cyan-300">
+                        <p className="text-xs font-mono-matrix text-white">
                           {formData.paymentReceipt?.name}
                         </p>
                       </div>
                     ) : (
                       <div className="text-center space-y-2">
-                        <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center mx-auto text-cyan-400">
+                        <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-white/30/30 flex items-center justify-center mx-auto text-cyan-400">
                           <Upload className="w-6 h-6" />
                         </div>
                         <p className="text-sm font-space font-semibold text-white">
@@ -850,17 +897,18 @@ export default function Register() {
               disabled={loading}
               whileHover={{ scale: loading ? 1 : 1.02 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
-              className="btn-primary w-full py-4 text-sm font-black justify-center shadow-cyan-500/30 flex items-center gap-2"
+              className="w-full py-4 text-sm font-orbitron font-bold uppercase tracking-widest justify-center flex items-center gap-2 rounded-2xl transition-all duration-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-white/30/50 backdrop-blur-xl text-white shadow-[0_0_20px_rgba(0,242,254,0.15)] hover:shadow-[0_0_30px_rgba(0,242,254,0.3)] relative overflow-hidden group"
             >
+              {/* Optional nice subtle inner gradient sweep effect could go here, but background changes on hover are enough! */}
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>PROCESSING REGISTRATION...</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+                  <span className="relative z-10 text-white">PROCESSING REGISTRATION...</span>
                 </>
               ) : (
                 <>
-                  <span>CONFIRM & SUBMIT REGISTRATION</span>
-                  <Send className="w-4 h-4" />
+                  <span className="relative z-10 text-white group-hover:text-cyan-100 transition-colors">CONFIRM & SUBMIT REGISTRATION</span>
+                  <Send className="w-4 h-4 text-cyan-400 group-hover:text-cyan-200 transition-colors" />
                 </>
               )}
             </motion.button>
