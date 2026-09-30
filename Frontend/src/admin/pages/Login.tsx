@@ -29,9 +29,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-[#030712] flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Ambient Glows */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
