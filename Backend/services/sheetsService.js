@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import { getGoogleServiceAccountCredentials } from "./googleAuthHelper.js";
 
 /**
  * Extracts clean Google Spreadsheet ID from either raw ID or full Google Sheets URL
@@ -35,28 +36,15 @@ export const a1Range = (sheetTitle, cellRange) => {
  * Returns Google Auth Client with Sheets and Drive scopes
  */
 const getSheetsAuthClient = () => {
-  const clientEmail = (process.env.GOOGLE_CLIENT_EMAIL || "").trim();
-  let privateKey = (process.env.GOOGLE_PRIVATE_KEY || "").trim();
-
-  if (!clientEmail || !privateKey) {
+  const creds = getGoogleServiceAccountCredentials();
+  if (!creds || !creds.isValid) {
     return null;
   }
 
-  // Strip leading/trailing surrounding quotes if present
-  if (
-    (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
-    (privateKey.startsWith("'") && privateKey.endsWith("'"))
-  ) {
-    privateKey = privateKey.slice(1, -1);
-  }
-
-  // Convert literal \n to real newlines
-  privateKey = privateKey.replace(/\\n/g, "\n");
-
   return new google.auth.GoogleAuth({
     credentials: {
-      client_email: clientEmail,
-      private_key: privateKey,
+      client_email: creds.clientEmail,
+      private_key: creds.privateKey,
     },
     scopes: [
       "https://www.googleapis.com/auth/spreadsheets",

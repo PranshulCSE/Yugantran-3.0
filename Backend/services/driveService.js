@@ -1,13 +1,17 @@
 import { google } from "googleapis";
 import { Readable } from "stream";
+import { getGoogleServiceAccountCredentials } from "./googleAuthHelper.js";
 
 const getAuthClient = () => {
+  const creds = getGoogleServiceAccountCredentials();
+  if (!creds || !creds.isValid) {
+    return null;
+  }
+
   return new google.auth.GoogleAuth({
     credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY
-        ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")
-        : undefined,
+      client_email: creds.clientEmail,
+      private_key: creds.privateKey,
     },
     scopes: ["https://www.googleapis.com/auth/drive.file"],
   });
