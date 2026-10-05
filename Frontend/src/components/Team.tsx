@@ -111,13 +111,12 @@ export default function Team() {
           transition={{ duration: 0.4 }}
           className="text-center max-w-3xl mx-auto"
         >
-          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-4">
-            Organizing <span className="gradient-text">Committee</span>
+          <h1 className="font-orbitron text-3xl sm:text-4xl md:text-5xl font-black mb-4">
+            <span className="anim-silver-royal">Organizing Committee</span>
           </h1>
 
           <p className="text-slate-600 dark:text-slate-300 text-base sm:text-lg font-body">
-            The visionary student leads and coordinators driving YUGANTRAN 3.0 at the School of
-            Computer Science & Engineering, Geeta University.
+            The driving force behind YUGANTRAN 3.0 at Geeta University.
           </p>
         </motion.div>
 
@@ -125,23 +124,23 @@ export default function Team() {
         <div className="flex justify-center items-center gap-4 mt-4 mb-8">
           <button
             onClick={() => setActiveTab("core")}
-            className={`px-6 py-2.5 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all ${
+            className={`px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all border ${
               activeTab === "core"
-                ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
-                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700"
+                ? "anim-silver-bg shadow-[0_0_15px_rgba(209,213,219,0.5)]"
+                : "glass border-transparent hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
             }`}
           >
-            CORE TEAM
+            <span>CORE TEAM</span>
           </button>
           <button
             onClick={() => setActiveTab("volunteer")}
-            className={`px-6 py-2.5 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all ${
+            className={`px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all border ${
               activeTab === "volunteer"
-                ? "bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(0,242,254,0.4)]"
-                : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700"
+                ? "anim-silver-bg shadow-[0_0_15px_rgba(209,213,219,0.5)]"
+                : "glass border-transparent hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
             }`}
           >
-            VOLUNTEERS
+            <span>VOLUNTEERS</span>
           </button>
         </div>
 
@@ -168,7 +167,7 @@ export default function Team() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
           >
             {members.map((m, i) => (
               <MemberCard key={m._id || m.id || i} member={m} index={i} />

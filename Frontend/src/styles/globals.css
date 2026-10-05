@@ -1,14 +1,15 @@
-/* ═══════════════════════════════════════════════════════════════
-   YUGANTRAN 3.0 — NextGen Cyber, AI & Technical Festival Theme
+@import "./iridescent.css";
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   YUGANTRAN 3.0 â€” NextGen Cyber, AI & Technical Festival Theme
    Style: Deep Cyber Black (Dark) & High-Tech Silver Glass (Light)
-   School of Computer Science & Engineering • Geeta University
-   ═══════════════════════════════════════════════════════════════ */
+   School of Computer Science & Engineering â€¢ Geeta University
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── CSS Variables ─────────────────────────────────────────────── */
+/* â”€â”€â”€ CSS Variables â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 :root {
   --cyan-neon: #00f2fe;
   --cyan-glow: rgba(0, 242, 254, 0.4);
@@ -18,7 +19,7 @@
   --blue-deep: #030712;
   --indigo-neon: #6366f1;
   --purple-neon: #a855f7;
-  
+
   /* Dark defaults */
   --text-main: #f8fafc;
   --text-dim: #94a3b8;
@@ -45,8 +46,10 @@ html.dark {
   color-scheme: dark;
 }
 
-/* ─── Base ──────────────────────────────────────────────────────── */
-*, *::before, *::after {
+/* â”€â”€â”€ Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -69,13 +72,16 @@ html.light {
 html::-webkit-scrollbar {
   width: 6px;
 }
+
 html::-webkit-scrollbar-track {
   background: transparent;
 }
+
 html::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #00f2fe, #38bdf8);
   border-radius: 4px;
 }
+
 html::-webkit-scrollbar-thumb:hover {
   background: #00f2fe;
 }
@@ -99,21 +105,24 @@ html.light body {
   color: #0f172a;
 }
 
-/* ─── Typography & Font Classes ─────────────────────────────────── */
+/* â”€â”€â”€ Typography & Font Classes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .font-orbitron {
   font-family: "Orbitron", sans-serif !important;
 }
+
 .font-mono-matrix {
   font-family: "Share Tech Mono", "JetBrains Mono", monospace !important;
 }
+
 .font-space {
   font-family: "Space Grotesk", sans-serif !important;
 }
+
 .font-body {
   font-family: "Plus Jakarta Sans", "Inter", sans-serif !important;
 }
 
-/* ─── Gradient Texts & Neon Glows ──────────────────────────────── */
+/* â”€â”€â”€ Gradient Texts & Neon Glows â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .gradient-text {
   /* Using gradient--1 for light mode */
   background:
@@ -150,6 +159,7 @@ html.dark .gradient-text {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 html.dark .gradient-text-cyan {
   background: linear-gradient(135deg, #ffffff 0%, #00f2fe 60%, #38bdf8 100%);
   -webkit-background-clip: text;
@@ -163,6 +173,7 @@ html.dark .gradient-text-cyan {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 html.dark .gradient-text-green {
   background: linear-gradient(135deg, #ffffff 0%, #00ff41 50%, #10b981 100%);
   -webkit-background-clip: text;
@@ -176,6 +187,7 @@ html.dark .gradient-text-green {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
 html.dark .gradient-text-purple {
   background: linear-gradient(135deg, #ffffff 0%, #a855f7 50%, #38bdf8 100%);
   -webkit-background-clip: text;
@@ -184,9 +196,23 @@ html.dark .gradient-text-purple {
 }
 
 @keyframes gradient-shift {
-  0% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-  100% { background-position: 0% center; }
+  0% {
+    background-position: 0% center;
+  }
+
+  50% {
+    background-position: 100% center;
+  }
+
+  100% {
+    background-position: 0% center;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .text-glow-cyan {
@@ -197,7 +223,7 @@ html.dark .gradient-text-purple {
   box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
 }
 
-/* ─── Section Tags & Badges ─────────────────────────────────────── */
+/* â”€â”€â”€ Section Tags & Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .section-tag {
   display: inline-flex;
   align-items: center;
@@ -223,19 +249,19 @@ html.dark .section-tag {
   box-shadow: 0 0 12px rgba(0, 242, 254, 0.15);
 }
 
-/* ─── Glassmorphism Cards (Optimized for 60fps) ─────────────────── */
+/* â”€â”€â”€ Glassmorphism Cards (Optimized for 60fps) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 html.dark .glass {
-  background: linear-gradient(135deg, rgba(8, 20, 44, 0.75) 0%, rgba(3, 10, 26, 0.88) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.18);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .glass-hover {
@@ -249,7 +275,62 @@ html.dark .glass {
   transform: translateY(-4px);
 }
 
-/* ─── Buttons ───────────────────────────────────────────────────── */
+/* Continuous Neon Glow Border Effect */
+.btn-neon-glow {
+  --neon-color: #00f2fe;
+  /* Cyan for dark mode */
+  position: relative;
+}
+
+html.light .btn-neon-glow {
+  --neon-color: #0ea5e9;
+  /* Sky blue for light mode */
+}
+
+.btn-neon-glow-svg {
+  pointer-events: none;
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+  z-index: 0;
+  overflow: visible;
+}
+
+.btn-neon-glow-blur,
+.btn-neon-glow-rect {
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  x: 8px;
+  y: 8px;
+  fill: transparent;
+  stroke: var(--neon-color);
+  stroke-dasharray: 60 1000;
+  stroke-linecap: round;
+  animation: neon-travel 4s linear infinite;
+}
+
+.btn-neon-glow-rect {
+  stroke-width: 2px;
+}
+
+.btn-neon-glow-blur {
+  stroke-width: 6px;
+  filter: blur(6px);
+  opacity: 0.8;
+}
+
+@keyframes neon-travel {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -1060px;
+  }
+}
+
+/* â”€â”€â”€ Buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -321,12 +402,13 @@ html.dark .btn-outline:hover {
   background: rgba(0, 242, 254, 0.12);
 }
 
-/* ─── Category Badges ───────────────────────────────────────────── */
+/* â”€â”€â”€ Category Badges â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .badge-ai {
   color: #0284c7;
   border-color: rgba(2, 132, 199, 0.35);
   background: rgba(2, 132, 199, 0.1);
 }
+
 html.dark .badge-ai {
   color: #00f2fe;
   border-color: rgba(0, 242, 254, 0.35);
@@ -338,6 +420,7 @@ html.dark .badge-ai {
   border-color: rgba(225, 29, 72, 0.35);
   background: rgba(225, 29, 72, 0.1);
 }
+
 html.dark .badge-cybersecurity {
   color: #f43f5e;
   border-color: rgba(244, 63, 94, 0.35);
@@ -349,6 +432,7 @@ html.dark .badge-cybersecurity {
   border-color: rgba(2, 132, 199, 0.35);
   background: rgba(2, 132, 199, 0.1);
 }
+
 html.dark .badge-coding {
   color: #38bdf8;
   border-color: rgba(56, 189, 248, 0.35);
@@ -360,6 +444,7 @@ html.dark .badge-coding {
   border-color: rgba(234, 88, 12, 0.35);
   background: rgba(234, 88, 12, 0.1);
 }
+
 html.dark .badge-swe {
   color: #fb923c;
   border-color: rgba(251, 146, 60, 0.35);
@@ -371,6 +456,7 @@ html.dark .badge-swe {
   border-color: rgba(13, 148, 136, 0.35);
   background: rgba(13, 148, 136, 0.1);
 }
+
 html.dark .badge-iot {
   color: #2dd4bf;
   border-color: rgba(45, 212, 191, 0.35);
@@ -382,6 +468,7 @@ html.dark .badge-iot {
   border-color: rgba(147, 51, 234, 0.35);
   background: rgba(147, 51, 234, 0.1);
 }
+
 html.dark .badge-innovation {
   color: #a855f7;
   border-color: rgba(168, 85, 247, 0.35);
@@ -393,13 +480,14 @@ html.dark .badge-innovation {
   border-color: rgba(219, 39, 119, 0.35);
   background: rgba(219, 39, 119, 0.1);
 }
+
 html.dark .badge-gaming {
   color: #ec4899;
   border-color: rgba(236, 72, 153, 0.35);
   background: rgba(236, 72, 153, 0.1);
 }
 
-/* ─── Admin Styles ──────────────────────────────────────────────── */
+/* â”€â”€â”€ Admin Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .admin-sidebar {
   width: 260px;
   min-height: 100vh;
@@ -423,7 +511,7 @@ html.dark .badge-gaming {
   border-radius: 16px;
 }
 
-.admin-input {
+.frontend-input, .admin-input {
   width: 100%;
   padding: 12px 16px;
   background: rgba(255, 255, 255, 0.85);
@@ -436,38 +524,38 @@ html.dark .badge-gaming {
   transition: all 0.2s ease;
 }
 
-html.dark .admin-input {
+html.dark .frontend-input, .admin-input {
   background: rgba(4, 12, 30, 0.75);
   border: 1px solid rgba(56, 189, 248, 0.22);
   color: #ffffff;
 }
 
-.admin-input.pl-11,
-.admin-input.has-icon,
-.admin-input[class*="pl-11"],
-.admin-input[class*="pl-12"] {
+.frontend-input, .admin-input.pl-11,
+.frontend-input, .admin-input.has-icon,
+.frontend-input, .admin-input[class*="pl-11"],
+.frontend-input, .admin-input[class*="pl-12"] {
   padding-left: 44px !important;
 }
 
-.admin-input.pr-11,
-.admin-input[class*="pr-11"] {
+.frontend-input, .admin-input.pr-11,
+.frontend-input, .admin-input[class*="pr-11"] {
   padding-right: 44px !important;
 }
 
-.admin-input::placeholder {
+.frontend-input, .admin-input::placeholder {
   color: rgba(100, 116, 139, 0.6);
 }
 
-html.dark .admin-input::placeholder {
+html.dark .frontend-input, .admin-input::placeholder {
   color: rgba(148, 163, 184, 0.45);
 }
 
-.admin-input:focus {
+.frontend-input, .admin-input:focus {
   border-color: #00f2fe;
   box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.15);
 }
 
-/* ─── Admin Data Table Styles ────────────────────────────────────── */
+/* â”€â”€â”€ Admin Data Table Styles â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .data-table {
   width: 100%;
   border-collapse: separate;
@@ -511,10 +599,15 @@ html.dark .admin-input::placeholder {
   border-bottom: none;
 }
 
-/* ─── Infinite Marquee Animations ───────────────────────────────── */
+/* â”€â”€â”€ Infinite Marquee Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes marquee-scroll {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -528,12 +621,25 @@ html.dark .admin-input::placeholder {
   animation-play-state: paused;
 }
 
-/* ─── Neon Circuit Laser Animations ─────────────────────────────── */
+/* â”€â”€â”€ Neon Circuit Laser Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes neon-laser {
-  0% { stroke-dashoffset: 600; opacity: 0; }
-  15% { opacity: 1; }
-  85% { opacity: 1; }
-  100% { stroke-dashoffset: 0; opacity: 0; }
+  0% {
+    stroke-dashoffset: 600;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
 }
 
 .animate-neon-laser {
@@ -541,9 +647,12 @@ html.dark .admin-input::placeholder {
   will-change: stroke-dashoffset, opacity;
 }
 
-/* ─── Reduced Motion ────────────────────────────────────────────── */
+/* â”€â”€â”€ Reduced Motion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -551,7 +660,7 @@ html.dark .admin-input::placeholder {
   }
 }
 
-/* ─── Glassy Navbar Items (Dribbble Inspired) ────────────────────────── */
+/* â”€â”€â”€ Glassy Navbar Items (Dribbble Inspired) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .glassy-nav-item {
   --_transition-speed: 200ms;
   --_hover-opacity: 0.15;
@@ -568,7 +677,8 @@ html.dark .admin-input::placeholder {
   background-color: transparent;
   position: relative;
   display: inline-flex;
-  border-radius: 9999px; /* full rounded */
+  border-radius: 9999px;
+  /* full rounded */
 }
 
 .glassy-nav-item .glassy-content {
@@ -603,7 +713,8 @@ html.dark .admin-input::placeholder {
   z-index: -1;
   inset: 0;
   border-radius: inherit;
-  background-color: rgba(0, 242, 254, 0.20); /* cyan tint to blend */
+  background-color: rgba(255, 255, 255, 0.15);
+  /* neutral tint */
   transition: scale var(--_transition-speed),
     translate var(--_transition-speed);
   animation: exit forwards var(--_transition-speed);
@@ -611,7 +722,8 @@ html.dark .admin-input::placeholder {
 }
 
 html.light .glassy-nav-item::after {
-  background-color: rgba(6, 182, 212, 0.20); /* lighter cyan for light mode */
+  background-color: rgba(0, 0, 0, 0.10);
+  /* darker neutral tint for light mode */
 }
 
 /* Hover & Focus state */
@@ -666,11 +778,151 @@ html.light .glassy-nav-item.active .glassy-content {
 }
 
 @keyframes enter {
-  from { transform: translate(0, 0); }
-  to { transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1)); }
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1));
+  }
 }
 
 @keyframes exit {
-  from { transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1)); }
-  to { transform: translate(0, 0); }
+  from {
+    transform: translate(calc(var(--_x-motion, 0px) * var(--_motion-factor) * -1), calc(var(--_y-motion, 0px) * var(--_motion-factor) * -1));
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+/* Custom Animated Gradient Text */
+.anim-silver-royal {
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shineGradient 4s linear infinite;
+}
+
+html.dark .anim-silver-royal {
+  background-image: linear-gradient(to right, #9ca3af, #f8fafc, #d1d5db, #f8fafc, #9ca3af);
+}
+
+html.light .anim-silver-royal,
+.anim-silver-royal {
+  background-image: linear-gradient(to right, #1e3a8a, #3b82f6, #93c5fd, #3b82f6, #1e3a8a);
+}
+
+@keyframes shineGradient {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: -200% center;
+  }
+}
+
+/* --- Electric Card --- */
+:root {
+  --electric-border-amber: #f59e0b;
+  --electric-light-amber: #fbbf24;
+}
+
+.electric-inner-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.electric-border-outer {
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 1.5rem;
+  position: absolute;
+  inset: 0;
+}
+
+.electric-main-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.5rem;
+  border: 2px solid var(--electric-border-amber);
+  filter: url(#turbulent-displace);
+}
+
+.electric-glow-layer-1 {
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  border-radius: 1.5rem;
+  position: absolute;
+  inset: 0;
+  filter: blur(2px);
+}
+
+.electric-glow-layer-2 {
+  border: 1px solid var(--electric-light-amber);
+  border-radius: 1.5rem;
+  position: absolute;
+  inset: 0;
+  filter: blur(4px);
+}
+
+.anim-silver-bg {
+  background-size: 200% auto;
+  animation: shineGradient 4s linear infinite;
+  border-color: transparent !important;
+}
+
+html.dark .anim-silver-bg {
+  background-image: linear-gradient(to right, #9ca3af, #f8fafc, #d1d5db, #f8fafc, #9ca3af);
+  color: #0f172a !important;
+}
+
+html.light .anim-silver-bg,
+.anim-silver-bg {
+  background-image: linear-gradient(to right, #e2e8f0, #ffffff, #f8fafc, #ffffff, #e2e8f0);
+  color: #0f172a !important;
+}
+
+/* ─── Performance: Circuit Node Pulse ─────────────────────────────
+   Only animates opacity + transform — both GPU compositor-only.
+   No layout, no paint. Replaces Framer Motion JS-thread equivalent.
+──────────────────────────────────────────────────────────────────── */
+.circuit-node-pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  will-change: opacity, transform;
+  animation: circuit-node-pulse 3.5s ease-in-out infinite;
+  contain: layout style;
+}
+
+@keyframes circuit-node-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1);   }
+  50%       { opacity: 0.8; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* ─── Performance: Reduced Motion ─────────────────────────────────
+   Cuts all animation/transition for users who prefer it (accessibility +
+   battery + performance on constrained devices).
+──────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Performance: Canvas GPU layer ───────────────────────────────
+   Promotes the background canvas to its own GPU compositor layer
+   without affecting layout or sizing.
+──────────────────────────────────────────────────────────────────── */
+canvas[aria-hidden="true"] {
+  will-change: transform;
 }

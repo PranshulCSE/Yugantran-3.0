@@ -88,55 +88,72 @@ export function WhyYugantran() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="relative mt-16 lg:mt-24 max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-stretch justify-between gap-12 lg:gap-6">
+          
+          {/* Glowing Track Line (Desktop) */}
+          <div className="absolute top-1/2 left-[5%] right-[5%] h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent -translate-y-1/2 hidden lg:block z-0" />
+          
+          {/* Glowing Track Line (Mobile) */}
+          <div className="absolute left-1/2 top-[5%] bottom-[5%] w-[2px] bg-gradient-to-b from-transparent via-cyan-500/40 to-transparent -translate-x-1/2 block lg:hidden z-0" />
+
           {pillars.map((item, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: idx * 0.08, duration: 0.35 }}
-              className="glass glass-hover p-6 rounded-3xl border-cyan-500/20 flex flex-col justify-between group shadow-lg"
+              transition={{ delay: idx * 0.15, duration: 0.5 }}
+              className="relative z-10 flex flex-col items-center text-center group w-full lg:w-1/4"
             >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
-                    style={{
-                      background: `${item.color}15`,
-                      border: `1px solid ${item.color}35`,
-                      boxShadow: `0 0 20px ${item.color}20`,
-                    }}
-                  >
-                    <item.icon className="w-6 h-6" style={{ color: item.color }} />
-                  </div>
-                  <span
-                    className="font-orbitron text-xs font-black px-2.5 py-1 rounded-full border"
-                    style={{
-                      color: item.color,
-                      borderColor: `${item.color}35`,
-                      background: `${item.color}10`,
-                    }}
-                  >
-                    {item.badge}
-                  </span>
+              {/* Glassy Flow Node */}
+              <div 
+                className="glass p-6 sm:p-8 rounded-[2rem] w-full max-w-[280px] flex flex-col items-center hover:bg-white/10 transition-all duration-300 relative z-10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] h-full"
+                style={{
+                  border: `1px solid ${item.color}30`
+                }}
+              >
+                {/* Node Index Badge */}
+                <div 
+                  className="absolute -top-3 -right-3 w-10 h-10 rounded-full flex items-center justify-center font-orbitron font-black text-sm text-slate-950 border-4 border-[#030712] shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
+                  style={{ background: item.color }}
+                >
+                  {item.badge}
                 </div>
 
-                <h3 className="font-orbitron font-black text-xl text-slate-900 dark:text-white mb-1 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
+                {/* Node Icon */}
+                <div 
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                  style={{ background: `${item.color}15`, color: item.color, border: `1px solid ${item.color}40` }}
+                >
+                  <item.icon className="w-7 h-7" />
+                </div>
+
+                <h3 className="font-orbitron font-black text-lg text-slate-900 dark:text-white tracking-wide mb-1" style={{ textShadow: `0 0 10px ${item.color}30` }}>
                   {item.title}
                 </h3>
-                <p className="text-xs font-space font-semibold mb-3" style={{ color: item.color }}>
+                
+                <p className="text-[10px] font-space font-bold uppercase tracking-widest mb-3" style={{ color: item.color }}>
                   {item.subtitle}
                 </p>
-                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-body leading-relaxed">
+                
+                <p className="text-slate-600 dark:text-slate-300 text-xs font-body leading-relaxed flex-1">
                   {item.desc}
                 </p>
               </div>
 
-              <div className="pt-4 mt-4 border-t border-slate-200 dark:border-slate-800/80 flex items-center gap-1.5 text-[11px] font-mono-matrix text-slate-500 dark:text-slate-400 group-hover:text-cyan-500 dark:group-hover:text-cyan-300 transition-colors">
-                <span>CORE PILLAR</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
+              {/* Connecting Arrows for Desktop (except last) */}
+              {idx < pillars.length - 1 && (
+                <div className="hidden lg:flex absolute top-1/2 -right-3 -translate-y-1/2 translate-x-1/2 items-center text-cyan-500/50 z-0">
+                  <ArrowRight className="w-5 h-5 animate-pulse" />
+                </div>
+              )}
+              
+              {/* Connecting Arrows for Mobile (except last) */}
+              {idx < pillars.length - 1 && (
+                <div className="flex lg:hidden absolute -bottom-8 left-1/2 -translate-x-1/2 items-center text-cyan-500/50 z-0">
+                  <ArrowRight className="w-5 h-5 rotate-90 animate-pulse" />
+                </div>
+              )}
             </motion.div>
           ))}
         </div>
@@ -167,10 +184,6 @@ export function AboutTeaser() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             <div className="lg:col-span-7 space-y-4">
-              <div className="section-tag">
-                <Zap className="w-3.5 h-3.5 text-cyan-400" />
-                <span>ABOUT THE FEST</span>
-              </div>
               <h2 className="font-orbitron text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 dark:text-white">
                 Where <span className="gradient-text">Innovation</span> Meets Extreme Competition
               </h2>
@@ -390,7 +403,7 @@ export function TimelinePreview() {
 // ─── 5. PRIZE POOL BANNER ─────────────────────────────────────────
 export function PrizePoolBanner() {
   const navigate = useNavigate();
-  const [prizePool, setPrizePool] = useState("₹54,000+");
+  const [prizePool, setPrizePool] = useState("₹11,000+");
 
   useEffect(() => {
     publicApi
