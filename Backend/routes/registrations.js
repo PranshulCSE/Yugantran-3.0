@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 import Registration from "../models/Registration.js";
 import Event from "../models/Event.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -148,10 +149,12 @@ router.post("/", upload.single("paymentReceipt"), async (req, res) => {
     }
 
     // Save to MongoDB (Omit heavy base64 if Drive succeeded to save Atlas quota)
+    const validEventId = (eventId && mongoose.Types.ObjectId.isValid(eventId)) ? eventId : undefined;
+
     const registration = new Registration({
       name, rollNumber, program, semester, mobileNumber,
       college, email,
-      eventId: eventId || undefined,
+      eventId: validEventId,
       eventName,
       teamType: teamType || "individual",
       teamName: teamName || "",
@@ -351,13 +354,15 @@ router.post("/admin/send-email/:id", authMiddleware, async (req, res) => {
         { new: true }
       );
       return res.json({
+        success: true,
         message: `Confirmation email sent successfully to ${reg.email} via ${emailResult.provider || "Gmail"}!`,
         emailResult,
         registration: updated,
       });
     } else {
-      return res.status(500).json({
-        error: emailResult.error || "Failed to send confirmation email.",
+      return res.status(400).json({
+        success: false,
+        error: emailResult?.error || "Failed to send confirmation email.",
         emailResult,
       });
     }
@@ -376,20 +381,22 @@ router.post("/admin/sync-sheet/:id", authMiddleware, async (req, res) => {
     console.log(`📊 [Manual Sync] Appending registration for ${reg.name} to Google Sheet...`);
     const sheetResult = await appendConfirmedRegistrationToSheet(reg);
 
-    if (sheetResult.success) {
+    if (sheetResult?.success) {
       const updated = await Registration.findByIdAndUpdate(
         req.params.id,
         { sheetSyncedAt: new Date() },
         { new: true }
       );
       return res.json({
+        success: true,
         message: `Successfully synced to Google Sheet under tab "${sheetResult.sheetTitle}"!`,
         registration: updated,
         sheetResult,
       });
     } else {
-      return res.status(500).json({
-        error: sheetResult.error || "Failed to append row to Google Sheet.",
+      return res.status(400).json({
+        success: false,
+        error: sheetResult?.error || "Failed to append row to Google Sheet.",
         sheetResult,
       });
     }
@@ -399,7 +406,7 @@ router.post("/admin/sync-sheet/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// POST /api/admin/registrations/sync-all — Sync all confirmed registrations to Google Sheets
+// POST /api/admin/registrations/sync-all — Sync all confirmed registrations to Google Sheets (Parallel Batched)
 router.post("/admin/sync-all", authMiddleware, async (req, res) => {
   try {
     const confirmedRegs = await Registration.find({ status: "confirmed" }).sort({ createdAt: 1 });
@@ -407,20 +414,37 @@ router.post("/admin/sync-all", authMiddleware, async (req, res) => {
       return res.json({ message: "No confirmed registrations found to sync.", syncedCount: 0, total: 0 });
     }
 
-    console.log(`📊 [Bulk Sync] Syncing ${confirmedRegs.length} confirmed registrations to Google Sheets...`);
+    console.log(`📊 [Bulk Sync] Syncing ${confirmedRegs.length} confirmed registrations to Google Sheets in parallel batches...`);
     const results = [];
 
-    for (const reg of confirmedRegs) {
-      const sResult = await appendConfirmedRegistrationToSheet(reg);
-      if (sResult.success) {
-        await Registration.findByIdAndUpdate(reg._id, { sheetSyncedAt: new Date() });
-      }
-      results.push({
-        id: reg._id,
-        name: reg.name,
-        eventName: reg.eventName,
-        ...sResult,
-      });
+    // Process in parallel batches of 4 to prevent 30s timeout while avoiding API rate limits
+    const batchSize = 4;
+    for (let i = 0; i < confirmedRegs.length; i += batchSize) {
+      const batch = confirmedRegs.slice(i, i + batchSize);
+      await Promise.allSettled(
+        batch.map(async (reg) => {
+          try {
+            const sResult = await appendConfirmedRegistrationToSheet(reg);
+            if (sResult?.success) {
+              await Registration.findByIdAndUpdate(reg._id, { sheetSyncedAt: new Date() });
+            }
+            results.push({
+              id: reg._id,
+              name: reg.name,
+              eventName: reg.eventName,
+              ...sResult,
+            });
+          } catch (err) {
+            results.push({
+              id: reg._id,
+              name: reg.name,
+              eventName: reg.eventName,
+              success: false,
+              error: err.message,
+            });
+          }
+        })
+      );
     }
 
     const successCount = results.filter((r) => r.success).length;

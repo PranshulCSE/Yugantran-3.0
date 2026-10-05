@@ -25,6 +25,9 @@ function getNodemailerTransporter() {
         user: gmailUser,
         pass: gmailPass,
       },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
       tls: {
         rejectUnauthorized: false,
       },
@@ -41,6 +44,9 @@ function getNodemailerTransporter() {
         user: process.env.SMTP_USER.trim(),
         pass: process.env.SMTP_PASS.trim(),
       },
+      connectionTimeout: 8000,
+      greetingTimeout: 8000,
+      socketTimeout: 10000,
       tls: {
         rejectUnauthorized: false,
       },

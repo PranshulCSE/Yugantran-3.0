@@ -28,6 +28,9 @@ export async function uploadToDrive(buffer, filename, mimeType) {
   if (webhookUrl && webhookUrl.startsWith("http")) {
     try {
       const base64 = buffer.toString("base64");
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s max timeout
+
       const res = await fetch(webhookUrl, {
         method: "POST",
         headers: {
@@ -40,7 +43,10 @@ export async function uploadToDrive(buffer, filename, mimeType) {
           folderId,
         }),
         redirect: "follow",
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       const data = await res.json();
       if (data && data.success) {
@@ -54,7 +60,7 @@ export async function uploadToDrive(buffer, filename, mimeType) {
         throw new Error(data?.error || "Apps Script returned unsuccessful status");
       }
     } catch (webhookErr) {
-      console.warn("⚠️ Google Apps Script Webhook upload failed:", webhookErr.message);
+      console.warn("⚠️ Google Apps Script Webhook upload failed:", webhookErr.name === "AbortError" ? "Timeout after 12s" : webhookErr.message);
       // Fall through to try Service Account or other fallbacks
     }
   }

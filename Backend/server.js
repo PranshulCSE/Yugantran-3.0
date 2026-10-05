@@ -74,13 +74,20 @@ app.use("/uploads", express.static(uploadsDir));
 
 // ─── MongoDB ────────────────────────────────────────
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, {
+    serverSelectionTimeoutMS: 10000,
+    socketTimeoutMS: 45000,
+  })
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err.message));
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err.message));
+
+mongoose.connection.on("error", (err) => {
+  console.error("⚠️ MongoDB runtime error:", err.message);
+});
 
 // ─── Routes ─────────────────────────────────────────
-app.get("/", (req, res) => res.json({ message: "YUGANTRAN 3.0 Backend — Running ✓" }));
-app.get("/health", (req, res) => res.json({ status: "ok", version: "3.0.0" }));
+app.get("/", (req, res) => res.json({ message: "YUGANTRAN 3.0 Backend — Running ✓", timestamp: new Date().toISOString() }));
+app.get("/health", (req, res) => res.json({ status: "ok", version: "3.0.0", mongoState: mongoose.connection.readyState }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
@@ -98,14 +105,24 @@ app.use((req, res) => {
 
 // ─── Error Handler ──────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error("Server Error:", err.message);
+  console.error("Server Error:", err.message || err);
   res.status(500).json({ error: err.message || "Internal server error." });
 });
 
+// ─── Process Error Handlers (Prevents unhandled crashes) ───
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("⚠️ Unhandled Promise Rejection:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("⚠️ Uncaught Exception:", err);
+});
+
 // ─── Start ──────────────────────────────────────────
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => {
   console.log(`🚀 YUGANTRAN 3.0 Backend running on port ${PORT}`);
 });
 
 export default app;
+

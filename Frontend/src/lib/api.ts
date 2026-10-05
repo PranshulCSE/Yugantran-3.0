@@ -13,7 +13,7 @@ const BASE_URL = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").r
 
 // ─── Axios instances ───────────────────────────────────────────────────────────
 
-const api = axios.create({ baseURL: BASE_URL, timeout: 30000 });
+const api = axios.create({ baseURL: BASE_URL, timeout: 60000 });
 
 // Attach JWT token to every request
 api.interceptors.request.use((config) => {
@@ -127,7 +127,7 @@ export const adminApi = {
   updateRegistration: (id: string, data: any) => api.put(`/api/registrations/admin/${id}`, data),
   sendConfirmationEmail: (id: string) => api.post(`/api/registrations/admin/send-email/${id}`),
   syncRegistrationToSheet: (id: string) => api.post(`/api/registrations/admin/sync-sheet/${id}`),
-  syncAllToSheets: () => api.post("/api/registrations/admin/sync-all"),
+  syncAllToSheets: () => api.post("/api/registrations/admin/sync-all", {}, { timeout: 120000 }),
   exportRegistrations: (params?: any) =>
     api.get("/api/registrations/admin/export", { params, responseType: "blob" }),
   getStats: () => api.get("/api/registrations/admin/stats"),
