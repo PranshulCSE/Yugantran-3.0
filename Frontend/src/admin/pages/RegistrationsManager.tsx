@@ -324,440 +324,221 @@ export default function RegistrationsManager() {
         </div>
       </div>
 
-      {/* Main Table Card */}
-      <div className="rounded-xl overflow-hidden border border-slate-800/80 bg-[#071329]/80 shadow-lg">
-        <div className="overflow-x-auto max-h-[calc(100vh-230px)]">
-          {loading ? (
-            <div className="flex items-center justify-center h-40">
-              <div className="w-7 h-7 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : (
-            <table className="data-table min-w-full">
-              <thead>
-                <tr>
-                  <th className="w-10 text-center">#</th>
-                  <th>Participant</th>
-                  <th>Event & Team</th>
-                  <th>University / College</th>
-                  <th>Contact</th>
-                  <th>Txn ID</th>
-                  <th>Status</th>
-                  <th>G Sheets</th>
-                  <th>Email</th>
-                  <th>Proof</th>
-                  <th className="text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {registrations.map((r, i) => (
-                  <tr
+      {/* 2-Column Mailbox Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 min-h-[calc(100vh-230px)]">
+        
+        {/* Left Column (Feed) */}
+        <div className="lg:col-span-5 bg-slate-900/40 rounded-xl border border-slate-800/80 overflow-hidden flex flex-col h-[calc(100vh-230px)]">
+          <div className="p-3 border-b border-slate-800/60 bg-slate-950/50">
+            <h2 className="text-slate-300 font-space font-semibold text-xs tracking-widest">REGISTRATION FEED</h2>
+          </div>
+          <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/50 p-2 space-y-2">
+            {loading ? (
+              <div className="flex items-center justify-center h-40">
+                <div className="w-7 h-7 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : registrations.length === 0 ? (
+              <div className="text-center p-8 text-slate-500 text-xs font-space">
+                No registrations matched your criteria.
+              </div>
+            ) : (
+              registrations.map((r, i) => {
+                const statusInfo = STATUS_CONFIG[r.status] || STATUS_CONFIG.pending;
+                const isSelected = selectedReg?._id === r._id;
+                return (
+                  <button
                     key={r._id}
                     onClick={() => setSelectedReg(r)}
-                    className="cursor-pointer group"
+                    className={`w-full text-left p-3 rounded-lg border transition-all duration-200 block ${
+                      isSelected 
+                        ? "bg-cyan-950/40 border-cyan-500/50 shadow-[0_0_15px_rgba(0,242,254,0.1)]" 
+                        : "bg-slate-900/50 border-slate-800/60 hover:bg-slate-800 hover:border-slate-700"
+                    }`}
                   >
-                    <td className="font-mono-matrix text-[11px] text-slate-500 text-center">
-                      {i + 1}
-                    </td>
-                    <td>
-                      <div className="font-bold text-slate-100 group-hover:text-cyan-300 transition-colors">
-                        {r.name}
-                      </div>
-                      <div className="text-[10px] text-cyan-400/80 font-mono-matrix">
-                        {r.rollNumber} {r.program ? `• ${r.program}` : ""}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="font-semibold text-slate-200 text-xs">{r.eventName}</div>
-                      <div className="text-[10px] text-slate-400 font-space">
-                        {r.teamType === "team" ? (
-                          <span className="text-cyan-400">Team: {r.teamName || "Squad"}</span>
-                        ) : (
-                          "Solo"
-                        )}
-                      </div>
-                    </td>
-                    <td className="text-[11px] text-slate-300 max-w-[130px] truncate" title={r.college}>
-                      {r.college}
-                    </td>
-                    <td className="font-mono-matrix text-[11px] text-slate-300">
-                      {r.mobileNumber}
-                    </td>
-                    <td
-                      className="font-mono-matrix text-[11px] text-slate-400 max-w-[110px] truncate"
-                      title={r.transactionId}
-                    >
-                      {r.transactionId}
-                    </td>
-                    <td>
-                      <span
-                        className={`inline-flex items-center gap-1 text-[10px] font-orbitron font-bold px-2 py-0.5 rounded border ${
-                          STATUS_CONFIG[r.status]?.badgeClass || "bg-slate-900 border-slate-700 text-slate-400"
-                        }`}
-                      >
-                        <span
-                          className={`w-1 h-1 rounded-full ${
-                            STATUS_CONFIG[r.status]?.dotColor || "bg-slate-400"
-                          }`}
-                        />
-                        {r.status?.toUpperCase()}
+                    <div className="flex justify-between items-start mb-1">
+                      <span className={`text-sm font-bold truncate ${isSelected ? "text-cyan-300" : "text-slate-100"}`}>
+                        {r.name || "Unknown"}
                       </span>
-                    </td>
-                    <td>
-                      {r.sheetSyncedAt ? (
-                        <span
-                          className="inline-flex items-center gap-1 text-[10px] font-mono-matrix text-emerald-400 bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-500/30"
-                          title={`Synced at ${new Date(r.sheetSyncedAt).toLocaleString()}`}
-                        >
-                          <CheckCircle2 className="w-2.5 h-2.5" />
-                          <span>Synced</span>
-                        </span>
-                      ) : (
-                        <span className="text-[10px] font-mono-matrix text-slate-500">
-                          {r.status === "confirmed" ? "Pending" : "—"}
-                        </span>
-                      )}
-                    </td>
-                    <td>
-                      {r.emailSentAt ? (
-                        <span
-                          className="inline-flex items-center gap-1 text-[10px] font-mono-matrix text-cyan-400 bg-cyan-950/60 px-1.5 py-0.5 rounded border border-cyan-500/30"
-                          title={`Email sent at ${new Date(r.emailSentAt).toLocaleString()}`}
-                        >
-                          <CheckCircle2 className="w-2.5 h-2.5" />
-                          <span>Sent</span>
-                        </span>
-                      ) : (
-                        <span className="text-[10px] font-mono-matrix text-slate-500">
-                          {r.status === "confirmed" ? "Not sent" : "—"}
-                        </span>
-                      )}
-                    </td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      {r.paymentReceiptUrl || r._id ? (
-                        <a
-                          href={(() => {
-                            const backendBase = (
-                              import.meta.env.VITE_BACKEND_URL || "http://localhost:5005"
-                            ).replace(/\/+$/, "");
-                            if (
-                              r.paymentReceiptUrl &&
-                              r.paymentReceiptUrl.startsWith("http") &&
-                              !r.paymentReceiptUrl.includes("/uploads/") &&
-                              !r.paymentReceiptUrl.includes("/api/registrations/receipt/")
-                            ) {
-                              return r.paymentReceiptUrl;
-                            }
-                            return `${backendBase}/api/registrations/receipt/${r._id}`;
-                          })()}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 text-[10px] font-space transition-colors"
-                        >
-                          <Eye className="w-3 h-3" />
-                          <span>Proof</span>
-                        </a>
-                      ) : (
-                        <span className="text-slate-600 text-xs">—</span>
-                      )}
-                    </td>
-                    <td onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center justify-end gap-1">
-                        {r.status !== "confirmed" && (
-                          <button
-                            onClick={() => updateStatus(r._id, "confirmed")}
-                            disabled={updating === r._id}
-                            title="Confirm, Send Gmail & Sync to G Sheet"
-                            className="p-1.5 rounded-lg bg-emerald-950 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-colors disabled:opacity-50"
-                          >
-                            {updating === r._id ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : (
-                              <Check className="w-3 h-3" />
-                            )}
-                          </button>
-                        )}
-                        {r.status === "confirmed" && (
-                          <>
-                            <button
-                              onClick={() => sendManualEmail(r._id, r.name)}
-                              disabled={sendingEmailId === r._id}
-                              title="Resend Confirmation Email via Gmail"
-                              className="p-1.5 rounded-lg bg-cyan-950 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500 hover:text-slate-950 transition-colors disabled:opacity-50"
-                            >
-                              {sendingEmailId === r._id ? (
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                              ) : (
-                                <Mail className="w-3 h-3" />
-                              )}
-                            </button>
-                            <button
-                              onClick={() => syncSingleToSheet(r._id)}
-                              disabled={syncingId === r._id}
-                              title="Force Push / Re-sync to Event Google Sheet"
-                              className="p-1.5 rounded-lg bg-emerald-950 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 transition-colors disabled:opacity-50"
-                            >
-                              {syncingId === r._id ? (
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                              ) : (
-                                <FileSpreadsheet className="w-3 h-3" />
-                              )}
-                            </button>
-                          </>
-                        )}
-                        {r.status !== "rejected" && (
-                          <button
-                            onClick={() => updateStatus(r._id, "rejected")}
-                            disabled={updating === r._id}
-                            title="Reject Registration"
-                            className="p-1.5 rounded-lg bg-rose-950 border border-rose-500/40 text-rose-400 hover:bg-rose-500 hover:text-white transition-colors disabled:opacity-50"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        )}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className={`w-2 h-2 rounded-full ${statusInfo.dotColor}`} />
                       </div>
-                    </td>
-                  </tr>
-                ))}
-                {!registrations.length && !loading && (
-                  <tr>
-                    <td colSpan={11} className="text-center text-slate-500 py-8 text-xs font-space">
-                      No registrations matched your criteria.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          )}
+                    </div>
+                    <div className="flex justify-between items-center text-xs mt-2">
+                      <span className="text-slate-400 font-semibold truncate max-w-[60%]">{r.eventName || "N/A"}</span>
+                      <span className="text-slate-500 font-mono-matrix text-[10px] shrink-0">
+                        {r.teamType === "team" ? `Team: ${r.teamName || "Squad"}` : "Solo"}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Slide-Over / Modal Detail Drawer */}
-      <AnimatePresence>
-        {selectedReg && (
-          <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, x: 300 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 300 }}
-              transition={{ type: "spring", damping: 25, stiffness: 280 }}
-              className="w-full max-w-lg bg-[#060e22] border-l border-cyan-500/20 h-full flex flex-col justify-between shadow-2xl overflow-y-auto"
-            >
-              {/* Drawer Header */}
-              <div className="p-4 border-b border-slate-800/80 bg-slate-950/40 flex items-center justify-between sticky top-0 z-10">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-orbitron font-bold text-sm text-white truncate">
-                      {selectedReg.name}
-                    </h3>
-                    <span
-                      className={`text-[9px] font-orbitron font-bold px-1.5 py-0.5 rounded border ${
-                        STATUS_CONFIG[selectedReg.status]?.badgeClass
-                      }`}
-                    >
-                      {selectedReg.status?.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="text-[11px] font-mono-matrix text-cyan-400">
-                    {selectedReg.rollNumber} • {selectedReg.eventName}
+        {/* Right Column (Inspector) */}
+        <div className="lg:col-span-7 bg-[#0a1122] rounded-xl border border-slate-800/80 p-4 lg:p-6 lg:sticky lg:top-4 h-fit lg:h-[calc(100vh-230px)] flex flex-col overflow-hidden shadow-2xl">
+          {!selectedReg ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-slate-500 opacity-60">
+              <Eye className="w-12 h-12 mb-4 text-slate-600" />
+              <p className="font-space text-sm">Select a registration from the list to begin verification.</p>
+            </div>
+          ) : (
+            <div className="flex flex-col h-full">
+              {/* Inspector Header */}
+              <div className="flex justify-between items-start border-b border-slate-800 pb-4 mb-4 shrink-0">
+                <div>
+                  <h2 className="text-2xl font-bold text-white mb-1">{selectedReg.name || "Unknown"}</h2>
+                  <div className="flex items-center gap-2 text-sm text-slate-400 font-space">
+                    <span className="text-cyan-400 font-semibold">{selectedReg.eventName}</span>
+                    <span>•</span>
+                    <span>{selectedReg.teamType === "team" ? `Team: ${selectedReg.teamName}` : "Solo"}</span>
+                    <span>•</span>
+                    <span className="font-mono-matrix text-[11px]">{selectedReg.rollNumber}</span>
                   </div>
                 </div>
-
-                <button
-                  onClick={() => setSelectedReg(null)}
-                  className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/80"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                <div className={`px-3 py-1 rounded-full border text-xs font-bold shrink-0 ${STATUS_CONFIG[selectedReg.status]?.badgeClass}`}>
+                  {STATUS_CONFIG[selectedReg.status]?.label?.toUpperCase()}
+                </div>
               </div>
 
-              {/* Drawer Body */}
-              <div className="p-4 space-y-4 text-xs font-space flex-1">
-                {/* Academic & Contact Section */}
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
-                  <div className="font-orbitron font-bold text-[10px] text-cyan-400 uppercase tracking-wider">
-                    Participant Intel
+              {/* Inspector Body (Scrollable) */}
+              <div className="flex-1 overflow-y-auto space-y-4 pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/50">
+                
+                {/* Metadata Grid */}
+                <div className="grid grid-cols-2 gap-4 bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+                  <div>
+                    <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Transaction ID</div>
+                    <div className="font-mono-matrix text-cyan-300 bg-cyan-950/30 px-2 py-1 rounded inline-block font-bold">
+                      {selectedReg.transactionId || "N/A"}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div>
-                      <span className="text-slate-500 block">Program/Branch:</span>
-                      <span className="text-slate-200 font-semibold">{selectedReg.program || "-"}</span>
+                  <div>
+                    <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">UPI ID / UTR</div>
+                    <div className="text-slate-200 text-xs font-mono-matrix">{selectedReg.upiId || "N/A"}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Contact Number</div>
+                    <div className="text-slate-200 text-sm font-mono-matrix">
+                      <a href={`tel:${selectedReg.mobileNumber}`} className="hover:text-cyan-300 hover:underline">{selectedReg.mobileNumber || "N/A"}</a>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Semester:</span>
-                      <span className="text-slate-200 font-semibold">{selectedReg.semester || "-"}</span>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Email</div>
+                    <div className="text-slate-300 text-xs font-mono-matrix truncate">
+                       <a href={`mailto:${selectedReg.email}`} className="hover:text-cyan-300 hover:underline">{selectedReg.email || "N/A"}</a>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Phone / WhatsApp:</span>
-                      <a
-                        href={`tel:${selectedReg.mobileNumber}`}
-                        className="text-cyan-300 font-mono-matrix hover:underline"
-                      >
-                        {selectedReg.mobileNumber}
-                      </a>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Email:</span>
-                      <a
-                        href={`mailto:${selectedReg.email}`}
-                        className="text-cyan-300 font-mono-matrix hover:underline truncate block"
-                      >
-                        {selectedReg.email}
-                      </a>
-                    </div>
-                    <div className="col-span-2">
-                      <span className="text-slate-500 block">College / University:</span>
-                      <span className="text-slate-200">{selectedReg.college}</span>
-                    </div>
+                  </div>
+                  <div className="col-span-2 pt-2 border-t border-slate-800/60 mt-1">
+                    <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">College / University</div>
+                    <div className="text-slate-300 text-sm">{selectedReg.college || "N/A"}</div>
                   </div>
                 </div>
 
-                {/* Team Info Section */}
-                {selectedReg.teamType === "team" && (
-                  <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-orbitron font-bold text-[10px] text-cyan-400 uppercase tracking-wider">
-                        Squad / Team Details
-                      </span>
-                      <span className="text-xs text-slate-300 font-bold">
-                        {selectedReg.teamName || "Team"}
-                      </span>
+                {/* Team Info if Team */}
+                {selectedReg.teamType === "team" && selectedReg.teamMembers && selectedReg.teamMembers.length > 0 && (
+                  <div className="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
+                    <div className="text-[10px] text-cyan-400 uppercase tracking-wider mb-2 font-bold">Squad Members</div>
+                    <div className="space-y-2">
+                      {selectedReg.teamMembers.map((m: any, idx: number) => (
+                        <div key={idx} className="flex justify-between items-center text-xs bg-slate-950/50 p-2 rounded border border-slate-800/50">
+                          <span className="text-slate-200 font-semibold">{m.name}</span>
+                          <span className="text-slate-500 font-mono-matrix">{m.rollNumber}</span>
+                        </div>
+                      ))}
                     </div>
-
-                    {selectedReg.teamMembers && selectedReg.teamMembers.length > 0 ? (
-                      <div className="space-y-1.5 pt-1">
-                        {selectedReg.teamMembers.map((m: any, idx: number) => (
-                          <div
-                            key={idx}
-                            className="p-2 rounded-lg bg-slate-950/60 border border-slate-800/60 flex items-center justify-between text-[11px]"
-                          >
-                            <div>
-                              <span className="font-semibold text-slate-200">{m.name || "N/A"}</span>
-                              <span className="text-slate-500 ml-1.5 font-mono-matrix">
-                                ({m.rollNumber || "-"})
-                              </span>
-                            </div>
-                            <span className="text-cyan-400 text-[10px]">{m.program || "-"}</span>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-slate-500 text-[11px]">No additional teammates listed.</p>
-                    )}
                   </div>
                 )}
 
-                {/* Payment & Proof Section */}
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-2.5">
-                  <div className="font-orbitron font-bold text-[10px] text-cyan-400 uppercase tracking-wider">
-                    Payment Verification
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 text-[11px]">
-                    <div>
-                      <span className="text-slate-500 block">UPI ID / UTR:</span>
-                      <span className="text-slate-200 font-mono-matrix">{selectedReg.upiId}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-500 block">Transaction ID:</span>
-                      <span className="text-cyan-300 font-mono-matrix font-bold">
-                        {selectedReg.transactionId}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Receipt Preview */}
-                  {selectedReg.paymentReceiptUrl || selectedReg._id ? (
-                    <div className="mt-2 space-y-1.5">
-                      <span className="text-slate-400 text-[10px] block">Uploaded Payment Receipt:</span>
-                      <div className="rounded-lg overflow-hidden border border-slate-800 bg-slate-950 max-h-48 flex items-center justify-center">
-                        <img
-                          src={(() => {
-                            const backendBase = (
-                              import.meta.env.VITE_BACKEND_URL || "http://localhost:5005"
-                            ).replace(/\/+$/, "");
-                            if (
-                              selectedReg.paymentReceiptUrl &&
-                              selectedReg.paymentReceiptUrl.startsWith("http") &&
-                              !selectedReg.paymentReceiptUrl.includes("/uploads/") &&
-                              !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")
-                            ) {
-                              return selectedReg.paymentReceiptUrl;
-                            }
-                            return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
-                          })()}
-                          alt="Receipt"
-                          className="max-h-48 object-contain"
-                        />
-                      </div>
+                {/* Payment Proof Viewer */}
+                <div className="flex-1 min-h-[250px] bg-slate-950 rounded-lg border border-slate-800 flex flex-col relative group overflow-hidden">
+                  <div className="absolute top-2 left-2 bg-slate-900/80 px-2 py-1 rounded text-[10px] text-slate-400 uppercase font-semibold backdrop-blur-sm z-10 flex items-center gap-2">
+                    Payment Proof
+                    {(selectedReg.paymentReceiptUrl || selectedReg._id) && (
                       <a
                         href={(() => {
-                          const backendBase = (
-                            import.meta.env.VITE_BACKEND_URL || "http://localhost:5005"
-                          ).replace(/\/+$/, "");
-                          if (
-                            selectedReg.paymentReceiptUrl &&
-                            selectedReg.paymentReceiptUrl.startsWith("http") &&
-                            !selectedReg.paymentReceiptUrl.includes("/uploads/") &&
-                            !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")
-                          ) {
+                          const backendBase = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
+                          if (selectedReg.paymentReceiptUrl && selectedReg.paymentReceiptUrl.startsWith("http") && !selectedReg.paymentReceiptUrl.includes("/uploads/") && !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")) {
                             return selectedReg.paymentReceiptUrl;
                           }
                           return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
                         })()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] text-cyan-400 hover:underline flex items-center gap-1"
+                        className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                        title="Open full image in new tab"
                       >
-                        <ExternalLink className="w-3 h-3" /> Open full receipt in new tab
+                        <ExternalLink className="w-3 h-3" />
                       </a>
+                    )}
+                  </div>
+                  
+                  {selectedReg.paymentReceiptUrl || selectedReg._id ? (
+                    <div className="w-full h-full p-4 flex items-center justify-center">
+                      <img 
+                        src={(() => {
+                          const backendBase = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
+                          if (selectedReg.paymentReceiptUrl && selectedReg.paymentReceiptUrl.startsWith("http") && !selectedReg.paymentReceiptUrl.includes("/uploads/") && !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")) {
+                            return selectedReg.paymentReceiptUrl;
+                          }
+                          return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
+                        })()} 
+                        alt="Proof" 
+                        className="max-w-full max-h-[300px] object-contain rounded hover:scale-[1.02] transition-transform" 
+                      />
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="flex items-center justify-center w-full h-full min-h-[150px]">
+                      <span className="text-slate-600 text-xs">No image provided</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Drawer Footer Actions */}
-              <div className="p-3 border-t border-slate-800/80 bg-slate-950/80 flex items-center justify-between gap-2 sticky bottom-0">
+              {/* Action Bar (Footer) */}
+              <div className="pt-4 border-t border-slate-800 mt-2 shrink-0 grid grid-cols-2 gap-3">
                 {selectedReg.status !== "confirmed" ? (
                   <button
                     onClick={() => updateStatus(selectedReg._id, "confirmed")}
                     disabled={updating === selectedReg._id}
-                    className="flex-1 py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(52,211,153,0.15)]"
                   >
-                    {updating === selectedReg._id ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Check className="w-3.5 h-3.5" />
-                    )}
-                    <span>Confirm & Send Gmail</span>
+                    {updating === selectedReg._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <CheckCircle2 className="w-5 h-5" />}
+                    APPROVE & SYNC
                   </button>
                 ) : (
                   <button
                     onClick={() => sendManualEmail(selectedReg._id, selectedReg.name)}
                     disabled={sendingEmailId === selectedReg._id}
-                    className="flex-1 py-2 px-3 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
+                    className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(8,145,178,0.15)]"
                   >
-                    {sendingEmailId === selectedReg._id ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <Mail className="w-3.5 h-3.5" />
-                    )}
-                    <span>Resend Confirmation Email</span>
+                    {sendingEmailId === selectedReg._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mail className="w-5 h-5" />}
+                    RESEND EMAIL
                   </button>
                 )}
 
-                {selectedReg.status !== "rejected" && (
-                  <button
+                {selectedReg.status !== "rejected" ? (
+                   <button
                     onClick={() => updateStatus(selectedReg._id, "rejected")}
                     disabled={updating === selectedReg._id}
-                    className="py-2 px-3 rounded-lg bg-rose-950 border border-rose-500/40 text-rose-400 hover:bg-rose-600 hover:text-white font-semibold text-xs transition-colors disabled:opacity-50"
+                    className="w-full py-3 bg-transparent border-2 border-rose-900/80 hover:bg-rose-950 hover:border-rose-700 text-rose-500 hover:text-rose-400 font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Reject
+                    {updating === selectedReg._id ? <Loader2 className="w-5 h-5 animate-spin" /> : <X className="w-5 h-5" />}
+                    REJECT
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="w-full py-3 bg-transparent border-2 border-slate-800 text-slate-500 font-bold rounded-lg cursor-not-allowed flex justify-center items-center gap-2"
+                  >
+                    ALREADY REJECTED
                   </button>
                 )}
               </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
