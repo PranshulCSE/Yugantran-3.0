@@ -13,7 +13,6 @@ export default function RaceTrackTimeline() {
     const ref = useRef<HTMLElement | null>(null);
     const isInView = useInView(ref, { once: true, amount: 0.2 });
 
-    // Memoized event data
     const events = useMemo<EventItem[]>(
         () => [
             { time: "9:30 – 10:30", title: "Registration & Inauguration", venue: "F-Block & Auditorium", notes: "—" },
@@ -35,16 +34,12 @@ export default function RaceTrackTimeline() {
         []
     );
 
-    // Anchor positions for cards along the track (initial anchors)
-    // Anchor positions — EXACTLY on the racetrack, perfectly spaced
 const cardAnchors = useMemo(() => {
     const total = events.length; // 15
 
-    // Create an SVG path programmatically
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-    // Track curve (same as your motionPath)
     path.setAttribute(
         "d",
         "M 100 350 C 260 260, 420 250, 600 320 C 760 380, 820 250, 1000 300 C 1180 350, 1240 450, 1350 420"
@@ -53,7 +48,6 @@ const cardAnchors = useMemo(() => {
 
     const fullLength = path.getTotalLength();
 
-    // Sample exact coordinates equally along the track
     return Array.from({ length: total }).map((_, i) => {
         const p = path.getPointAtLength((fullLength * i) / (total - 1));
         return { x: p.x, y: p.y };
@@ -62,7 +56,6 @@ const cardAnchors = useMemo(() => {
 
 
 
-    // Animation variants (like About.tsx)
     const containerVariants = {
         hidden: { opacity: 0, y: 40 },
         visible: {
@@ -77,7 +70,6 @@ const cardAnchors = useMemo(() => {
         visible: { opacity: 1, y: 0 },
     };
 
-    // Compute non-overlapping card layout from anchors - improved algorithm (same approach as before)
     const laidOutCards = useMemo(() => {
         const cardWidth = 300;
         const cardHeight = 92;
@@ -133,7 +125,6 @@ const cardAnchors = useMemo(() => {
                 y: currentRect.y,
                 w: currentRect.w,
                 h: currentRect.h,
-                // keep marker offsets for reference but we will use absolute anchors for drawing markers/lines
                 markerX: Math.round(anchor.x - currentRect.x),
                 markerY: Math.round(anchor.y - currentRect.y),
             });
@@ -145,7 +136,6 @@ const cardAnchors = useMemo(() => {
     return (
         <section id="timeline" ref={ref} className="relative py-24 overflow-visible bg-transparent">
             <div className="container mx-auto px-4 lg:px-8 relative z-10">
-                {/* Header section (motion) */}
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -169,7 +159,6 @@ const cardAnchors = useMemo(() => {
                     </p>
                 </motion.div>
 
-                {/* Main SVG as a motion container so children pick up stagger */}
                 <motion.svg
                     variants={containerVariants}
                     initial="hidden"
@@ -215,7 +204,6 @@ const cardAnchors = useMemo(() => {
                         />
                     </defs>
 
-                    {/* Track layers (no background rectangle, user has their own background) */}
                     <g>
                         <path
                             d="M 100 350 C 260 260, 420 250, 600 320 C 760 380, 820 250, 1000 300 C 1180 350, 1240 450, 1350 420"
@@ -241,7 +229,6 @@ const cardAnchors = useMemo(() => {
                         />
                     </g>
 
-                    {/* dashed centerline */}
                     <path
                         d="M 120 350 C 260 275, 420 265, 595 330 C 760 390, 825 265, 990 315 C 1160 360, 1210 450, 1330 430"
                         fill="none"
@@ -252,7 +239,6 @@ const cardAnchors = useMemo(() => {
                         opacity="0.95"
                     />
 
-                    {/* moving streak for motion */}
                     <path
                         d="M 100 350 C 260 260, 420 250, 600 320 C 760 380, 820 250, 1000 300 C 1180 350, 1240 450, 1350 420"
                         fill="none"
@@ -267,7 +253,6 @@ const cardAnchors = useMemo(() => {
                         <animate attributeName="stroke-dashoffset" from="0" to="-1000" dur="5s" repeatCount="indefinite" />
                     </path>
 
-                    {/* Realistic-style car silhouette based on the provided image */}
                     <g filter="url(#softShadow)">
                         <g transform="translate(-24,-12)">
                             <animateMotion dur="5.4s" repeatCount="indefinite" rotate="auto">
@@ -275,14 +260,12 @@ const cardAnchors = useMemo(() => {
                             </animateMotion>
 
                             <g transform="scale(0.95)" aria-hidden>
-                                {/* car body */}
                                 <path
                                     d="M8 22 C22 8, 52 8, 78 22 L92 34 C96 38,96 44,89 50 L18 50 C12 44,12 38,18 32 Z"
                                     fill="#5b7072ff"
                                     stroke="#0095a8"
                                     strokeWidth="0.8"
                                 />
-                                {/* highlight */}
                                 <path
                                     d="M12 26 C26 14, 46 14, 72 26"
                                     fill="none"
@@ -290,19 +273,15 @@ const cardAnchors = useMemo(() => {
                                     strokeWidth="1.6"
                                     opacity="0.85"
                                 />
-                                {/* windshield */}
                                 <path d="M30 14 L54 14 L66 24 L38 24 Z" fill="#024965ff" opacity="0.9" />
-                                {/* wheels */}
                                 <circle cx="28" cy="54" r="6.2" fill="#071b22" stroke="#0b8899" strokeWidth="1.2" />
                                 <circle cx="72" cy="54" r="6.2" fill="#071b22" stroke="#0b8899" strokeWidth="1.2" />
-                                {/* headlight glow (front) */}
                                 <ellipse cx="84" cy="36" rx="4" ry="2.2" fill="#ffd659" opacity="0.95" />
                                 <ellipse cx="84" cy="36" rx="10" ry="4" fill="#ffd659" opacity="0.12" />
                             </g>
                         </g>
                     </g>
 
-                    {/* Event markers & connectors drawn using absolute coordinates,
               cards drawn at absolute positions — this ensures markers spread properly
               over the track (no shared/clamped X coordinate). */}
                     {events.map((ev, i) => {
@@ -310,27 +289,21 @@ const cardAnchors = useMemo(() => {
                         const cardWidth = 300;
                         const cardHeight = 92;
 
-                        // Anchor on track (absolute)
                         const anchor = cardAnchors[i] ?? { x: 120 + i * 90, y: 300 };
                         const anchorX = anchor.x;
                         const anchorY = anchor.y;
 
-                        // card absolute position (from layout)
                         const posX = layout ? layout.x : Math.round(anchor.x - cardWidth / 2);
                         const posY = layout ? layout.y : Math.round(anchor.y - cardHeight - 42);
 
-                        // determine whether the card sits above or below the anchor
                         const cardCenterY = posY + cardHeight / 2;
                         const isAnchorAboveCard = anchorY < posY + cardHeight / 2;
 
-                        // connector endpoints (absolute)
                         const cardEdgeX = posX + cardWidth / 2; // connect from center of card horizontally
                         const cardEdgeY = isAnchorAboveCard ? posY + cardHeight : posY; // bottom if anchor is above, top if anchor is below
 
-                        // draw multiple marker dots along the vertical connector like the reference screenshot
                         const dotCount = 3;
                         const dots: { cx: number; cy: number }[] = [];
-                        // place dots evenly between the anchor and the cardEdgeY (but keep them visually stacked)
                         for (let d = 0; d < dotCount; d++) {
                             const t = (d + 1) / (dotCount + 1);
                             const dotY = anchorY + (cardEdgeY - anchorY) * t;
@@ -339,7 +312,6 @@ const cardAnchors = useMemo(() => {
 
                         return (
                             <motion.g key={i} variants={itemVariants} style={{ willChange: "transform, opacity" }} role="group">
-                                {/* vertical connector (absolute) */}
                                 <line
                                     x1={anchorX}
                                     y1={anchorY}
@@ -351,15 +323,12 @@ const cardAnchors = useMemo(() => {
                                     opacity={0.50}
                                 />
 
-                                {/* stacked dots */}
                                 {dots.map((d, idx) => (
                                     <circle key={idx} cx={d.cx} cy={d.cy} r={8 - idx * 1.4} fill="#ffd659" opacity={0.40} filter="url(#glowSmall)" />
                                 ))}
 
-                                {/* marker circle at track (slightly larger) */}
                                 <circle cx={anchorX} cy={anchorY} r={10} fill="#ffd659" filter="url(#glowSmall)" />
 
-                                {/* card background (absolute position) */}
                                 <g transform={`translate(${posX}, ${posY})`}>
                                     <rect
                                         x={0}
