@@ -1,4 +1,5 @@
 import "dotenv/config";
+import dns from "dns";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -6,6 +7,11 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
+
+// Force IPv4 first for DNS lookups (prevents IPv6 ENETUNREACH on Render/Docker containers)
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder("ipv4first");
+}
 
 import authRoutes from "./routes/auth.js";
 import eventRoutes from "./routes/events.js";
