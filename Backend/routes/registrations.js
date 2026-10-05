@@ -248,7 +248,7 @@ router.get("/admin/stats", authMiddleware, async (req, res) => {
 // PUT /api/admin/registrations/:id — Update status & TRIGGER CONFIRMATION EMAIL & GOOGLE SHEET SYNC
 router.put("/admin/:id", authMiddleware, async (req, res) => {
   try {
-    const { status, adminNote, forceSync } = req.body;
+    const { status, adminNote, forceSync, sendEmail: shouldSendEmail } = req.body;
     const previous = await Registration.findById(req.params.id);
     if (!previous) return res.status(404).json({ error: "Registration not found." });
 
@@ -267,9 +267,11 @@ router.put("/admin/:id", authMiddleware, async (req, res) => {
 
     // If admin confirmed registration (or forceSync requested on confirmed registration)
     if (status === "confirmed" || (forceSync && reg.status === "confirmed")) {
-      console.log(`🚀 Admin approved/syncing registration for ${reg.name} (${reg.email}). Sending confirmation email & syncing sheet...`);
+      console.log(`🚀 [Admin Confirmation] Processing registration for ${reg.name} (${reg.email}). Sending confirmation email & syncing sheet...`);
 
-      const emailPromise = (status === "confirmed" && previous.status !== "confirmed")
+      // Send email if status is confirmed or requested (unless explicitly sendEmail is false)
+      const shouldTriggerEmail = shouldSendEmail !== false;
+      const emailPromise = shouldTriggerEmail
         ? sendConfirmationEmail(reg.email, {
             name: reg.name,
             event: reg.eventName,
@@ -277,33 +279,42 @@ router.put("/admin/:id", authMiddleware, async (req, res) => {
             transactionId: reg.transactionId,
             whatsappLink: reg.whatsappLink,
           })
-        : Promise.resolve({ skipped: true, reason: "Already confirmed previously" });
+        : Promise.resolve({ skipped: true, reason: "Email sending disabled in request" });
 
       const sheetPromise = appendConfirmedRegistrationToSheet(reg);
 
       const [eRes, sRes] = await Promise.allSettled([emailPromise, sheetPromise]);
 
+      const updatesAfterSync = {};
+
       if (eRes.status === "fulfilled") {
         emailResult = eRes.value;
-        console.log("✅ Approval email sent result:", eRes.value);
+        if (emailResult?.success) {
+          updatesAfterSync.emailSentAt = new Date();
+        }
+        console.log("✅ Confirmation email result:", eRes.value);
       } else {
-        console.error("❌ Approval email error:", eRes.reason?.message || eRes.reason);
+        console.error("❌ Confirmation email error:", eRes.reason?.message || eRes.reason);
         emailResult = { success: false, error: eRes.reason?.message || "Email failed" };
       }
 
       if (sRes.status === "fulfilled") {
         sheetResult = sRes.value;
         if (sheetResult?.success) {
-          reg = await Registration.findByIdAndUpdate(
-            req.params.id,
-            { sheetSyncedAt: new Date() },
-            { new: true }
-          );
+          updatesAfterSync.sheetSyncedAt = new Date();
         }
-        console.log(`✅ Google Sheet sync result for ${reg.name}:`, sRes.value?.success ? `Added to "${sRes.value?.sheetTitle}"` : sRes.value?.error);
+        console.log(`✅ Google Sheet sync result for ${reg.name}:`, sRes.value?.success ? `Added to tab "${sRes.value?.sheetTitle}"` : sRes.value?.error);
       } else {
         console.error("❌ Google Sheet sync error:", sRes.reason?.message || sRes.reason);
         sheetResult = { success: false, error: sRes.reason?.message || "Sheet sync failed" };
+      }
+
+      if (Object.keys(updatesAfterSync).length > 0) {
+        reg = await Registration.findByIdAndUpdate(
+          req.params.id,
+          updatesAfterSync,
+          { new: true }
+        );
       }
     }
 
@@ -315,6 +326,44 @@ router.put("/admin/:id", authMiddleware, async (req, res) => {
   } catch (err) {
     console.error("Update registration error:", err);
     res.status(500).json({ error: "Failed to update registration." });
+  }
+});
+
+// POST /api/admin/registrations/send-email/:id — Manually send / resend confirmation email
+router.post("/admin/send-email/:id", authMiddleware, async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg) return res.status(404).json({ error: "Registration not found." });
+
+    console.log(`📧 [Admin Manual Email] Sending confirmation email to ${reg.name} (${reg.email})...`);
+    const emailResult = await sendConfirmationEmail(reg.email, {
+      name: reg.name,
+      event: reg.eventName,
+      teamName: reg.teamName,
+      transactionId: reg.transactionId,
+      whatsappLink: reg.whatsappLink,
+    });
+
+    if (emailResult?.success) {
+      const updated = await Registration.findByIdAndUpdate(
+        req.params.id,
+        { emailSentAt: new Date() },
+        { new: true }
+      );
+      return res.json({
+        message: `Confirmation email sent successfully to ${reg.email} via ${emailResult.provider || "Gmail"}!`,
+        emailResult,
+        registration: updated,
+      });
+    } else {
+      return res.status(500).json({
+        error: emailResult.error || "Failed to send confirmation email.",
+        emailResult,
+      });
+    }
+  } catch (err) {
+    console.error("Send email error:", err);
+    res.status(500).json({ error: err.message || "Failed to send confirmation email." });
   }
 });
 

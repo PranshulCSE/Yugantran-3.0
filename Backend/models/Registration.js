@@ -45,6 +45,7 @@ const RegistrationSchema = new mongoose.Schema(
     },
     adminNote: { type: String, default: "" },
     sheetSyncedAt: { type: Date },
+    emailSentAt: { type: Date },
   },
   { timestamps: true }
 );

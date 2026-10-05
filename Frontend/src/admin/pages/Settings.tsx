@@ -1,32 +1,39 @@
 import { useEffect, useState } from "react";
 import { adminApi } from "../../lib/api";
-import { Save, ToggleLeft, ToggleRight, CheckCircle2 } from "lucide-react";
+import {
+  Save, ToggleLeft, ToggleRight, CheckCircle2, QrCode,
+  Calendar, MapPin, Sparkles, Trophy, Mail, Instagram,
+  Linkedin, Shield, AlertCircle
+} from "lucide-react";
 
-function FormField({
+function CompactField({
   label,
   value,
   onChange,
   type = "text",
   hint = "",
+  placeholder = "",
 }: {
   label: string;
   value: any;
   onChange: (val: string) => void;
   type?: string;
   hint?: string;
+  placeholder?: string;
 }) {
   return (
     <div>
-      <label className="block font-space text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+      <label className="block text-[11px] font-space font-semibold text-slate-300 uppercase tracking-wider mb-1">
         {label}
       </label>
       <input
         type={type}
+        placeholder={placeholder}
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         className="admin-input"
       />
-      {hint && <p className="text-slate-400 text-xs mt-1.5 font-space">{hint}</p>}
+      {hint && <p className="text-[10px] text-slate-500 mt-1 font-space">{hint}</p>}
     </div>
   );
 }
@@ -55,7 +62,8 @@ export default function SettingsPage() {
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (e) {
-      console.error(e);
+      console.error("Failed to save settings", e);
+      alert("Failed to save settings. Check console.");
     } finally {
       setSaving(false);
     }
@@ -70,102 +78,234 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-4 max-w-5xl">
+      {/* 1. Header with Save Action */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/60 p-3.5 sm:p-4 rounded-2xl border border-slate-800 sticky top-12 z-20 backdrop-blur-md">
         <div>
-          <h1 className="font-orbitron font-black text-2xl sm:text-3xl text-white tracking-wider">
-            GLOBAL FESTIVAL CONTROLS
-          </h1>
-          <p className="text-slate-400 font-space text-sm mt-1">
-            Configure live registration status, payment identifiers, dates, and festival metadata.
+          <div className="flex items-center gap-2">
+            <h1 className="font-orbitron font-bold text-lg sm:text-xl text-white tracking-wide">
+              GLOBAL FESTIVAL CONTROLS
+            </h1>
+            <span className="text-[10px] font-mono-matrix px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-400 font-semibold">
+              SYSTEM CONFIG
+            </span>
+          </div>
+          <p className="text-slate-400 font-space text-xs mt-0.5">
+            Configure registration switch, payment gateway, festival dates, and social links.
           </p>
         </div>
 
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="btn-primary text-xs py-3 px-6 flex items-center gap-2 self-start sm:self-auto shadow-cyan-500/30"
-        >
-          {saved ? <CheckCircle2 className="w-4 h-4 text-slate-950" /> : <Save className="w-4 h-4" />}
-          <span>{saving ? "SAVING CONFIG..." : saved ? "CONFIG SAVED ✓" : "SAVE ALL CHANGES"}</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className={`btn-primary text-xs py-2 px-4 flex items-center gap-2 transition-all ${
+              saved ? "bg-emerald-500 border-emerald-400 text-slate-950 shadow-emerald-500/20" : "shadow-cyan-500/20"
+            }`}
+          >
+            {saved ? <CheckCircle2 className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+            <span>{saving ? "Saving Config..." : saved ? "Config Saved ✓" : "Save All Changes"}</span>
+          </button>
+        </div>
       </div>
 
-      {/* 1. Master Registration Switch */}
-      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="font-orbitron font-bold text-base text-white mb-1">
-              MASTER REGISTRATION GATE
-            </h2>
-            <p className="text-slate-400 text-sm font-space">
-              Current state:{" "}
-              <span
-                className={`font-bold ${
-                  settings?.isRegistrationOpen ? "text-emerald-400" : "text-rose-400"
-                }`}
-              >
-                {settings?.isRegistrationOpen ? "OPEN & ACCEPTING ENTRIES" : "CLOSED TO PUBLIC"}
-              </span>
-            </p>
+      {/* 2. Master Registration Gate */}
+      <div className="glass p-4 sm:p-5 rounded-2xl border-cyan-500/20 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+              settings?.isRegistrationOpen
+                ? "bg-emerald-950/60 border-emerald-500/40 text-emerald-400"
+                : "bg-rose-950/60 border-rose-500/40 text-rose-400"
+            }`}>
+              <Shield className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="font-orbitron font-bold text-sm text-white">
+                MASTER REGISTRATION GATE
+              </h2>
+              <p className="text-slate-400 text-xs font-space mt-0.5">
+                Current status:{" "}
+                <span
+                  className={`font-semibold ${
+                    settings?.isRegistrationOpen ? "text-emerald-400" : "text-rose-400"
+                  }`}
+                >
+                  {settings?.isRegistrationOpen ? "OPEN — Accepting registrations" : "CLOSED — Public forms disabled"}
+                </span>
+              </p>
+            </div>
           </div>
 
-          <button onClick={() => set("isRegistrationOpen", !settings?.isRegistrationOpen)}>
+          <button
+            onClick={() => set("isRegistrationOpen", !settings?.isRegistrationOpen)}
+            className="hover:scale-105 transition-transform self-start sm:self-auto"
+          >
             {settings?.isRegistrationOpen ? (
-              <ToggleRight className="w-12 h-12 text-cyan-400" />
+              <ToggleRight className="w-9 h-9 text-emerald-400" />
             ) : (
-              <ToggleLeft className="w-12 h-12 text-slate-600" />
+              <ToggleLeft className="w-9 h-9 text-slate-600" />
             )}
           </button>
         </div>
       </div>
 
-      {/* 2. Fest Information */}
-      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
-        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
-          FESTIVAL IDENTITY & VENUE
-        </h2>
+      {/* 3. Two-Column Grid: Identity & Dates */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Festival Identity */}
+        <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+          <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+            <Sparkles className="w-4 h-4 text-cyan-400" />
+            <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
+              Festival Identity & Venue
+            </h2>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <FormField label="Fest Official Title" value={settings?.festName} onChange={(v) => set("festName", v)} />
-          <FormField label="Theme / Tagline" value={settings?.theme} onChange={(v) => set("theme", v)} />
-          <FormField label="Official Campus Venue" value={settings?.venue} onChange={(v) => set("venue", v)} />
-          <FormField label="Total Prize Pool Tag" value={settings?.totalPrizePool} onChange={(v) => set("totalPrizePool", v)} hint="e.g. ₹73,000+" />
-          <FormField label="Event Start Date (ISO)" value={settings?.eventDateStart} onChange={(v) => set("eventDateStart", v)} hint="e.g. 2026-10-27T09:00:00+05:30" />
-          <FormField label="Event End Date (ISO)" value={settings?.eventDateEnd} onChange={(v) => set("eventDateEnd", v)} hint="e.g. 2026-10-28T17:00:00+05:30" />
+          <div className="space-y-3">
+            <CompactField
+              label="Fest Official Title"
+              value={settings?.festName}
+              onChange={(v) => set("festName", v)}
+              placeholder="YUGANTRAN 3.0"
+            />
+            <CompactField
+              label="Theme / Tagline"
+              value={settings?.theme}
+              onChange={(e) => set("theme", e)}
+              placeholder="Annual Technical Fest of SCSE"
+            />
+            <CompactField
+              label="Official Campus Venue"
+              value={settings?.venue}
+              onChange={(e) => set("venue", e)}
+              placeholder="Main Auditorium & Lab Complex"
+            />
+            <CompactField
+              label="Total Prize Pool Tag"
+              value={settings?.totalPrizePool}
+              onChange={(e) => set("totalPrizePool", e)}
+              hint="Shown in hero & ribbons (e.g. ₹73,000+)"
+              placeholder="₹73,000+"
+            />
+          </div>
         </div>
 
-        <FormField
-          label="Registration Cutoff Deadline (ISO)"
-          value={settings?.registrationDeadline}
-          onChange={(v) => set("registrationDeadline", v)}
-          hint="Countdown timer on hero calculates from this date"
-        />
-      </div>
+        {/* Schedule & Deadlines */}
+        <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+          <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+            <Calendar className="w-4 h-4 text-cyan-400" />
+            <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
+              Event Dates & Countdown Cutoff
+            </h2>
+          </div>
 
-      {/* 3. Payment Gateway Config */}
-      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
-        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
-          UPI PAYMENT GATEWAY & QR
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <FormField label="Fest UPI VPA ID" value={settings?.upiId} onChange={(v) => set("upiId", v)} hint="e.g. yugantran@okhdfcbank" />
-          <FormField label="Hosted QR Code Image URL" value={settings?.upiQrImageUrl} onChange={(v) => set("upiQrImageUrl", v)} hint="Paste direct link to QR image" />
+          <div className="space-y-3">
+            <CompactField
+              label="Event Start Date (ISO String)"
+              value={settings?.eventDateStart}
+              onChange={(v) => set("eventDateStart", v)}
+              hint="e.g. 2026-10-27T09:00:00+05:30"
+              placeholder="2026-10-27T09:00:00+05:30"
+            />
+            <CompactField
+              label="Event End Date (ISO String)"
+              value={settings?.eventDateEnd}
+              onChange={(v) => set("eventDateEnd", v)}
+              hint="e.g. 2026-10-28T17:00:00+05:30"
+              placeholder="2026-10-28T17:00:00+05:30"
+            />
+            <CompactField
+              label="Registration Cutoff Deadline (ISO)"
+              value={settings?.registrationDeadline}
+              onChange={(v) => set("registrationDeadline", v)}
+              hint="Controls hero countdown timer deadline"
+              placeholder="2026-10-26T23:59:59+05:30"
+            />
+          </div>
         </div>
       </div>
 
-      {/* 4. Contact & Socials */}
-      <div className="glass p-7 sm:p-8 rounded-3xl border-cyan-500/25 shadow-xl space-y-5">
-        <h2 className="font-orbitron font-bold text-sm text-cyan-300 tracking-wider uppercase">
-          CONTACT INTEL & SOCIAL HANDLES
-        </h2>
+      {/* 4. Payment Gateway & QR Preview */}
+      <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+          <QrCode className="w-4 h-4 text-cyan-400" />
+          <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
+            UPI Payment Gateway & QR Code
+          </h2>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <FormField label="Contact Email" value={settings?.contactEmail} onChange={(v) => set("contactEmail", v)} />
-          <FormField label="Instagram URL" value={settings?.instagram} onChange={(v) => set("instagram", v)} />
-          <FormField label="LinkedIn URL" value={settings?.linkedin} onChange={(v) => set("linkedin", v)} />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+          <div className="md:col-span-2 space-y-3">
+            <CompactField
+              label="Festival UPI VPA ID"
+              value={settings?.upiId}
+              onChange={(v) => set("upiId", v)}
+              hint="Candidates pay fees directly to this UPI address"
+              placeholder="yugantran@okhdfcbank"
+            />
+            <CompactField
+              label="Hosted QR Code Image URL"
+              value={settings?.upiQrImageUrl}
+              onChange={(v) => set("upiQrImageUrl", v)}
+              hint="Direct link to hosted QR image file"
+              placeholder="https://..."
+            />
+          </div>
+
+          {/* QR Code Live Preview */}
+          <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col items-center justify-center text-center">
+            <span className="text-[10px] font-space font-semibold text-slate-400 uppercase mb-2">
+              Live QR Preview
+            </span>
+            {settings?.upiQrImageUrl ? (
+              <img
+                src={settings.upiQrImageUrl}
+                alt="UPI QR Code"
+                className="w-24 h-24 object-contain rounded-lg bg-white p-1 border border-cyan-500/30 shadow-md"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = "none";
+                }}
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500">
+                <QrCode className="w-8 h-8" />
+              </div>
+            )}
+            <span className="text-[10px] font-mono-matrix text-cyan-400 mt-2 truncate max-w-[150px]">
+              {settings?.upiId || "No VPA ID"}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Contact & Social Handles */}
+      <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
+          <Mail className="w-4 h-4 text-cyan-400" />
+          <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
+            Contact Channels & Social Media
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <CompactField
+            label="Official Contact Email"
+            value={settings?.contactEmail}
+            onChange={(v) => set("contactEmail", v)}
+            placeholder="yugantran.fest@gmail.com"
+          />
+          <CompactField
+            label="Instagram URL"
+            value={settings?.instagram}
+            onChange={(v) => set("instagram", v)}
+            placeholder="https://instagram.com/yugantran"
+          />
+          <CompactField
+            label="LinkedIn URL"
+            value={settings?.linkedin}
+            onChange={(v) => set("linkedin", v)}
+            placeholder="https://linkedin.com/company/yugantran"
+          />
         </div>
       </div>
     </div>

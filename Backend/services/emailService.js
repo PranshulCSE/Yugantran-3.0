@@ -18,10 +18,15 @@ function getNodemailerTransporter() {
 
   if (gmailUser && gmailPass) {
     nodemailerTransporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: gmailUser,
         pass: gmailPass,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
     return nodemailerTransporter;
@@ -35,6 +40,9 @@ function getNodemailerTransporter() {
       auth: {
         user: process.env.SMTP_USER.trim(),
         pass: process.env.SMTP_PASS.trim(),
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
     return nodemailerTransporter;
@@ -249,21 +257,46 @@ export async function sendConfirmationEmail(to, payload) {
   const subject = `✓ Registration Confirmed: ${event} — YUGANTRAN 3.0`;
 
   // 1. Try Nodemailer / Gmail SMTP first if configured
-  const transporter = getNodemailerTransporter();
-  if (transporter) {
-    try {
-      const gmailUser = (process.env.GMAIL_USER || "").trim();
-      const fromAddress = process.env.EMAIL_FROM || (gmailUser ? `"YUGANTRAN 3.0" <${gmailUser}>` : "YUGANTRAN 3.0 <yugantran@geetauniversity.edu.in>");
-      const info = await transporter.sendMail({
-        from: fromAddress,
-        to,
-        subject,
-        html,
-      });
-      console.log(`📧 [SMTP/Gmail] Confirmation email sent successfully to ${to} | ID: ${info.messageId}`);
-      return { success: true, messageId: info.messageId };
-    } catch (smtpErr) {
-      console.error("❌ [SMTP/Gmail] Email Failed to send:", smtpErr.message);
+  const gmailUser = (process.env.GMAIL_USER || "").trim();
+  const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
+
+  if (gmailUser && gmailPass) {
+    const transporter = getNodemailerTransporter();
+    if (transporter) {
+      try {
+        const senderName = process.env.EMAIL_SENDER_NAME || "YUGANTRAN 3.0";
+        const fromAddress = `"${senderName}" <${gmailUser}>`;
+        const info = await transporter.sendMail({
+          from: fromAddress,
+          to,
+          subject,
+          html,
+        });
+        console.log(`📧 [Gmail SMTP] Confirmation email sent successfully to ${to} from ${gmailUser} | ID: ${info.messageId}`);
+        return { success: true, provider: "gmail", messageId: info.messageId, sender: fromAddress };
+      } catch (smtpErr) {
+        console.error("❌ [Gmail SMTP] Email failed to send via Gmail, falling back to Resend:", smtpErr.message);
+      }
+    }
+  }
+
+  // Fallback to custom SMTP host if configured
+  if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+    const transporter = getNodemailerTransporter();
+    if (transporter) {
+      try {
+        const fromAddress = process.env.EMAIL_FROM || `"YUGANTRAN 3.0" <${process.env.SMTP_USER}>`;
+        const info = await transporter.sendMail({
+          from: fromAddress,
+          to,
+          subject,
+          html,
+        });
+        console.log(`📧 [Custom SMTP] Email sent successfully to ${to} | ID: ${info.messageId}`);
+        return { success: true, provider: "smtp", messageId: info.messageId, sender: fromAddress };
+      } catch (smtpErr) {
+        console.error("❌ [Custom SMTP] Failed to send:", smtpErr.message);
+      }
     }
   }
 
@@ -288,14 +321,14 @@ export async function sendConfirmationEmail(to, payload) {
 
       if (result.error) {
         console.error("❌ Resend Email Failed:", result.error.message || result.error);
-        return { success: false, error: result.error.message };
+        return { success: false, provider: "resend", error: result.error.message };
       }
 
       console.log(`📧 [Resend] Email sent to ${to} | ID: ${result.data?.id}`);
-      return { success: true, messageId: result.data?.id };
+      return { success: true, provider: "resend", messageId: result.data?.id, sender: fromAddress };
     } catch (error) {
       console.error("❌ Resend Email Error:", error.message);
-      return { success: false, error: error.message };
+      return { success: false, provider: "resend", error: error.message };
     }
   }
 
