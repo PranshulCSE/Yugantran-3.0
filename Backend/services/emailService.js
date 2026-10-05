@@ -1,47 +1,78 @@
-import { Resend } from "resend";
 import nodemailer from "nodemailer";
+import dns from "dns";
 
-let resendClient = null;
-function getResendClient() {
-  if (!resendClient && process.env.RESEND_API_KEY) {
-    resendClient = new Resend(process.env.RESEND_API_KEY);
-  }
-  return resendClient;
+// Ensure Node.js prioritizes IPv4 over IPv6 for DNS queries.
+// This prevents connection timeouts / ENETUNREACH errors on cloud hosting (Render, Docker, etc.).
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder("ipv4first");
 }
 
-let cachedGmailTransporters = {};
+let cachedTransporter = null;
 
-function getGmailTransporter(port = 465, secure = true) {
-  const cacheKey = `${port}_${secure}`;
-  if (cachedGmailTransporters[cacheKey]) return cachedGmailTransporters[cacheKey];
+/**
+ * Returns a configured Nodemailer Gmail transporter.
+ */
+function getGmailTransporter() {
+  if (cachedTransporter) return cachedTransporter;
 
   const gmailUser = (process.env.GMAIL_USER || "").trim();
   const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
 
-  if (gmailUser && gmailPass) {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port,
-      secure,
-      family: 4, // CRITICAL: Forces IPv4 to prevent ENETUNREACH on Render/Docker environments
-      auth: {
-        user: gmailUser,
-        pass: gmailPass,
-      },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-      tls: {
-        rejectUnauthorized: false,
-      },
-    });
-    cachedGmailTransporters[cacheKey] = transporter;
-    return transporter;
+  if (!gmailUser || !gmailPass) {
+    return null;
   }
 
-  return null;
+  // Primary: standard Gmail service transport with connection pooling
+  cachedTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: gmailUser,
+      pass: gmailPass,
+    },
+    pool: true,
+    maxConnections: 3,
+    maxMessages: 50,
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+
+  return cachedTransporter;
 }
 
+/**
+ * Direct fallback transporter using explicit host & port with family: 4.
+ */
+function getDirectSmtpTransporter(port = 465, secure = true) {
+  const gmailUser = (process.env.GMAIL_USER || "").trim();
+  const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
+
+  if (!gmailUser || !gmailPass) return null;
+
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port,
+    secure,
+    family: 4,
+    auth: {
+      user: gmailUser,
+      pass: gmailPass,
+    },
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+}
+
+/**
+ * Custom SMTP transporter if SMTP_HOST is explicitly configured.
+ */
 let customSmtpTransporter = null;
 function getCustomSmtpTransporter() {
   if (customSmtpTransporter) return customSmtpTransporter;
@@ -56,9 +87,9 @@ function getCustomSmtpTransporter() {
         user: process.env.SMTP_USER.trim(),
         pass: process.env.SMTP_PASS.trim(),
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 20000,
       tls: {
         rejectUnauthorized: false,
       },
@@ -69,6 +100,13 @@ function getCustomSmtpTransporter() {
   return null;
 }
 
+/**
+ * Sends registration confirmation email using Gmail SMTP.
+ *
+ * @param {string} to - Recipient email address
+ * @param {object} payload - Registration details (name, event, teamName, transactionId, whatsappLink)
+ * @returns {Promise<{ success: boolean, provider?: string, messageId?: string, sender?: string, error?: string }>}
+ */
 export async function sendConfirmationEmail(to, payload) {
   const { name, event, teamName, transactionId, whatsappLink } = payload;
 
@@ -274,7 +312,6 @@ export async function sendConfirmationEmail(to, payload) {
 
   const subject = `✓ Registration Confirmed: ${event} — YUGANTRAN 3.0`;
 
-  // 1. Try Nodemailer / Gmail SMTP first if configured
   const gmailUser = (process.env.GMAIL_USER || "").trim();
   const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
 
@@ -282,9 +319,9 @@ export async function sendConfirmationEmail(to, payload) {
     const senderName = process.env.EMAIL_SENDER_NAME || "YUGANTRAN 3.0";
     const fromAddress = `"${senderName}" <${gmailUser}>`;
 
-    // Attempt 1: Port 465 (SSL/TLS)
+    // Attempt 1: Standard Gmail Transport
     try {
-      const transporter = getGmailTransporter(465, true);
+      const transporter = getGmailTransporter();
       if (transporter) {
         const info = await transporter.sendMail({
           from: fromAddress,
@@ -292,26 +329,45 @@ export async function sendConfirmationEmail(to, payload) {
           subject,
           html,
         });
-        console.log(`📧 [Gmail SMTP] Confirmation email sent successfully to ${to} from ${gmailUser} (Port 465) | ID: ${info.messageId}`);
+        console.log(`📧 [Gmail Service] Confirmation email sent successfully to ${to} from ${gmailUser} | ID: ${info.messageId}`);
         return { success: true, provider: "gmail", messageId: info.messageId, sender: fromAddress };
       }
-    } catch (smtpErr465) {
-      console.warn(`⚠️ [Gmail SMTP 465] Notice: ${smtpErr465.message}. Retrying on Port 587...`);
-      // Attempt 2: Port 587 (STARTTLS)
+    } catch (primaryErr) {
+      console.warn(`⚠️ [Gmail Service] Primary transport failed (${primaryErr.message}). Retrying with direct Port 465...`);
+      
+      // Attempt 2: Direct SSL Port 465
       try {
-        const transporter587 = getGmailTransporter(587, false);
-        if (transporter587) {
-          const info587 = await transporter587.sendMail({
+        const direct465 = getDirectSmtpTransporter(465, true);
+        if (direct465) {
+          const info465 = await direct465.sendMail({
             from: fromAddress,
             to,
             subject,
             html,
           });
-          console.log(`📧 [Gmail SMTP] Confirmation email sent successfully to ${to} from ${gmailUser} (Port 587) | ID: ${info587.messageId}`);
-          return { success: true, provider: "gmail", messageId: info587.messageId, sender: fromAddress };
+          console.log(`📧 [Gmail Direct 465] Confirmation email sent to ${to} | ID: ${info465.messageId}`);
+          return { success: true, provider: "gmail", messageId: info465.messageId, sender: fromAddress };
         }
-      } catch (smtpErr587) {
-        console.error("❌ [Gmail SMTP] Both Port 465 & 587 failed. Falling back to Resend:", smtpErr587.message);
+      } catch (port465Err) {
+        console.warn(`⚠️ [Gmail Direct 465] Failed (${port465Err.message}). Retrying with Port 587...`);
+        
+        // Attempt 3: Direct TLS Port 587
+        try {
+          const direct587 = getDirectSmtpTransporter(587, false);
+          if (direct587) {
+            const info587 = await direct587.sendMail({
+              from: fromAddress,
+              to,
+              subject,
+              html,
+            });
+            console.log(`📧 [Gmail Direct 587] Confirmation email sent to ${to} | ID: ${info587.messageId}`);
+            return { success: true, provider: "gmail", messageId: info587.messageId, sender: fromAddress };
+          }
+        } catch (port587Err) {
+          console.error("❌ [Gmail SMTP] All Gmail SMTP attempts failed:", port587Err.message);
+          return { success: false, provider: "gmail", error: port587Err.message };
+        }
       }
     }
   }
@@ -332,42 +388,11 @@ export async function sendConfirmationEmail(to, payload) {
         return { success: true, provider: "smtp", messageId: info.messageId, sender: fromAddress };
       } catch (smtpErr) {
         console.error("❌ [Custom SMTP] Failed to send:", smtpErr.message);
+        return { success: false, provider: "smtp", error: smtpErr.message };
       }
     }
   }
 
-  // 2. Try Resend if configured
-  const resend = getResendClient();
-  if (resend) {
-    try {
-      let fromAddress = process.env.EMAIL_FROM || "YUGANTRAN 3.0 <onboarding@resend.dev>";
-      
-      // Resend does not permit @gmail.com as the sender domain without domain verification
-      if (/@gmail\.com|@yahoo\.com|@hotmail\.com/i.test(fromAddress)) {
-        console.warn(`⚠️ Warning: Resend does not allow sending from public domains like ${fromAddress}. Using 'onboarding@resend.dev'.`);
-        fromAddress = "YUGANTRAN 3.0 <onboarding@resend.dev>";
-      }
-
-      const result = await resend.emails.send({
-        from: fromAddress,
-        to: [to],
-        subject,
-        html,
-      });
-
-      if (result.error) {
-        console.error("❌ Resend Email Failed:", result.error.message || result.error);
-        return { success: false, provider: "resend", error: result.error.message };
-      }
-
-      console.log(`📧 [Resend] Email sent to ${to} | ID: ${result.data?.id}`);
-      return { success: true, provider: "resend", messageId: result.data?.id, sender: fromAddress };
-    } catch (error) {
-      console.error("❌ Resend Email Error:", error.message);
-      return { success: false, provider: "resend", error: error.message };
-    }
-  }
-
-  console.warn("⚠️ No working email provider configured. Please set GMAIL_USER + GMAIL_APP_PASSWORD or RESEND_API_KEY in .env.");
-  return { success: false, error: "No email provider configured" };
+  console.warn("⚠️ No Gmail credentials configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in .env.");
+  return { success: false, error: "No Gmail credentials configured (GMAIL_USER & GMAIL_APP_PASSWORD)" };
 }
