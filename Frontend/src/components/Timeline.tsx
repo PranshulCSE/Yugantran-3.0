@@ -34,7 +34,7 @@ const SCHEDULE_DAY1 = [
   },
   {
     time: "02:00 PM",
-    title: "Code Sprint, Git Wars & Hardware Hack",
+    title: "Pixelverse, Git Wars & Hardware Hack",
     category: "TECH TRACKS",
     desc: "Speed coding, Git conflict resolution, and microcontroller robotics build.",
     location: "Computer Labs 3 & 4",
@@ -100,7 +100,7 @@ const SCHEDULE_DAY2 = [
   },
 ];
 
-const TimelineItem = ({ item, globalIdx, handleMouseMove }: { item: any; globalIdx: number; handleMouseMove: any }) => {
+const TimelineItem = ({ item, globalIdx, handleMouseMove }: { item: Record<string, string>; globalIdx: number; handleMouseMove: React.MouseEventHandler<HTMLDivElement> }) => {
   const isEven = globalIdx % 2 === 0;
   const [isCenter, setIsCenter] = useState(false);
 

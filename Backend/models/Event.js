@@ -18,6 +18,7 @@ const EventSchema = new mongoose.Schema(
         "coding",
         "swe",
         "iot",
+        "design",
         "innovation",
         "gaming",
         "interactive",

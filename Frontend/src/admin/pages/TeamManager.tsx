@@ -1,12 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { adminApi } from "../../lib/api";
+import { toast } from "sonner";
+import { TeamMember } from "../../types";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight,
   Search, Linkedin, Mail, ShieldCheck, Sparkles, Image as ImageIcon
 } from "lucide-react";
 
-const EMPTY = {
+const EMPTY: Record<string, unknown> = {
   name: "",
   role: "",
   department: "SCSE",
@@ -34,18 +36,18 @@ const DEPARTMENTS = [
 ];
 
 export default function TeamManager() {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPanel, setShowPanel] = useState(false);
-  const [editMember, setEditMember] = useState<any>(null);
-  const [form, setForm] = useState<any>(EMPTY);
+  const [editMember, setEditMember] = useState<Partial<TeamMember> | null>(null);
+  const [form, setForm] = useState<Partial<TeamMember>>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const updateField = (field: string, val: any) => {
-    setForm((p: any) => ({ ...p, [field]: val }));
+  const updateField = (field: string, val: unknown) => {
+    setForm((p) => ({ ...p, [field]: val }));
   };
 
   const fetchTeam = async () => {
@@ -54,7 +56,7 @@ export default function TeamManager() {
       const r = await adminApi.getAllTeam();
       setMembers(r.data);
     } catch (err) {
-      console.error("Failed to fetch team members", err);
+      toast.error("Failed to fetch team members");
     } finally {
       setLoading(false);
     }
@@ -70,38 +72,40 @@ export default function TeamManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (m: any) => {
+  const openEdit = (m: TeamMember) => {
     setEditMember(m);
     setForm({ ...m });
     setShowPanel(true);
   };
 
   const save = async () => {
-    if (!form.name?.trim()) {
-      alert("Please enter member's full name.");
+    if (!(form.name as string)?.trim()) {
+      toast.error("Please enter member's full name.");
       return;
     }
     setSaving(true);
     try {
-      if (editMember) await adminApi.updateTeamMember(editMember._id, form);
+      if (editMember?._id) await adminApi.updateTeamMember(editMember._id, form);
       else await adminApi.createTeamMember(form);
       setShowPanel(false);
       fetchTeam();
+      toast.success("Team member saved successfully");
     } catch (e: any) {
-      alert(e.response?.data?.error || "Save operation failed.");
+      toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const toggle = async (m: any) => {
+  const toggle = async (m: TeamMember) => {
     try {
       await adminApi.updateTeamMember(m._id, { isActive: !m.isActive });
       setMembers((prev) =>
         prev.map((item) => (item._id === m._id ? { ...item, isActive: !item.isActive } : item))
       );
+      toast.success("Team member status updated");
     } catch (err) {
-      console.error("Failed to toggle status", err);
+      toast.error("Failed to toggle status");
     }
   };
 
@@ -110,8 +114,9 @@ export default function TeamManager() {
       await adminApi.deleteTeamMember(id);
       setDeleteId(null);
       fetchTeam();
+      toast.success("Team member deleted");
     } catch (err) {
-      console.error("Failed to delete member", err);
+      toast.error("Failed to delete member");
     }
   };
 
@@ -169,44 +174,11 @@ export default function TeamManager() {
         </div>
       </div>
 
-      {/* 2. Compact Search & Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
-          <input
-            type="text"
-            placeholder="Search by name, role or department..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700/70 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
-          />
-        </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5">
-          {[
-            { id: "all", label: `All (${members.length})` },
-            { id: "core", label: `Core Team (${coreCount})` },
-            { id: "subteam", label: `Volunteers (${volunteerCount})` },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setFilter(cat.id)}
-              className={`px-3 py-1 rounded-lg text-[11px] font-space font-semibold whitespace-nowrap transition-all ${
-                filter === cat.id
-                  ? "bg-cyan-500 text-slate-950 shadow-sm"
-                  : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* 3. High-Density Table */}
       <div className="glass rounded-xl overflow-hidden border border-slate-800/90 shadow-xl">
-        <div className="overflow-x-auto max-h-[calc(100vh-290px)] min-h-[300px]">
+        <div className="overflow-x-auto min-h-[300px] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/50">
           {loading ? (
             <div className="flex justify-center h-48 items-center">
               <div className="w-7 h-7 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
@@ -224,7 +196,6 @@ export default function TeamManager() {
                   <th>Role / Designation</th>
                   <th>Department</th>
                   <th>Category</th>
-                  <th>Social Contacts</th>
                   <th className="text-center">Live</th>
                   <th className="text-right pr-4">Actions</th>
                 </tr>
@@ -282,30 +253,7 @@ export default function TeamManager() {
                         {m.category === "core" ? "Core Lead" : "Volunteer"}
                       </span>
                     </td>
-                    <td>
-                      <div className="flex items-center gap-1.5">
-                        {m.linkedin && (
-                          <a
-                            href={m.linkedin}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-1 rounded bg-slate-900 border border-slate-800 text-blue-400 hover:text-white transition-colors"
-                            title="LinkedIn Profile"
-                          >
-                            <Linkedin className="w-3 h-3" />
-                          </a>
-                        )}
-                        {m.email && (
-                          <a
-                            href={`mailto:${m.email}`}
-                            className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
-                            title="Send Email"
-                          >
-                            <Mail className="w-3 h-3" />
-                          </a>
-                        )}
-                      </div>
-                    </td>
+
                     <td className="text-center">
                       <button
                         onClick={() => toggle(m)}

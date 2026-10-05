@@ -34,6 +34,12 @@
   pointer-events: none;
 }
 
+html.light .card__inner:after {
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 30%, transparent 60%);
+}
+
+
+
 .card__cover {
   grid-area: stack;
   width: 100%;
@@ -70,6 +76,8 @@
   letter-spacing: 0.05em;
 }
 
+
+
 .card__role {
   color: #00f2fe;
   font-size: 0.8rem;
@@ -81,6 +89,8 @@
   text-transform: uppercase;
 }
 
+
+
 .card__dept {
   color: #e2e8f0;
   font-size: 0.7rem;
@@ -90,6 +100,8 @@
   line-height: 1.4;
   opacity: 0.9;
 }
+
+
 
 .icon {
   width: 1em;
@@ -113,6 +125,8 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
+
 
 .button:hover {
   background: #00f2fe;

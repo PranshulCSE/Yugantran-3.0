@@ -60,7 +60,7 @@ export default function Hero() {
     return () => clearInterval(id);
   }, [settings]);
 
-  const prizePool = settings?.totalPrizePool || "₹11,000+";
+  const prizePool = settings?.totalPrizePool || "₹21,000+";
   const venue = settings?.venue || "Geeta University, Panipat-Delhi NCR, Haryana";
 
   return (
@@ -118,7 +118,7 @@ export default function Hero() {
           >
             <h1
               className="font-orbitron font-black tracking-tight gradient-text leading-none select-none"
-              style={{ fontSize: "clamp(3.5rem, 13vw, 7.5rem)" }}
+              style={{ fontSize: "clamp(2rem, 10vw, 7.5rem)" }}
             >
               YUGANTRAN
             </h1>
@@ -146,14 +146,14 @@ export default function Hero() {
           >
             <button
               onClick={(e) => { e.preventDefault(); navigate("/register"); }}
-              className="anim-silver-bg group relative w-auto min-w-[240px] px-8 py-3 font-orbitron text-[11px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase overflow-hidden"
+              className="anim-silver-bg group relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase overflow-hidden"
             >
               <span className="relative z-10 whitespace-nowrap">REGISTER NOW</span>
             </button>
 
             <button
               onClick={() => navigate("/awards")}
-              className="relative w-auto min-w-[240px] px-8 py-3 bg-slate-900/5 dark:bg-white/10 hover:bg-slate-900/10 dark:hover:bg-white/20 backdrop-blur-xl border border-slate-900/20 dark:border-white/30 text-slate-950 dark:text-white font-orbitron text-[11px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase"
+              className="relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 bg-slate-900/5 dark:bg-white/10 hover:bg-slate-900/10 dark:hover:bg-white/20 backdrop-blur-xl border border-slate-900/20 dark:border-white/30 text-slate-950 dark:text-white font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase"
             >
               <span className="relative z-10 whitespace-nowrap">See Exciting Awards !!</span>
             </button>
@@ -230,8 +230,7 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* Bottom subtle gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-black to-transparent pointer-events-none" />
+
     </section>
   );
 }

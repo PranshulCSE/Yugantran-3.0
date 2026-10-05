@@ -7,6 +7,7 @@ import {
   FALLBACK_SETTINGS,
 } from "../data/fallbackData";
 import coreTeamData from "../data/team.json";
+import { Event, TeamMember, Award, Domain, Registration } from "../types";
 
 
 const BASE_URL = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
@@ -42,8 +43,10 @@ export const publicApi = {
     try {
       const res = await api.get("/api/events");
       if (Array.isArray(res.data) && res.data.length > 0) return res;
+      console.warn("API returned empty events, using fallback.");
       return { data: FALLBACK_EVENTS };
-    } catch {
+    } catch (err) {
+      console.error("Failed to fetch events from API:", err);
       return { data: FALLBACK_EVENTS };
     }
   },
@@ -53,8 +56,10 @@ export const publicApi = {
       const res = await api.get(`/api/events/${slug}`);
       if (res.data) return res;
       const found = FALLBACK_EVENTS.find((e) => e.slug === slug);
+      console.warn(`Event ${slug} not found via API, using fallback.`);
       return { data: found || null };
-    } catch {
+    } catch (err) {
+      console.error(`Failed to fetch event ${slug} from API:`, err);
       const found = FALLBACK_EVENTS.find((e) => e.slug === slug);
       return { data: found || null };
     }
@@ -64,11 +69,13 @@ export const publicApi = {
     try {
       const res = await api.get("/api/team", { params: category ? { category } : {} });
       if (Array.isArray(res.data)) return res;
+      console.warn("API returned empty team, using fallback.");
       return { data: [] };
-    } catch {
-      let filtered = coreTeamData as any[];
+    } catch (err) {
+      console.error("Failed to fetch team from API:", err);
+      let filtered = coreTeamData as unknown as TeamMember[];
       if (category) {
-        filtered = filtered.filter((m: any) => (m.category || "core") === category);
+        filtered = filtered.filter((m) => (m.category || "core") === category);
       }
       return { data: filtered };
     }
@@ -78,8 +85,10 @@ export const publicApi = {
     try {
       const res = await api.get("/api/settings");
       if (res.data) return res;
+      console.warn("API returned empty settings, using fallback.");
       return { data: FALLBACK_SETTINGS };
-    } catch {
+    } catch (err) {
+      console.error("Failed to fetch settings from API:", err);
       return { data: FALLBACK_SETTINGS };
     }
   },
@@ -88,8 +97,10 @@ export const publicApi = {
     try {
       const res = await api.get("/api/awards");
       if (Array.isArray(res.data) && res.data.length > 0) return res;
+      console.warn("API returned empty awards, using fallback.");
       return { data: FALLBACK_AWARDS };
-    } catch {
+    } catch (err) {
+      console.error("Failed to fetch awards from API:", err);
       return { data: FALLBACK_AWARDS };
     }
   },
@@ -98,8 +109,10 @@ export const publicApi = {
     try {
       const res = await api.get("/api/domains");
       if (Array.isArray(res.data) && res.data.length > 0) return res;
+      console.warn("API returned empty domains, using fallback.");
       return { data: FALLBACK_DOMAINS };
-    } catch {
+    } catch (err) {
+      console.error("Failed to fetch domains from API:", err);
       return { data: FALLBACK_DOMAINS };
     }
   },
@@ -117,41 +130,41 @@ export const adminApi = {
   me: () => api.get("/api/auth/me"),
 
   // Events
-  getAllEvents: () => api.get("/api/events/admin/all"),
-  createEvent: (data: any) => api.post("/api/events/admin", data),
-  updateEvent: (id: string, data: any) => api.put(`/api/events/admin/${id}`, data),
+  getAllEvents: () => api.get<Event[]>("/api/events/admin/all"),
+  createEvent: (data: Partial<Event>) => api.post("/api/events/admin", data),
+  updateEvent: (id: string, data: Partial<Event>) => api.put(`/api/events/admin/${id}`, data),
   deleteEvent: (id: string) => api.delete(`/api/events/admin/${id}`),
 
   // Registrations
-  getRegistrations: (params?: any) => api.get("/api/registrations/admin", { params }),
-  updateRegistration: (id: string, data: any) => api.put(`/api/registrations/admin/${id}`, data),
+  getRegistrations: (params?: Record<string, unknown>) => api.get<{ registrations: Registration[], total: number }>("/api/registrations/admin", { params }),
+  updateRegistration: (id: string, data: Partial<Registration>) => api.put(`/api/registrations/admin/${id}`, data),
   sendConfirmationEmail: (id: string) => api.post(`/api/registrations/admin/send-email/${id}`),
   syncRegistrationToSheet: (id: string) => api.post(`/api/registrations/admin/sync-sheet/${id}`),
   syncAllToSheets: () => api.post("/api/registrations/admin/sync-all", {}, { timeout: 120000 }),
-  exportRegistrations: (params?: any) =>
+  exportRegistrations: (params?: Record<string, unknown>) =>
     api.get("/api/registrations/admin/export", { params, responseType: "blob" }),
   getStats: () => api.get("/api/registrations/admin/stats"),
 
   // Team
-  getAllTeam: () => api.get("/api/team/admin"),
-  createTeamMember: (data: any) => api.post("/api/team/admin", data),
-  updateTeamMember: (id: string, data: any) => api.put(`/api/team/admin/${id}`, data),
+  getAllTeam: () => api.get<TeamMember[]>("/api/team/admin"),
+  createTeamMember: (data: Partial<TeamMember>) => api.post("/api/team/admin", data),
+  updateTeamMember: (id: string, data: Partial<TeamMember>) => api.put(`/api/team/admin/${id}`, data),
   deleteTeamMember: (id: string) => api.delete(`/api/team/admin/${id}`),
 
   // Settings
   getSettings: () => api.get("/api/settings/admin"),
-  updateSettings: (data: any) => api.put("/api/settings/admin", data),
+  updateSettings: (data: Record<string, unknown>) => api.put("/api/settings/admin", data),
 
   // Awards
-  getAllAwards: () => api.get("/api/awards/admin"),
-  createAward: (data: any) => api.post("/api/awards/admin", data),
-  updateAward: (id: string, data: any) => api.put(`/api/awards/admin/${id}`, data),
+  getAllAwards: () => api.get<Award[]>("/api/awards/admin"),
+  createAward: (data: Partial<Award>) => api.post("/api/awards/admin", data),
+  updateAward: (id: string, data: Partial<Award>) => api.put(`/api/awards/admin/${id}`, data),
   deleteAward: (id: string) => api.delete(`/api/awards/admin/${id}`),
 
   // Domains
-  getAllDomains: () => api.get("/api/domains/admin"),
-  createDomain: (data: any) => api.post("/api/domains/admin", data),
-  updateDomain: (id: string, data: any) => api.put(`/api/domains/admin/${id}`, data),
+  getAllDomains: () => api.get<Domain[]>("/api/domains/admin"),
+  createDomain: (data: Partial<Domain>) => api.post("/api/domains/admin", data),
+  updateDomain: (id: string, data: Partial<Domain>) => api.put(`/api/domains/admin/${id}`, data),
   deleteDomain: (id: string) => api.delete(`/api/domains/admin/${id}`),
 };
 

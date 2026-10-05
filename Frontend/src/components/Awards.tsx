@@ -14,7 +14,7 @@ export default function Awards() {
       .catch(() => {});
   }, []);
 
-  const totalPrizePool = settings?.totalPrizePool || "₹11,000+";
+  const totalPrizePool = settings?.totalPrizePool || "₹21,000+";
 
   const recognitionTiers = [
     {

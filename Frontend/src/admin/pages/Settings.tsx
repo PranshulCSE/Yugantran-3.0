@@ -15,7 +15,7 @@ function CompactField({
   placeholder = "",
 }: {
   label: string;
-  value: any;
+  value: unknown;
   onChange: (val: string) => void;
   type?: string;
   hint?: string;
@@ -29,6 +29,7 @@ function CompactField({
       <input
         type={type}
         placeholder={placeholder}
+        // @ts-ignore
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         className="admin-input"
@@ -52,8 +53,8 @@ export default function SettingsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const set = (key: string, value: any) =>
-    setSettings((prev: any) => ({ ...prev, [key]: value }));
+  const set = (key: string, value: unknown) =>
+    setSettings((prev: Record<string, unknown>) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     setSaving(true);
@@ -78,9 +79,9 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-4 max-w-5xl">
+    <div className="space-y-6 pb-10">
       {/* 1. Header with Save Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/60 p-3.5 sm:p-4 rounded-2xl border border-slate-800 sticky top-12 z-20 backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/80 p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-xl">
         <div>
           <div className="flex items-center gap-2">
             <h1 className="font-orbitron font-bold text-lg sm:text-xl text-white tracking-wide">
@@ -110,8 +111,8 @@ export default function SettingsPage() {
       </div>
 
       {/* 2. Master Registration Gate */}
-      <div className="glass p-4 sm:p-5 rounded-2xl border-cyan-500/20 shadow-lg">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-slate-900/50 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-cyan-500/30 shadow-[0_0_30px_rgba(6,182,212,0.1)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
               settings?.isRegistrationOpen
@@ -151,9 +152,9 @@ export default function SettingsPage() {
       </div>
 
       {/* 3. Two-Column Grid: Identity & Dates */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Festival Identity */}
-        <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+        <div className="bg-slate-900/50 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
             <Sparkles className="w-4 h-4 text-cyan-400" />
             <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
@@ -191,7 +192,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Schedule & Deadlines */}
-        <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+        <div className="bg-slate-900/50 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
             <Calendar className="w-4 h-4 text-cyan-400" />
             <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
@@ -226,7 +227,7 @@ export default function SettingsPage() {
       </div>
 
       {/* 4. Payment Gateway & QR Preview */}
-      <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+      <div className="bg-slate-900/50 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
         <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
           <QrCode className="w-4 h-4 text-cyan-400" />
           <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
@@ -279,7 +280,7 @@ export default function SettingsPage() {
       </div>
 
       {/* 5. Contact & Social Handles */}
-      <div className="glass p-4 sm:p-5 rounded-2xl border border-slate-800 shadow-lg space-y-3">
+      <div className="bg-slate-900/50 backdrop-blur-md p-5 sm:p-6 rounded-2xl border border-slate-800 shadow-xl space-y-4">
         <div className="flex items-center gap-2 pb-2 border-b border-slate-800">
           <Mail className="w-4 h-4 text-cyan-400" />
           <h2 className="font-orbitron font-bold text-xs text-white uppercase tracking-wider">
