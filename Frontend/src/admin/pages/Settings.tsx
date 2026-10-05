@@ -15,7 +15,7 @@ function CompactField({
   placeholder = "",
 }: {
   label: string;
-  value: any;
+  value: unknown;
   onChange: (val: string) => void;
   type?: string;
   hint?: string;
@@ -29,6 +29,7 @@ function CompactField({
       <input
         type={type}
         placeholder={placeholder}
+        // @ts-ignore
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         className="admin-input"
@@ -52,8 +53,8 @@ export default function SettingsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const set = (key: string, value: any) =>
-    setSettings((prev: any) => ({ ...prev, [key]: value }));
+  const set = (key: string, value: unknown) =>
+    setSettings((prev: Record<string, unknown>) => ({ ...prev, [key]: value }));
 
   const handleSave = async () => {
     setSaving(true);

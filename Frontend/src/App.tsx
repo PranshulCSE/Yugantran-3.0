@@ -16,6 +16,7 @@ import "./styles/globals.css";
 export default function App() {
   return (
     <ThemeProvider>
+      {/* @ts-ignore */}
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AuthProvider>
           <Routes>

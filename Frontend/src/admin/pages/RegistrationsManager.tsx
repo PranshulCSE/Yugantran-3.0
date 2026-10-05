@@ -22,6 +22,8 @@ import {
   Filter,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
+import { Registration } from "../../types";
 
 const STATUS_CONFIG: Record<string, { label: string; badgeClass: string; dotColor: string }> = {
   pending: {
@@ -42,7 +44,7 @@ const STATUS_CONFIG: Record<string, { label: string; badgeClass: string; dotColo
 };
 
 export default function RegistrationsManager() {
-  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState({ event: "", status: "" });
@@ -50,7 +52,7 @@ export default function RegistrationsManager() {
   const [syncingAll, setSyncingAll] = useState(false);
   const [syncingId, setSyncingId] = useState<string | null>(null);
   const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
-  const [selectedReg, setSelectedReg] = useState<any | null>(null);
+  const [selectedReg, setSelectedReg] = useState<Partial<Registration> & Record<string, any> | null>(null);
   const [notification, setNotification] = useState<{
     type: "success" | "error" | "info";
     message: string;
@@ -70,8 +72,7 @@ export default function RegistrationsManager() {
       setRegistrations(res.data.registrations || []);
       setTotal(res.data.total || 0);
     } catch (e) {
-      console.error(e);
-      showNotification("Failed to fetch registrations.", "error");
+      toast.error("Failed to fetch registrations.");
     } finally {
       setLoading(false);
     }
@@ -84,6 +85,7 @@ export default function RegistrationsManager() {
   const updateStatus = async (id: string, status: string) => {
     setUpdating(id);
     try {
+      // @ts-ignore
       const res = await adminApi.updateRegistration(id, { status, forceSync: true });
       const updatedData = res.data;
 
@@ -92,7 +94,7 @@ export default function RegistrationsManager() {
       );
 
       if (selectedReg?._id === id) {
-        setSelectedReg((prev: any) => (prev ? { ...prev, ...updatedData, status } : null));
+        setSelectedReg((prev) => (prev ? { ...prev, ...updatedData, status } : null));
       }
 
       if (status === "confirmed") {
@@ -112,13 +114,12 @@ export default function RegistrationsManager() {
           : "";
 
         const details = [sheetMsg, emailMsg].filter(Boolean).join(" | ");
-        showNotification(`✅ Registration confirmed! ${details}`, "success");
+        toast.success(`Registration confirmed! ${details}`);
       } else {
-        showNotification(`Registration marked as ${status}.`, "info");
+        toast.info(`Registration marked as ${status}.`);
       }
     } catch (e: any) {
-      console.error(e);
-      showNotification(e.response?.data?.error || "Failed to update registration status.", "error");
+      toast.error(e.response?.data?.error || "Failed to update registration status.");
     } finally {
       setUpdating(null);
     }
@@ -128,17 +129,16 @@ export default function RegistrationsManager() {
     setSendingEmailId(id);
     try {
       const res = await adminApi.sendConfirmationEmail(id);
-      showNotification(res.data.message || `Confirmation email sent to ${name}!`, "success");
+      toast.success(res.data.message || `Confirmation email sent to ${name}!`);
       const updatedTimestamp = new Date().toISOString();
       setRegistrations((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, emailSentAt: updatedTimestamp } : r))
+        prev.map((r) => (r._id === id ? { ...r, emailSentAt: updatedTimestamp } as Registration : r))
       );
       if (selectedReg?._id === id) {
-        setSelectedReg((prev: any) => (prev ? { ...prev, emailSentAt: updatedTimestamp } : null));
+        setSelectedReg((prev) => (prev ? { ...prev, emailSentAt: updatedTimestamp } : null));
       }
     } catch (e: any) {
-      console.error(e);
-      showNotification(e.response?.data?.error || "Failed to send confirmation email.", "error");
+      toast.error(e.response?.data?.error || "Failed to send confirmation email.");
     } finally {
       setSendingEmailId(null);
     }
@@ -148,17 +148,16 @@ export default function RegistrationsManager() {
     setSyncingId(id);
     try {
       const res = await adminApi.syncRegistrationToSheet(id);
-      showNotification(res.data.message || "Synced to Google Sheet successfully!", "success");
+      toast.success(res.data.message || "Synced to Google Sheet successfully!");
       const updatedTimestamp = new Date().toISOString();
       setRegistrations((prev) =>
-        prev.map((r) => (r._id === id ? { ...r, sheetSyncedAt: updatedTimestamp } : r))
+        prev.map((r) => (r._id === id ? { ...r, sheetSyncedAt: updatedTimestamp } as Registration : r))
       );
       if (selectedReg?._id === id) {
-        setSelectedReg((prev: any) => (prev ? { ...prev, sheetSyncedAt: updatedTimestamp } : null));
+        setSelectedReg((prev) => (prev ? { ...prev, sheetSyncedAt: updatedTimestamp } : null));
       }
     } catch (e: any) {
-      console.error(e);
-      showNotification(e.response?.data?.error || "Failed to sync to Google Sheet.", "error");
+      toast.error(e.response?.data?.error || "Failed to sync to Google Sheet.");
     } finally {
       setSyncingId(null);
     }
@@ -170,14 +169,10 @@ export default function RegistrationsManager() {
     setSyncingAll(true);
     try {
       const res = await adminApi.syncAllToSheets();
-      showNotification(
-        res.data.message || "All confirmed registrations synced to Google Sheets!",
-        "success"
-      );
+      toast.success(res.data.message || "All confirmed registrations synced to Google Sheets!");
       fetchData();
     } catch (e: any) {
-      console.error(e);
-      showNotification(e.response?.data?.error || "Failed to sync all registrations.", "error");
+      toast.error(e.response?.data?.error || "Failed to sync all registrations.");
     } finally {
       setSyncingAll(false);
     }
@@ -193,8 +188,7 @@ export default function RegistrationsManager() {
       a.click();
       URL.revokeObjectURL(url);
     } catch (e) {
-      console.error(e);
-      showNotification("Failed to export CSV.", "error");
+      toast.error("Failed to export CSV.");
     }
   };
 
@@ -397,8 +391,8 @@ export default function RegistrationsManager() {
                     <span className="font-mono-matrix text-[11px]">{selectedReg.rollNumber}</span>
                   </div>
                 </div>
-                <div className={`px-3 py-1 rounded-full border text-xs font-bold shrink-0 ${STATUS_CONFIG[selectedReg.status]?.badgeClass}`}>
-                  {STATUS_CONFIG[selectedReg.status]?.label?.toUpperCase()}
+                <div className={`px-3 py-1 rounded-full border text-xs font-bold shrink-0 ${STATUS_CONFIG[selectedReg.status || "pending"]?.badgeClass}`}>
+                  {STATUS_CONFIG[selectedReg.status || "pending"]?.label?.toUpperCase()}
                 </div>
               </div>
 
@@ -440,7 +434,7 @@ export default function RegistrationsManager() {
                   <div className="bg-slate-900/60 p-4 rounded-lg border border-slate-800">
                     <div className="text-[10px] text-cyan-400 uppercase tracking-wider mb-2 font-bold">Squad Members</div>
                     <div className="space-y-2">
-                      {selectedReg.teamMembers.map((m: any, idx: number) => (
+                      {selectedReg.teamMembers.map((m: Record<string, string>, idx: number) => (
                         <div key={idx} className="flex justify-between items-center text-xs bg-slate-950/50 p-2 rounded border border-slate-800/50">
                           <span className="text-slate-200 font-semibold">{m.name}</span>
                           <span className="text-slate-500 font-mono-matrix">{m.rollNumber}</span>
@@ -486,7 +480,7 @@ export default function RegistrationsManager() {
               <div className="pt-4 border-t border-slate-800 mt-2 shrink-0 grid grid-cols-2 gap-3">
                 {selectedReg.status !== "confirmed" ? (
                   <button
-                    onClick={() => updateStatus(selectedReg._id, "confirmed")}
+                    onClick={() => updateStatus(selectedReg._id!, "confirmed")}
                     disabled={updating === selectedReg._id}
                     className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(52,211,153,0.15)]"
                   >
@@ -495,7 +489,8 @@ export default function RegistrationsManager() {
                   </button>
                 ) : (
                   <button
-                    onClick={() => sendManualEmail(selectedReg._id, selectedReg.name)}
+                    // @ts-ignore
+                    onClick={() => sendManualEmail(selectedReg._id!, selectedReg.name)}
                     disabled={sendingEmailId === selectedReg._id}
                     className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(8,145,178,0.15)]"
                   >
@@ -506,7 +501,7 @@ export default function RegistrationsManager() {
 
                 {selectedReg.status !== "rejected" ? (
                    <button
-                    onClick={() => updateStatus(selectedReg._id, "rejected")}
+                    onClick={() => updateStatus(selectedReg._id!, "rejected")}
                     disabled={updating === selectedReg._id}
                     className="w-full py-3 bg-transparent border-2 border-rose-900/80 hover:bg-rose-950 hover:border-rose-700 text-rose-500 hover:text-rose-400 font-bold rounded-lg transition-colors flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >

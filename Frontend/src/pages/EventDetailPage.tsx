@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { publicApi } from "../lib/api";
+import { Event } from "../types";
 import PageWrapper from "../components/PageWrapper";
 import {
   Zap,
@@ -21,7 +22,7 @@ import {
 export default function EventDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [event, setEvent] = useState<any>(null);
+  const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function EventDetailPage() {
       .then((res) => setEvent(res.data))
       .catch(() => {
         publicApi.getEvents().then((r) => {
-          const found = r.data.find((e: any) => e.slug === slug);
+          const found = r.data.find((e: Event) => e.slug === slug);
           setEvent(found || null);
         });
       })
@@ -136,7 +137,7 @@ export default function EventDetailPage() {
             </h3>
 
             <div className="space-y-4">
-              {event.rounds.map((round: any, idx: number) => (
+              {event.rounds.map((round: { name: string; description: string }, idx: number) => (
                 <div
                   key={idx}
                   className="p-5 rounded-2xl bg-slate-100/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 flex gap-4 items-start"

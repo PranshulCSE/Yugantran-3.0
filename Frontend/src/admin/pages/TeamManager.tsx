@@ -1,12 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { adminApi } from "../../lib/api";
+import { toast } from "sonner";
+import { TeamMember } from "../../types";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, User, ToggleLeft, ToggleRight,
   Search, Linkedin, Mail, ShieldCheck, Sparkles, Image as ImageIcon
 } from "lucide-react";
 
-const EMPTY = {
+const EMPTY: Record<string, unknown> = {
   name: "",
   role: "",
   department: "SCSE",
@@ -34,18 +36,18 @@ const DEPARTMENTS = [
 ];
 
 export default function TeamManager() {
-  const [members, setMembers] = useState<any[]>([]);
+  const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPanel, setShowPanel] = useState(false);
-  const [editMember, setEditMember] = useState<any>(null);
-  const [form, setForm] = useState<any>(EMPTY);
+  const [editMember, setEditMember] = useState<Partial<TeamMember> | null>(null);
+  const [form, setForm] = useState<Partial<TeamMember>>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const updateField = (field: string, val: any) => {
-    setForm((p: any) => ({ ...p, [field]: val }));
+  const updateField = (field: string, val: unknown) => {
+    setForm((p) => ({ ...p, [field]: val }));
   };
 
   const fetchTeam = async () => {
@@ -54,7 +56,7 @@ export default function TeamManager() {
       const r = await adminApi.getAllTeam();
       setMembers(r.data);
     } catch (err) {
-      console.error("Failed to fetch team members", err);
+      toast.error("Failed to fetch team members");
     } finally {
       setLoading(false);
     }
@@ -70,38 +72,40 @@ export default function TeamManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (m: any) => {
+  const openEdit = (m: TeamMember) => {
     setEditMember(m);
     setForm({ ...m });
     setShowPanel(true);
   };
 
   const save = async () => {
-    if (!form.name?.trim()) {
-      alert("Please enter member's full name.");
+    if (!(form.name as string)?.trim()) {
+      toast.error("Please enter member's full name.");
       return;
     }
     setSaving(true);
     try {
-      if (editMember) await adminApi.updateTeamMember(editMember._id, form);
+      if (editMember?._id) await adminApi.updateTeamMember(editMember._id, form);
       else await adminApi.createTeamMember(form);
       setShowPanel(false);
       fetchTeam();
+      toast.success("Team member saved successfully");
     } catch (e: any) {
-      alert(e.response?.data?.error || "Save operation failed.");
+      toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const toggle = async (m: any) => {
+  const toggle = async (m: TeamMember) => {
     try {
       await adminApi.updateTeamMember(m._id, { isActive: !m.isActive });
       setMembers((prev) =>
         prev.map((item) => (item._id === m._id ? { ...item, isActive: !item.isActive } : item))
       );
+      toast.success("Team member status updated");
     } catch (err) {
-      console.error("Failed to toggle status", err);
+      toast.error("Failed to toggle status");
     }
   };
 
@@ -110,8 +114,9 @@ export default function TeamManager() {
       await adminApi.deleteTeamMember(id);
       setDeleteId(null);
       fetchTeam();
+      toast.success("Team member deleted");
     } catch (err) {
-      console.error("Failed to delete member", err);
+      toast.error("Failed to delete member");
     }
   };
 

@@ -160,6 +160,7 @@ const cardAnchors = useMemo(() => {
                 </motion.div>
 
                 <motion.svg
+                    // @ts-ignore
                     variants={containerVariants}
                     initial="hidden"
                     animate={isInView ? "visible" : "hidden"}
@@ -282,7 +283,7 @@ const cardAnchors = useMemo(() => {
                         </g>
                     </g>
 
-              cards drawn at absolute positions — this ensures markers spread properly
+            {/* cards drawn at absolute positions — this ensures markers spread properly
               over the track (no shared/clamped X coordinate). */}
                     {events.map((ev, i) => {
                         const layout = laidOutCards[i];

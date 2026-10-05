@@ -56,13 +56,15 @@ const ICON_MAP: Record<string, any> = {
   Code,
 };
 
+import { Event } from "../types";
+
 export default function Register() {
   const location = useLocation();
   const ref = useRef(null);
   const successRef = useRef<HTMLDivElement>(null);
 
-  const [events, setEvents] = useState<any[]>([]);
-  const [settings, setSettings] = useState<any>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -78,9 +80,9 @@ export default function Register() {
     mobileNumber: "",
     college: "",
     email: "",
-    selectedEvent: null as any,
+    selectedEvent: null as Event | null,
     teamName: "",
-    teamMembers: [{ name: "", rollNumber: "", program: "", semester: "", college: "" }] as any[],
+    teamMembers: [{ name: "", rollNumber: "", program: "", semester: "", college: "" }] as Record<string, string>[],
     paymentReceipt: null as File | null,
     upiId: "",
     transactionId: "",
@@ -102,11 +104,14 @@ export default function Register() {
   // Listen for event pre-selection from other pages
   useEffect(() => {
     const handler = (e: Event) => {
+      // @ts-ignore
       const eventName = (e as CustomEvent).detail;
       const found = events.find((ev) => ev.name === eventName);
       if (found) selectEvent(found);
     };
+    // @ts-ignore
     window.addEventListener("eventSelected", handler as EventListener);
+    // @ts-ignore
     return () => window.removeEventListener("eventSelected", handler as EventListener);
   }, [events]);
 
@@ -125,7 +130,7 @@ export default function Register() {
     setTimeout(() => setToast(null), 3500);
   };
 
-  const selectEvent = (event: any) => {
+  const selectEvent = (event: Event) => {
     const isTeam = event.teamType === "team";
     const memberCount = isTeam ? Math.max((event.minTeam || 2) - 1, 1) : 0;
     setFormData((prev) => ({
@@ -335,14 +340,14 @@ export default function Register() {
             ref={successRef}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="relative overflow-hidden bg-white/5 dark:bg-[#020617]/40 backdrop-blur-2xl p-8 sm:p-12 rounded-[2rem] text-center border border-emerald-500/30 shadow-[0_0_60px_rgba(52,211,153,0.15)] space-y-8 max-w-2xl mx-auto"
+            className="relative overflow-hidden bg-white/80 dark:bg-[#020617]/60 backdrop-blur-2xl p-8 sm:p-12 rounded-[2rem] text-center border border-emerald-200 dark:border-emerald-500/30 shadow-[0_0_60px_rgba(52,211,153,0.15)] space-y-8 max-w-2xl mx-auto"
           >
             {/* Emerald Glowing Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-100/50 to-transparent dark:from-emerald-500/10 dark:to-transparent pointer-events-none" />
 
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center shadow-[0_0_40px_rgba(52,211,153,0.5)]">
-                <CheckCircle2 className="w-12 h-12 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.8)]" />
+              <div className="w-24 h-24 rounded-full bg-emerald-100 dark:bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center shadow-[0_0_40px_rgba(52,211,153,0.3)] dark:shadow-[0_0_40px_rgba(52,211,153,0.5)]">
+                <CheckCircle2 className="w-12 h-12 text-emerald-500 dark:text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)] dark:drop-shadow-[0_0_15px_rgba(52,211,153,0.8)]" />
               </div>
             </div>
 
@@ -923,6 +928,16 @@ export default function Register() {
                     <p className="text-rose-400 text-xs mt-1">{errors.paymentReceipt}</p>
                   )}
                 </div>
+              </div>
+            )}
+
+            {/* Payment Note */}
+            {(selectedEvent as any)?.teamSize && (selectedEvent as any).teamSize > 1 && (
+              <div className="mb-6 p-4 rounded-xl border text-sm font-space flex items-start gap-3 bg-red-50 border-red-200 text-red-600 dark:bg-cyan-950/30 dark:border-cyan-500/30 dark:text-cyan-400 shadow-sm">
+                <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                <p>
+                  <span className="font-bold">Note:</span> The total registration amount must be paid by the team member registering on behalf of the team.
+                </p>
               </div>
             )}
 

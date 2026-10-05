@@ -1,14 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { adminApi } from "../../lib/api";
+import { toast } from "sonner";
+import { Award } from "../../types";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, ToggleLeft, ToggleRight,
-  Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award,
+  Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award as AwardIcon,
   Search, Sparkles, Check
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
-  Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award,
+  Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award: AwardIcon,
 };
 const ICON_NAMES = Object.keys(ICON_MAP);
 
@@ -33,17 +35,17 @@ const EMPTY = {
 };
 
 export default function AwardsManager() {
-  const [awards, setAwards] = useState<any[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPanel, setShowPanel] = useState(false);
-  const [editAward, setEditAward] = useState<any>(null);
-  const [form, setForm] = useState<any>(EMPTY);
+  const [editAward, setEditAward] = useState<Partial<Award> | null>(null);
+  const [form, setForm] = useState<Partial<Award>>(EMPTY);
   const [saving, setSaving] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const updateField = (field: string, val: any) => {
-    setForm((p: any) => ({ ...p, [field]: val }));
+  const updateField = (field: keyof Award, val: unknown) => {
+    setForm((p) => ({ ...p, [field]: val }));
   };
 
   const fetchAwards = async () => {
@@ -52,7 +54,7 @@ export default function AwardsManager() {
       const r = await adminApi.getAllAwards();
       setAwards(r.data);
     } catch (err) {
-      console.error("Failed to fetch awards", err);
+      toast.error("Failed to fetch awards");
     } finally {
       setLoading(false);
     }
@@ -68,7 +70,7 @@ export default function AwardsManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (a: any) => {
+  const openEdit = (a: Award) => {
     setEditAward(a);
     setForm({ ...a });
     setShowPanel(true);
@@ -76,30 +78,32 @@ export default function AwardsManager() {
 
   const save = async () => {
     if (!form.title?.trim()) {
-      alert("Please enter an award title.");
+      toast.error("Please enter an award title.");
       return;
     }
     setSaving(true);
     try {
-      if (editAward) await adminApi.updateAward(editAward._id, form);
+      if (editAward?._id) await adminApi.updateAward(editAward._id, form);
       else await adminApi.createAward(form);
       setShowPanel(false);
       fetchAwards();
+      toast.success("Award saved successfully");
     } catch (e: any) {
-      alert(e.response?.data?.error || "Save operation failed.");
+      toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const toggle = async (a: any) => {
+  const toggle = async (a: Award) => {
     try {
       await adminApi.updateAward(a._id, { isActive: !a.isActive });
       setAwards((prev) =>
         prev.map((item) => (item._id === a._id ? { ...item, isActive: !item.isActive } : item))
       );
+      toast.success("Award status updated");
     } catch (err) {
-      console.error("Failed to toggle status", err);
+      toast.error("Failed to toggle status");
     }
   };
 
@@ -108,8 +112,9 @@ export default function AwardsManager() {
       await adminApi.deleteAward(id);
       setDeleteId(null);
       fetchAwards();
+      toast.success("Award deleted");
     } catch (err) {
-      console.error("Failed to delete award", err);
+      toast.error("Failed to delete award");
     }
   };
 
@@ -124,6 +129,7 @@ export default function AwardsManager() {
     });
   }, [awards, searchQuery]);
 
+  // @ts-ignore
   const SelectedIcon = ICON_MAP[form.icon] || Trophy;
 
   return (

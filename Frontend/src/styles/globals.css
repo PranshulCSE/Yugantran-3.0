@@ -514,13 +514,18 @@ html.dark .badge-gaming {
 .admin-sidebar {
   width: 230px;
   min-height: 100vh;
-  background: #060d1f;
-  border-right: 1px solid rgba(56, 189, 248, 0.12);
+  background: #f8fafc;
+  border-right: 1px solid rgba(14, 165, 233, 0.12);
   position: sticky;
   top: 0;
   flex-shrink: 0;
   transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 40;
+}
+
+html.dark .admin-sidebar {
+  background: #060d1f;
+  border-right: 1px solid rgba(56, 189, 248, 0.12);
 }
 
 .admin-sidebar.collapsed {
@@ -529,59 +534,76 @@ html.dark .badge-gaming {
 
 .admin-content {
   min-height: 100vh;
-  background: #030712;
+  background: #ffffff;
   min-width: 0;
 }
 
+html.dark .admin-content {
+  background: #030712;
+}
+
 .admin-card {
-  background: rgba(10, 20, 42, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(14, 165, 233, 0.2);
   backdrop-filter: blur(16px);
   border-radius: 14px;
+}
+
+html.dark .admin-card {
+  background: rgba(10, 20, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.15);
 }
 
 .frontend-input, .admin-input {
   width: 100%;
   padding: 8px 12px;
-  background: rgba(5, 15, 36, 0.85);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(14, 165, 233, 0.2);
   border-radius: 8px;
-  color: #f1f5f9;
+  color: #0f172a;
   font-family: "Space Grotesk", sans-serif;
   font-size: 0.8125rem;
   line-height: 1.35;
   outline: none;
   transition: all 0.15s ease;
+  backdrop-filter: blur(8px);
 }
 
-html.dark .frontend-input, .admin-input {
+html.dark .frontend-input, html.dark .admin-input {
   background: rgba(5, 15, 36, 0.85);
   border: 1px solid rgba(56, 189, 248, 0.2);
   color: #f8fafc;
+  backdrop-filter: none;
 }
 
-.frontend-input, .admin-input.pl-11,
-.frontend-input, .admin-input.has-icon,
-.frontend-input, .admin-input[class*="pl-11"],
-.frontend-input, .admin-input[class*="pl-12"] {
+.frontend-input.pl-11, .admin-input.pl-11,
+.frontend-input.has-icon, .admin-input.has-icon,
+.frontend-input[class*="pl-11"], .admin-input[class*="pl-11"],
+.frontend-input[class*="pl-12"], .admin-input[class*="pl-12"] {
   padding-left: 36px !important;
 }
 
-.frontend-input, .admin-input.pr-11,
-.frontend-input, .admin-input[class*="pr-11"] {
+.frontend-input.pr-11, .admin-input.pr-11,
+.frontend-input[class*="pr-11"], .admin-input[class*="pr-11"] {
   padding-right: 36px !important;
 }
 
-.frontend-input, .admin-input::placeholder {
-  color: rgba(148, 163, 184, 0.45);
+.frontend-input::placeholder, .admin-input::placeholder {
+  color: rgba(71, 85, 105, 0.6);
   font-size: 0.8125rem;
 }
 
-html.dark .frontend-input, .admin-input::placeholder {
+html.dark .frontend-input::placeholder, html.dark .admin-input::placeholder {
   color: rgba(148, 163, 184, 0.45);
 }
 
-.frontend-input, .admin-input:focus {
+.frontend-input:focus, .admin-input:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+html.dark .frontend-input:focus, html.dark .admin-input:focus {
   border-color: #00f2fe;
   box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.18);
   background: rgba(8, 24, 56, 0.95);
@@ -597,10 +619,14 @@ html.dark .frontend-input, .admin-input::placeholder {
 }
 
 .data-table thead {
-  background: #071226;
+  background: #f1f5f9;
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+html.dark .data-table thead {
+  background: #071226;
 }
 
 .data-table th {
@@ -610,17 +636,27 @@ html.dark .frontend-input, .admin-input::placeholder {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #0284c7;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.2);
+  white-space: nowrap;
+}
+
+html.dark .data-table th {
   color: #38bdf8;
   border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-  white-space: nowrap;
 }
 
 .data-table td {
   padding: 8px 12px;
   font-size: 0.775rem;
+  color: #475569;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+  vertical-align: middle;
+}
+
+html.dark .data-table td {
   color: #cbd5e1;
   border-bottom: 1px solid rgba(56, 189, 248, 0.07);
-  vertical-align: middle;
 }
 
 .data-table tbody tr {
@@ -628,6 +664,10 @@ html.dark .frontend-input, .admin-input::placeholder {
 }
 
 .data-table tbody tr:hover {
+  background: rgba(14, 165, 233, 0.05);
+}
+
+html.dark .data-table tbody tr:hover {
   background: rgba(0, 242, 254, 0.04);
 }
 

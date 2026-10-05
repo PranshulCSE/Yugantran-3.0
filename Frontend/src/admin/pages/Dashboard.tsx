@@ -21,7 +21,7 @@ interface Stats {
   totalRevenue: number;
 }
 
-function StatCard({ label, value, icon: Icon, color, subtext }: any) {
+function StatCard({ label, value, icon: Icon, color, subtext }: { label: string; value: string | number; icon: any; color: string; subtext?: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -195,7 +195,7 @@ export default function Dashboard() {
                     fontSize: 11,
                     padding: "6px 10px",
                   }}
-                  formatter={(val: any, name: any, item: any) => [`${val} Registrations`, item.payload.fullName]}
+                  formatter={(val: number, name: string, item: any) => [`${val} Registrations`, item.payload.fullName]}
                   cursor={{ fill: "rgba(0, 242, 254, 0.05)" }}
                 />
                 <Bar dataKey="count" radius={[4, 4, 0, 0]}>

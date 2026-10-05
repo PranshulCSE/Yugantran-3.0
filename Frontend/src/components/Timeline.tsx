@@ -100,7 +100,7 @@ const SCHEDULE_DAY2 = [
   },
 ];
 
-const TimelineItem = ({ item, globalIdx, handleMouseMove }: { item: any; globalIdx: number; handleMouseMove: any }) => {
+const TimelineItem = ({ item, globalIdx, handleMouseMove }: { item: Record<string, string>; globalIdx: number; handleMouseMove: React.MouseEventHandler<HTMLDivElement> }) => {
   const isEven = globalIdx % 2 === 0;
   const [isCenter, setIsCenter] = useState(false);
 

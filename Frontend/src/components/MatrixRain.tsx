@@ -85,9 +85,9 @@ function MatrixRain() {
         const isHead = y * fontSize < canvas.height * 0.12 || Math.random() > 0.97;
 
         if (isLight) {
-          ctx.shadowBlur = 6;
-          ctx.shadowColor = "rgba(0,0,0,0.5)";
-          ctx.fillStyle = isHead ? "#000000" : `rgba(0,0,0,${(0.4 + Math.random() * 0.4).toFixed(2)})`;
+          ctx.shadowBlur = isHead ? 14 : 8;
+          ctx.shadowColor = "#000000";
+          ctx.fillStyle = isHead ? "#000000" : `rgba(0,0,0,${(0.7 + Math.random() * 0.3).toFixed(2)})`;
         } else if (lowEnd) {
           // Low-end: no glow at all, just plain cyan
           ctx.shadowBlur = 0;

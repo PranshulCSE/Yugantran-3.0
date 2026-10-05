@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import React, { forwardRef, useEffect, useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { publicApi } from "../lib/api";
+import { Event } from "../types";
 import {
   Bot, Shield, Terminal, Bug, GitBranch, Search,
   Rocket, Cpu, Zap, Car, Trophy, Gamepad2, Swords,
@@ -27,7 +28,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string; badge: str
   flagship: { label: "Flagship Arena", color: "#ffd700", badge: "badge-flagship" },
 };
 
-function EventDetailModal({ event, onClose }: { event: any; onClose: () => void }) {
+function EventDetailModal({ event, onClose }: { event: Event; onClose: () => void }) {
   const navigate = useNavigate();
   const cfg = CATEGORY_CONFIG[event.category] || { color: "#00f2fe", badge: "badge-ai", label: event.category };
 
@@ -134,7 +135,7 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
                 ROUND-BY-ROUND FORMAT
               </h4>
               <div className="space-y-3">
-                {event.rounds.map((round: any, i: number) => (
+                {event.rounds.map((round: { name: string; description: string }, i: number) => (
                   <div
                     key={i}
                     className="p-4 rounded-2xl bg-white/30 dark:bg-white/5 border border-white/40 dark:border-white/10 shadow-sm flex gap-4 items-start"
@@ -182,7 +183,7 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
 }
 
 interface EventCardProps {
-  event: any;
+  event: Event;
   onClick: () => void;
   onRegister: () => void;
 }
@@ -296,10 +297,10 @@ EventCard.displayName = "EventCard";
 export default function Events() {
   const ref = useRef(null);
   const navigate = useNavigate();
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
