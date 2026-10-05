@@ -23,6 +23,17 @@ body {
   font-family: var(--font-body);
   background-color: #000; /* Ensures black cyber theme */
   color: #e0e0e0;
+  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.dark body {
+  background-color: #000;
+  color: #e0e0e0;
 }
 
 /* Headings or any element with cyber look */
@@ -367,7 +378,6 @@ body {
   }
 
   img, svg, video, canvas, audio, iframe, embed, object {
-    vertical-align: middle;
     display: block;
   }
 
@@ -2522,6 +2532,7 @@ html {
 
 .glass {
   -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   background: #1a1a2e4d;
   border: 1px solid #00d4ff33;
 }
@@ -2622,9 +2633,15 @@ html {
   -webkit-mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
   -webkit-mask-position: 0 0, 0 0;
   -webkit-mask-size: auto, auto;
+  mask-image: linear-gradient(#fff 0 0), linear-gradient(#fff 0 0);
+  mask-position: 0 0, 0 0;
+  mask-size: auto, auto;
   -webkit-mask-repeat: repeat, repeat;
   -webkit-mask-clip: content-box, border-box;
   -webkit-mask-origin: content-box, border-box;
+  mask-repeat: repeat, repeat;
+  mask-clip: content-box, border-box;
+  mask-origin: content-box, border-box;
   mask-composite: exclude;
   mask-mode: match-source, match-source;
 }
@@ -3257,7 +3274,7 @@ html {
 
 @import url(https://fonts.googleapis.com/css2?family=Orbitron:wght:400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap);
 /* virtual-fs:file:///styles/globals.css */
-@custom-variant dark (&:is(.dark *));
+
 :root {
   --font-size: 16px;
   --background: #0a0a0f;
@@ -3334,13 +3351,14 @@ html {
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
 }
-@theme inline { --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-destructive-foreground: var(--destructive-foreground); --color-border: var(--border); --color-input: var(--input); --color-input-background: var(--input-background); --color-switch-background: var(--switch-background); --color-ring: var(--ring); --color-chart-1: var(--chart-1); --color-chart-2: var(--chart-2); --color-chart-3: var(--chart-3); --color-chart-4: var(--chart-4); --color-chart-5: var(--chart-5); --radius-sm: calc(var(--radius) - 4px); --radius-md: calc(var(--radius) - 2px); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) + 4px); --color-sidebar: var(--sidebar); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-border: var(--sidebar-border); --color-sidebar-ring: var(--sidebar-ring); }
+
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: "Inter", sans-serif;
   }
   .font-orbitron {
@@ -3531,6 +3549,7 @@ html {
       rgba(0, 255, 255, 0.2),
       rgba(176, 0, 255, 0.2));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   opacity: 0;

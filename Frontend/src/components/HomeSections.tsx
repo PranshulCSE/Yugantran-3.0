@@ -40,7 +40,7 @@ export function WhyYugantran() {
     {
       title: "COMPETE",
       subtitle: "Industry Battlegrounds",
-      desc: "Live Cybersecurity quizzes, rapid 2-hour code sprints, blindfolded pair programming, and esports arenas.",
+      desc: "Live Cybersecurity quizzes, rapid Canva AI poster challenges, blindfolded pair programming, and esports arenas.",
       icon: Swords,
       color: "#f43f5e",
       badge: "02",
@@ -337,7 +337,7 @@ export function TimelinePreview() {
   const previewItems = [
     { day: "DAY 1", time: "10:00 AM", title: "Grand Inaugural & Keynote", track: "CEREMONY" },
     { day: "DAY 1", time: "11:00 AM", title: "AI Warzone & Cyber Escape Kickoff", track: "AI & CYBER" },
-    { day: "DAY 2", time: "10:00 AM", title: "Code Sprint & Hardware Hack", track: "DEVELOPMENT" },
+    { day: "DAY 2", time: "10:00 AM", title: "Pixelverse & Hardware Hack", track: "DEVELOPMENT" },
     { day: "DAY 2", time: "02:30 PM", title: "Blind Byte & Grand Valedictory", track: "FINALS" },
   ];
 
@@ -403,7 +403,7 @@ export function TimelinePreview() {
 // ─── 5. PRIZE POOL BANNER ─────────────────────────────────────────
 export function PrizePoolBanner() {
   const navigate = useNavigate();
-  const [prizePool, setPrizePool] = useState("₹11,000+");
+  const [prizePool, setPrizePool] = useState("₹21,000+");
 
   useEffect(() => {
     publicApi

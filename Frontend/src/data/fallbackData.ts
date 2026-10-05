@@ -2,7 +2,7 @@ export interface EventItem {
   _id?: string;
   name: string;
   slug: string;
-  category: "ai" | "cybersecurity" | "coding" | "swe" | "iot" | "innovation" | "gaming" | "interactive" | "flagship";
+  category: "ai" | "cybersecurity" | "coding" | "swe" | "iot" | "design" | "innovation" | "gaming" | "interactive" | "flagship";
   description: string;
   longDescription: string;
   icon: string;
@@ -86,22 +86,21 @@ export const FALLBACK_EVENTS: EventItem[] = [
     order: 3,
   },
   {
-    name: "CODE SPRINT",
-    slug: "code-sprint",
-    category: "coding",
-    description: "Build under pressure. 2 hours to ship a working prototype for a real-world problem.",
-    longDescription: "Build Under Pressure. A rapid software development competition in which participants receive a real-world problem statement and a limited amount of time (2 hours) to build a working prototype. Example challenges include Campus Lost & Found System, Smart Complaint Management, Student Productivity Platform, Event Management System, Campus Navigation System. Skills Tested: Rapid Prototyping, Full-Stack Development, Problem Solving, UI/UX & Code Quality.",
-    icon: "Code",
-    gradient: "from-blue-400 to-cyan-600",
+    name: "PIXELVERSE",
+    slug: "pixelverse",
+    category: "design",
+    description: "AI & Canva Poster Challenge. Where Creativity Meets Artificial Intelligence.",
+    longDescription: "A design competition in which participants create an original poster on a common theme or problem statement using Canva and AI tools. Human creativity and AI creativity can both be used — the best posters are where the two work together.\n\nGolden Rule: The final poster must be the participant’s own creative work. Copied or downloaded complete posters are not allowed.\n\nSkills Tested:\n▪ Creativity & Originality (25%)\n▪ Visual Design (20%)\n▪ Effective Use of AI (20%)\n▪ Communication of Theme (20%)\n▪ Overall Impact (15%)",
+    icon: "Rocket",
+    gradient: "from-pink-400 to-purple-600",
     fee: 60,
     prize: "₹5,000",
-    teamType: "team",
-    minTeam: 2,
-    maxTeam: 3,
+    teamType: "individual",
+    minTeam: 1,
+    maxTeam: 1,
     rounds: [
-      { name: "Problem Reveal & Architecture (15 mins)", description: "Real-world problem statement revealed — teams plan tech stack and system architecture." },
-      { name: "Sprint Build (2 Hours)", description: "Intense coding sprint to implement core features, database logic, and user interface." },
-      { name: "Live Prototype Demo", description: "Live demonstration and feature walkthrough to the technical jury." },
+      { name: "Format & How It Works", description: "A common theme / problem statement is given to all participants at the start; the timer begins after the reveal. Tools allowed: Canva and AI tools (ChatGPT, Gemini, Adobe Firefly, etc.). AI-generated images and elements are allowed." },
+      { name: "Rules & Regulations", description: "Solo event. No ready-made posters or unmodified templates. Raw AI output scores low; it must be refined. Export as PNG/JPG/PDF. File naming: PIXELVERSE_ParticipantName." },
     ],
     whatsappLink: "#",
     isActive: true,
@@ -247,7 +246,7 @@ export const FALLBACK_SETTINGS = {
   registrationDeadline: "2026-10-25T23:59:00+05:30",
   isRegistrationOpen: true,
   venue: "Geeta University, Panipat-Delhi NCR, Haryana",
-  totalPrizePool: "₹11,000+",
+  totalPrizePool: "₹21,000+",
   upiId: "yugantran@upi",
   contactEmail: "yugantran@geetauniversity.edu.in",
   contactPhone: ["+91 99925 60407", "+91 92110 67540"],

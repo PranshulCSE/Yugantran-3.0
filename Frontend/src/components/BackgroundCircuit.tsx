@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+// @ts-ignore
 import * as THREE from "three";
 
 export default function BackgroundCircuit() {

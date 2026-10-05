@@ -168,7 +168,7 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.2 }}
-            className={`absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:hidden glass ${isDark ? "!bg-black/60 !border-white/10" : "!bg-white/60 !border-white/50"} backdrop-blur-3xl rounded-2xl overflow-hidden shadow-2xl flex flex-col`}
+            className={`absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:hidden ${isDark ? "bg-[#020617]/95 border border-white/10" : "bg-white/95 border border-slate-200"} backdrop-blur-3xl rounded-2xl overflow-hidden shadow-2xl flex flex-col`}
           >
             <div className="flex flex-col p-2 space-y-1">
               {NAV_ROUTES.map((item) => (
