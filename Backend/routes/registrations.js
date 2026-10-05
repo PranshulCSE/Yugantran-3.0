@@ -245,44 +245,145 @@ router.get("/admin/stats", authMiddleware, async (req, res) => {
   }
 });
 
-// PUT /api/admin/registrations/:id — Update status & TRIGGER CONFIRMATION EMAIL
+// PUT /api/admin/registrations/:id — Update status & TRIGGER CONFIRMATION EMAIL & GOOGLE SHEET SYNC
 router.put("/admin/:id", authMiddleware, async (req, res) => {
   try {
-    const { status, adminNote } = req.body;
+    const { status, adminNote, forceSync } = req.body;
     const previous = await Registration.findById(req.params.id);
     if (!previous) return res.status(404).json({ error: "Registration not found." });
 
-    const reg = await Registration.findByIdAndUpdate(
+    const updateFields = {};
+    if (status !== undefined) updateFields.status = status;
+    if (adminNote !== undefined) updateFields.adminNote = adminNote;
+
+    let reg = await Registration.findByIdAndUpdate(
       req.params.id,
-      { status, adminNote },
+      updateFields,
       { new: true }
     );
 
-    // If admin confirmed registration, trigger official confirmation email & Google Sheet sync
-    if (status === "confirmed" && previous.status !== "confirmed") {
-      console.log(`🚀 Admin approved registration for ${reg.name} (${reg.email}). Sending confirmation email & syncing sheet...`);
-      
-      // 1. Send confirmation email
-      sendConfirmationEmail(reg.email, {
-        name: reg.name,
-        event: reg.eventName,
-        teamName: reg.teamName,
-        transactionId: reg.transactionId,
-        whatsappLink: reg.whatsappLink,
-      })
-        .then((result) => console.log("✅ Approval email sent result:", result))
-        .catch((e) => console.error("❌ Approval email error:", e.message));
+    let emailResult = null;
+    let sheetResult = null;
 
-      // 2. Append confirmed record to Google Sheet under Event tab
-      appendConfirmedRegistrationToSheet(reg)
-        .then((res) => console.log(`✅ Google Sheet sync result for ${reg.name}:`, res.success ? `Added to "${res.sheetTitle}"` : res.error))
-        .catch((e) => console.error("❌ Google Sheet sync error:", e.message));
+    // If admin confirmed registration (or forceSync requested on confirmed registration)
+    if (status === "confirmed" || (forceSync && reg.status === "confirmed")) {
+      console.log(`🚀 Admin approved/syncing registration for ${reg.name} (${reg.email}). Sending confirmation email & syncing sheet...`);
+
+      const emailPromise = (status === "confirmed" && previous.status !== "confirmed")
+        ? sendConfirmationEmail(reg.email, {
+            name: reg.name,
+            event: reg.eventName,
+            teamName: reg.teamName,
+            transactionId: reg.transactionId,
+            whatsappLink: reg.whatsappLink,
+          })
+        : Promise.resolve({ skipped: true, reason: "Already confirmed previously" });
+
+      const sheetPromise = appendConfirmedRegistrationToSheet(reg);
+
+      const [eRes, sRes] = await Promise.allSettled([emailPromise, sheetPromise]);
+
+      if (eRes.status === "fulfilled") {
+        emailResult = eRes.value;
+        console.log("✅ Approval email sent result:", eRes.value);
+      } else {
+        console.error("❌ Approval email error:", eRes.reason?.message || eRes.reason);
+        emailResult = { success: false, error: eRes.reason?.message || "Email failed" };
+      }
+
+      if (sRes.status === "fulfilled") {
+        sheetResult = sRes.value;
+        if (sheetResult?.success) {
+          reg = await Registration.findByIdAndUpdate(
+            req.params.id,
+            { sheetSyncedAt: new Date() },
+            { new: true }
+          );
+        }
+        console.log(`✅ Google Sheet sync result for ${reg.name}:`, sRes.value?.success ? `Added to "${sRes.value?.sheetTitle}"` : sRes.value?.error);
+      } else {
+        console.error("❌ Google Sheet sync error:", sRes.reason?.message || sRes.reason);
+        sheetResult = { success: false, error: sRes.reason?.message || "Sheet sync failed" };
+      }
     }
 
-    res.json(reg);
+    res.json({
+      ...reg.toObject(),
+      emailResult,
+      sheetResult,
+    });
   } catch (err) {
     console.error("Update registration error:", err);
     res.status(500).json({ error: "Failed to update registration." });
+  }
+});
+
+// POST /api/admin/registrations/sync-sheet/:id — Manually sync an individual registration to Google Sheet
+router.post("/admin/sync-sheet/:id", authMiddleware, async (req, res) => {
+  try {
+    const reg = await Registration.findById(req.params.id);
+    if (!reg) return res.status(404).json({ error: "Registration not found." });
+
+    console.log(`📊 [Manual Sync] Appending registration for ${reg.name} to Google Sheet...`);
+    const sheetResult = await appendConfirmedRegistrationToSheet(reg);
+
+    if (sheetResult.success) {
+      const updated = await Registration.findByIdAndUpdate(
+        req.params.id,
+        { sheetSyncedAt: new Date() },
+        { new: true }
+      );
+      return res.json({
+        message: `Successfully synced to Google Sheet under tab "${sheetResult.sheetTitle}"!`,
+        registration: updated,
+        sheetResult,
+      });
+    } else {
+      return res.status(500).json({
+        error: sheetResult.error || "Failed to append row to Google Sheet.",
+        sheetResult,
+      });
+    }
+  } catch (err) {
+    console.error("Sync sheet error:", err);
+    res.status(500).json({ error: err.message || "Failed to sync to Google Sheet." });
+  }
+});
+
+// POST /api/admin/registrations/sync-all — Sync all confirmed registrations to Google Sheets
+router.post("/admin/sync-all", authMiddleware, async (req, res) => {
+  try {
+    const confirmedRegs = await Registration.find({ status: "confirmed" }).sort({ createdAt: 1 });
+    if (confirmedRegs.length === 0) {
+      return res.json({ message: "No confirmed registrations found to sync.", syncedCount: 0, total: 0 });
+    }
+
+    console.log(`📊 [Bulk Sync] Syncing ${confirmedRegs.length} confirmed registrations to Google Sheets...`);
+    const results = [];
+
+    for (const reg of confirmedRegs) {
+      const sResult = await appendConfirmedRegistrationToSheet(reg);
+      if (sResult.success) {
+        await Registration.findByIdAndUpdate(reg._id, { sheetSyncedAt: new Date() });
+      }
+      results.push({
+        id: reg._id,
+        name: reg.name,
+        eventName: reg.eventName,
+        ...sResult,
+      });
+    }
+
+    const successCount = results.filter((r) => r.success).length;
+    res.json({
+      message: `Synced ${successCount} of ${confirmedRegs.length} registrations to Google Sheets.`,
+      total: confirmedRegs.length,
+      syncedCount: successCount,
+      results,
+    });
+  } catch (err) {
+    console.error("Sync all error:", err);
+    res.status(500).json({ error: err.message || "Failed to sync registrations to Google Sheets." });
   }
 });
 

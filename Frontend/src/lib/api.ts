@@ -125,6 +125,8 @@ export const adminApi = {
   // Registrations
   getRegistrations: (params?: any) => api.get("/api/registrations/admin", { params }),
   updateRegistration: (id: string, data: any) => api.put(`/api/registrations/admin/${id}`, data),
+  syncRegistrationToSheet: (id: string) => api.post(`/api/registrations/admin/sync-sheet/${id}`),
+  syncAllToSheets: () => api.post("/api/registrations/admin/sync-all"),
   exportRegistrations: (params?: any) =>
     api.get("/api/registrations/admin/export", { params, responseType: "blob" }),
   getStats: () => api.get("/api/registrations/admin/stats"),

@@ -1,17 +1,62 @@
 import { google } from "googleapis";
 
 /**
+ * Extracts clean Google Spreadsheet ID from either raw ID or full Google Sheets URL
+ */
+export const extractSpreadsheetId = (raw) => {
+  if (!raw) return "";
+  const cleaned = String(raw).trim().replace(/^["']|["']$/g, "");
+  const match = cleaned.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  return match ? match[1] : cleaned;
+};
+
+/**
+ * Sanitizes event name for Google Sheet tab title
+ * Sheet tab names cannot contain: * ? : / \ [ ] and cannot exceed 100 characters.
+ */
+export const sanitizeSheetTitle = (title) => {
+  const clean = (title || "General")
+    .trim()
+    .replace(/[*?:/\\\[\]]/g, "_")
+    .substring(0, 95);
+  return clean || "General";
+};
+
+/**
+ * Escapes sheet tab title for Google Sheets A1 notation.
+ * Single quotes in sheet names must be doubled (' -> '') when enclosed in quotes.
+ */
+export const a1Range = (sheetTitle, cellRange) => {
+  const escaped = sheetTitle.replace(/'/g, "''");
+  return `'${escaped}'!${cellRange}`;
+};
+
+/**
  * Returns Google Auth Client with Sheets and Drive scopes
  */
 const getSheetsAuthClient = () => {
-  if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+  const clientEmail = (process.env.GOOGLE_CLIENT_EMAIL || "").trim();
+  let privateKey = (process.env.GOOGLE_PRIVATE_KEY || "").trim();
+
+  if (!clientEmail || !privateKey) {
     return null;
   }
 
+  // Strip leading/trailing surrounding quotes if present
+  if (
+    (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
+    (privateKey.startsWith("'") && privateKey.endsWith("'"))
+  ) {
+    privateKey = privateKey.slice(1, -1);
+  }
+
+  // Convert literal \n to real newlines
+  privateKey = privateKey.replace(/\\n/g, "\n");
+
   return new google.auth.GoogleAuth({
     credentials: {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      client_email: clientEmail,
+      private_key: privateKey,
     },
     scopes: [
       "https://www.googleapis.com/auth/spreadsheets",
@@ -25,10 +70,10 @@ const getSheetsAuthClient = () => {
  * Creates the event tab with header row if it doesn't already exist.
  *
  * @param {Object} registration - Mongoose Registration Document / Object
- * @returns {Promise<{ success: boolean, sheetTitle?: string, row?: number, error?: string }>}
+ * @returns {Promise<{ success: boolean, sheetTitle?: string, updatedRange?: string, error?: string }>}
  */
 export async function appendConfirmedRegistrationToSheet(registration) {
-  const spreadsheetId = process.env.GOOGLE_SHEET_ID;
+  const spreadsheetId = extractSpreadsheetId(process.env.GOOGLE_SHEET_ID);
 
   if (!spreadsheetId) {
     console.warn("⚠️ [Google Sheets] GOOGLE_SHEET_ID is not configured in .env. Skipping sheet sync.");
@@ -44,21 +89,42 @@ export async function appendConfirmedRegistrationToSheet(registration) {
   try {
     const sheets = google.sheets({ version: "v4", auth });
 
-    // Sanitize event name to create valid Google Sheet tab title (max 100 chars, no special characters like * ? : / \ [ ])
-    const rawEventName = (registration.eventName || "General").trim();
-    const sheetTitle = rawEventName.replace(/[*?:/\\\[\]]/g, "_").substring(0, 95) || "General";
+    // Sanitize event name to create valid Google Sheet tab title
+    const sheetTitle = sanitizeSheetTitle(registration.eventName);
 
     // 1. Fetch spreadsheet metadata to check existing tabs
     const meta = await sheets.spreadsheets.get({ spreadsheetId });
     const existingSheets = meta.data.sheets || [];
-    const sheetExists = existingSheets.some(
+    const matchedSheet = existingSheets.find(
       (s) => s.properties?.title?.toLowerCase() === sheetTitle.toLowerCase()
     );
 
+    // Standard headers
+    const headers = [
+      "S.No",
+      "Registration ID",
+      "Participant Name",
+      "Roll Number",
+      "Program",
+      "Semester",
+      "Mobile Number",
+      "Email",
+      "College / University",
+      "Team Type",
+      "Team Name",
+      "Team Members",
+      "UPI ID",
+      "Transaction ID",
+      "Payment Receipt Link",
+      "Confirmed Date & Time",
+    ];
+
     // 2. If event tab doesn't exist, create it and insert header row
-    if (!sheetExists) {
+    let activeSheetTitle = matchedSheet ? matchedSheet.properties.title : sheetTitle;
+
+    if (!matchedSheet) {
       console.log(`📊 [Google Sheets] Creating new tab for event: "${sheetTitle}"...`);
-      
+
       await sheets.spreadsheets.batchUpdate({
         spreadsheetId,
         requestBody: {
@@ -77,34 +143,16 @@ export async function appendConfirmedRegistrationToSheet(registration) {
         },
       });
 
-      // Insert clean styled headers
-      const headers = [
-        "S.No",
-        "Registration ID",
-        "Participant Name",
-        "Roll Number",
-        "Program",
-        "Semester",
-        "Mobile Number",
-        "Email",
-        "College / University",
-        "Team Type",
-        "Team Name",
-        "Team Members",
-        "UPI ID",
-        "Transaction ID",
-        "Payment Receipt Link",
-        "Confirmed Date & Time",
-      ];
-
+      // Insert headers
       await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: `'${sheetTitle}'!A1:P1`,
+        range: a1Range(sheetTitle, "A1:P1"),
         valueInputOption: "USER_ENTERED",
         requestBody: {
           values: [headers],
         },
       });
+      activeSheetTitle = sheetTitle;
       console.log(`✅ [Google Sheets] Tab "${sheetTitle}" created with headers.`);
     }
 
@@ -113,11 +161,12 @@ export async function appendConfirmedRegistrationToSheet(registration) {
     try {
       const readRes = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: `'${sheetTitle}'!A:A`,
+        range: a1Range(activeSheetTitle, "A:A"),
       });
       const existingRows = readRes.data.values ? readRes.data.values.length : 1;
-      serialNo = existingRows; // If row 1 is header, next row will be S.No 1
-    } catch {
+      serialNo = existingRows; // Row 1 is header, so row 2 is S.No 1
+    } catch (readErr) {
+      console.warn("⚠️ [Google Sheets] Row count read notice:", readErr.message);
       serialNo = 1;
     }
 
@@ -140,7 +189,7 @@ export async function appendConfirmedRegistrationToSheet(registration) {
         .join("\n");
     }
 
-    // Format confirmed timestamp
+    // Format confirmed timestamp in Indian Standard Time (IST)
     const confirmedTime = new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
       dateStyle: "medium",
@@ -170,7 +219,7 @@ export async function appendConfirmedRegistrationToSheet(registration) {
     // 6. Append row to the sheet
     const appendRes = await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: `'${sheetTitle}'!A:P`,
+      range: a1Range(activeSheetTitle, "A:P"),
       valueInputOption: "USER_ENTERED",
       insertDataOption: "INSERT_ROWS",
       requestBody: {
@@ -179,12 +228,12 @@ export async function appendConfirmedRegistrationToSheet(registration) {
     });
 
     console.log(
-      `✅ [Google Sheets] Entry added to "${sheetTitle}" for ${registration.name} (S.No: ${serialNo})`
+      `✅ [Google Sheets] Entry added to "${activeSheetTitle}" for ${registration.name} (S.No: ${serialNo})`
     );
 
     return {
       success: true,
-      sheetTitle,
+      sheetTitle: activeSheetTitle,
       updatedRange: appendRes.data?.updates?.updatedRange,
     };
   } catch (error) {
