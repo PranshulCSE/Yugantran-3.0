@@ -212,7 +212,7 @@ export async function sendConfirmationEmail(to, payload) {
                         </tr>
                         <tr>
                           <td style="color:#cbd5e1;font-size:13px;padding:3px 0;">
-                            📞 Helpline: <a href="tel:+919211067540" style="color:#00f0ff;text-decoration:none;font-weight:600;">+91 92110 67540</a> &nbsp;|&nbsp; <a href="tel:+919053709750" style="color:#00f0ff;text-decoration:none;font-weight:600;">+91 90537 09750</a>
+                            📞 Helpline: <a href="tel:+91 99992 38013" style="color:#00f0ff;text-decoration:none;font-weight:600;">+91 92110 67540</a> &nbsp;|&nbsp; <a href="tel:+919053709750" style="color:#00f0ff;text-decoration:none;font-weight:600;">+91 99925 60407</a>
                           </td>
                         </tr>
                       </table>
