@@ -169,44 +169,11 @@ export default function TeamManager() {
         </div>
       </div>
 
-      {/* 2. Compact Search & Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
-          <input
-            type="text"
-            placeholder="Search by name, role or department..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700/70 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
-          />
-        </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5">
-          {[
-            { id: "all", label: `All (${members.length})` },
-            { id: "core", label: `Core Team (${coreCount})` },
-            { id: "subteam", label: `Volunteers (${volunteerCount})` },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setFilter(cat.id)}
-              className={`px-3 py-1 rounded-lg text-[11px] font-space font-semibold whitespace-nowrap transition-all ${
-                filter === cat.id
-                  ? "bg-cyan-500 text-slate-950 shadow-sm"
-                  : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       {/* 3. High-Density Table */}
       <div className="glass rounded-xl overflow-hidden border border-slate-800/90 shadow-xl">
-        <div className="overflow-x-auto max-h-[calc(100vh-290px)] min-h-[300px]">
+        <div className="overflow-x-auto min-h-[300px] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/50">
           {loading ? (
             <div className="flex justify-center h-48 items-center">
               <div className="w-7 h-7 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
@@ -224,7 +191,6 @@ export default function TeamManager() {
                   <th>Role / Designation</th>
                   <th>Department</th>
                   <th>Category</th>
-                  <th>Social Contacts</th>
                   <th className="text-center">Live</th>
                   <th className="text-right pr-4">Actions</th>
                 </tr>
@@ -282,30 +248,7 @@ export default function TeamManager() {
                         {m.category === "core" ? "Core Lead" : "Volunteer"}
                       </span>
                     </td>
-                    <td>
-                      <div className="flex items-center gap-1.5">
-                        {m.linkedin && (
-                          <a
-                            href={m.linkedin}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-1 rounded bg-slate-900 border border-slate-800 text-blue-400 hover:text-white transition-colors"
-                            title="LinkedIn Profile"
-                          >
-                            <Linkedin className="w-3 h-3" />
-                          </a>
-                        )}
-                        {m.email && (
-                          <a
-                            href={`mailto:${m.email}`}
-                            className="p-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
-                            title="Send Email"
-                          >
-                            <Mail className="w-3 h-3" />
-                          </a>
-                        )}
-                      </div>
-                    </td>
+
                     <td className="text-center">
                       <button
                         onClick={() => toggle(m)}

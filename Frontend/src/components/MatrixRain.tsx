@@ -19,6 +19,11 @@ function MatrixRain() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const themeRef = useRef(theme);
+  useEffect(() => {
+    themeRef.current = theme;
+  }, [theme]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -53,7 +58,6 @@ function MatrixRain() {
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
-    const isLight = theme === "light";
     const chars = "01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF<>{}[]|/";
     const charLen = chars.length;
     const columns = Math.floor(canvas.width / fontSize);
@@ -64,6 +68,8 @@ function MatrixRain() {
       animId = requestAnimationFrame(draw);
       if (currentTime - lastTime < frameInterval) return;
       lastTime = currentTime;
+
+      const isLight = themeRef.current === "light";
 
       // Trail fade — shadowBlur must be 0 before fillRect
       ctx.shadowBlur = 0;
@@ -79,9 +85,9 @@ function MatrixRain() {
         const isHead = y * fontSize < canvas.height * 0.12 || Math.random() > 0.97;
 
         if (isLight) {
-          ctx.shadowBlur = 4;
-          ctx.shadowColor = "rgba(2,132,199,0.4)";
-          ctx.fillStyle = isHead ? "#0369a1" : "rgba(2,132,199,0.5)";
+          ctx.shadowBlur = 6;
+          ctx.shadowColor = "rgba(0,0,0,0.5)";
+          ctx.fillStyle = isHead ? "#000000" : `rgba(0,0,0,${(0.4 + Math.random() * 0.4).toFixed(2)})`;
         } else if (lowEnd) {
           // Low-end: no glow at all, just plain cyan
           ctx.shadowBlur = 0;
@@ -113,7 +119,7 @@ function MatrixRain() {
       document.removeEventListener("visibilitychange", handleVisibility);
       clearTimeout(resizeTimer);
     };
-  }, [theme]);
+  }, []);
 
   return (
     <canvas

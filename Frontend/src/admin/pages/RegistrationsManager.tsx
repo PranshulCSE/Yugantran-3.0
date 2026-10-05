@@ -307,7 +307,7 @@ export default function RegistrationsManager() {
           <div className="relative w-full sm:w-56">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
             <input
-              className="admin-input pl-8 py-1 text-xs"
+              className="admin-input !pl-8 py-1 text-xs"
               placeholder="Filter by event..."
               value={filter.event}
               onChange={(e) => setFilter((f) => ({ ...f, event: e.target.value }))}
@@ -450,49 +450,36 @@ export default function RegistrationsManager() {
                   </div>
                 )}
 
-                {/* Payment Proof Viewer */}
-                <div className="flex-1 min-h-[250px] bg-slate-950 rounded-lg border border-slate-800 flex flex-col relative group overflow-hidden">
-                  <div className="absolute top-2 left-2 bg-slate-900/80 px-2 py-1 rounded text-[10px] text-slate-400 uppercase font-semibold backdrop-blur-sm z-10 flex items-center gap-2">
-                    Payment Proof
-                    {(selectedReg.paymentReceiptUrl || selectedReg._id) && (
-                      <a
-                        href={(() => {
-                          const backendBase = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
-                          if (selectedReg.paymentReceiptUrl && selectedReg.paymentReceiptUrl.startsWith("http") && !selectedReg.paymentReceiptUrl.includes("/uploads/") && !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")) {
-                            return selectedReg.paymentReceiptUrl;
-                          }
-                          return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
-                        })()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
-                        title="Open full image in new tab"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
+                {/* Payment Proof Button */}
+                {(selectedReg.paymentReceiptUrl || selectedReg._id) ? (
+                  <a
+                    href={(() => {
+                      const backendBase = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
+                      if (selectedReg.paymentReceiptUrl && selectedReg.paymentReceiptUrl.startsWith("http") && !selectedReg.paymentReceiptUrl.includes("/uploads/") && !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")) {
+                        return selectedReg.paymentReceiptUrl;
+                      }
+                      return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
+                    })()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-slate-900/80 hover:bg-slate-800 border border-slate-700/50 hover:border-cyan-500/50 rounded-lg p-4 flex items-center justify-between group transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="bg-slate-950 p-2 rounded-lg group-hover:bg-cyan-950/30 transition-colors">
+                        <FileSpreadsheet className="w-5 h-5 text-cyan-500" />
+                      </div>
+                      <div>
+                        <div className="text-slate-200 font-bold text-sm">View Payment Proof</div>
+                        <div className="text-slate-500 text-[10px] uppercase tracking-wider">Opens in new tab</div>
+                      </div>
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                  </a>
+                ) : (
+                  <div className="w-full bg-slate-900/40 border border-slate-800 rounded-lg p-4 flex items-center justify-center text-slate-500 text-xs">
+                    No payment proof provided
                   </div>
-                  
-                  {selectedReg.paymentReceiptUrl || selectedReg._id ? (
-                    <div className="w-full h-full p-4 flex items-center justify-center">
-                      <img 
-                        src={(() => {
-                          const backendBase = (import.meta.env.VITE_BACKEND_URL || "http://localhost:5005").replace(/\/+$/, "");
-                          if (selectedReg.paymentReceiptUrl && selectedReg.paymentReceiptUrl.startsWith("http") && !selectedReg.paymentReceiptUrl.includes("/uploads/") && !selectedReg.paymentReceiptUrl.includes("/api/registrations/receipt/")) {
-                            return selectedReg.paymentReceiptUrl;
-                          }
-                          return `${backendBase}/api/registrations/receipt/${selectedReg._id}`;
-                        })()} 
-                        alt="Proof" 
-                        className="max-w-full max-h-[300px] object-contain rounded hover:scale-[1.02] transition-transform" 
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center w-full h-full min-h-[150px]">
-                      <span className="text-slate-600 text-xs">No image provided</span>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
 
               {/* Action Bar (Footer) */}

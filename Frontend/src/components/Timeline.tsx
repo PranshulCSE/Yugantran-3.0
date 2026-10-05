@@ -34,7 +34,7 @@ const SCHEDULE_DAY1 = [
   },
   {
     time: "02:00 PM",
-    title: "Code Sprint, Git Wars & Hardware Hack",
+    title: "Pixelverse, Git Wars & Hardware Hack",
     category: "TECH TRACKS",
     desc: "Speed coding, Git conflict resolution, and microcontroller robotics build.",
     location: "Computer Labs 3 & 4",

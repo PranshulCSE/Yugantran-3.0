@@ -59,6 +59,7 @@ html {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 242, 254, 0.45) transparent;
   -webkit-overflow-scrolling: touch;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html.dark {
@@ -69,21 +70,30 @@ html.light {
   background-color: #f8fafc;
 }
 
-html::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
-html::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00f2fe, #38bdf8);
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 242, 254, 0.35);
   border-radius: 4px;
 }
 
-html::-webkit-scrollbar-thumb:hover {
-  background: #00f2fe;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 242, 254, 0.7);
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 body {
@@ -93,6 +103,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html.dark body {
@@ -461,6 +472,18 @@ html.dark .badge-iot {
   color: #2dd4bf;
   border-color: rgba(45, 212, 191, 0.35);
   background: rgba(45, 212, 191, 0.1);
+}
+
+.badge-design {
+  color: #db2777;
+  border-color: rgba(244, 114, 182, 0.35);
+  background: rgba(244, 114, 182, 0.1);
+}
+
+html.dark .badge-design {
+  color: #f472b6;
+  border-color: rgba(244, 114, 182, 0.35);
+  background: rgba(244, 114, 182, 0.1);
 }
 
 .badge-innovation {

@@ -20,6 +20,7 @@ const CATEGORY_CONFIG: Record<string, { label: string; color: string; badge: str
   coding: { label: "Competitive Coding", color: "#38bdf8", badge: "badge-coding" },
   swe: { label: "Software Engineering", color: "#fb923c", badge: "badge-swe" },
   iot: { label: "IoT & Hardware", color: "#2dd4bf", badge: "badge-iot" },
+  design: { label: "Design & Creativity", color: "#f472b6", badge: "badge-design" },
   innovation: { label: "Startup & Innovation", color: "#a855f7", badge: "badge-innovation" },
   gaming: { label: "Esports & Gaming", color: "#ec4899", badge: "badge-gaming" },
   interactive: { label: "Interactive Hunt", color: "#facc15", badge: "badge-interactive" },
@@ -161,7 +162,7 @@ function EventDetailModal({ event, onClose }: { event: any; onClose: () => void 
               onClick={() => {
                 onClose();
                 window.dispatchEvent(new CustomEvent("eventSelected", { detail: event.name }));
-                navigate("/register");
+                navigate("/register", { state: { preselectEvent: event.name } });
               }}
               className="py-3.5 px-8 sm:px-12 rounded-xl text-sm font-orbitron font-black tracking-widest text-slate-900 dark:text-white transition-all duration-300 flex items-center justify-center gap-2 group/modalbtn hover:scale-[1.02]"
               style={{
@@ -428,7 +429,7 @@ export default function Events() {
                   window.dispatchEvent(
                     new CustomEvent("eventSelected", { detail: event.name })
                   );
-                  navigate("/register");
+                  navigate("/register", { state: { preselectEvent: event.name } });
                 }}
               />
             ))}

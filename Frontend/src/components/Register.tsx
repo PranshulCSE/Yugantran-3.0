@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { publicApi } from "../lib/api";
 import {
   User,
@@ -56,6 +57,7 @@ const ICON_MAP: Record<string, any> = {
 };
 
 export default function Register() {
+  const location = useLocation();
   const ref = useRef(null);
   const successRef = useRef<HTMLDivElement>(null);
 
@@ -107,6 +109,16 @@ export default function Register() {
     window.addEventListener("eventSelected", handler as EventListener);
     return () => window.removeEventListener("eventSelected", handler as EventListener);
   }, [events]);
+
+  // Pre-select event from route state (e.g. when navigated from Events page)
+  useEffect(() => {
+    if (events.length > 0 && location.state?.preselectEvent && !formData.selectedEvent) {
+      const found = events.find((ev) => ev.name === location.state.preselectEvent);
+      if (found) {
+        selectEvent(found);
+      }
+    }
+  }, [events, location.state, formData.selectedEvent]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -300,7 +312,7 @@ export default function Register() {
             <span className="anim-silver-royal">Official Registration</span>
           </h1>
 
-          <p className="text-slate-200 text-opacity-90 text-sm sm:text-base font-body max-w-xl mx-auto text-balance leading-relaxed">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-body max-w-xl mx-auto text-balance leading-relaxed">
             Lock in your spot for YUGANTRAN 3.0. Select your competition, complete payment via UPI, and
             upload your receipt for verification.
           </p>
@@ -311,7 +323,7 @@ export default function Register() {
           <div className="glass p-12 rounded-3xl text-center border-rose-500/30">
             <XCircle className="w-16 h-16 text-rose-400 mx-auto mb-4" />
             <h3 className="font-orbitron font-bold text-2xl text-white mb-2">Registration Closed</h3>
-            <p className="text-slate-200 text-opacity-90">
+            <p className="text-slate-600 dark:text-slate-300">
               Registrations for YUGANTRAN 3.0 have officially concluded. See you at the arena!
             </p>
           </div>
@@ -321,48 +333,62 @@ export default function Register() {
         {submitted && (
           <motion.div
             ref={successRef}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="glass p-8 sm:p-12 rounded-3xl text-center border-emerald-400/40 shadow-[0_0_50px_rgba(52,211,153,0.2)] space-y-6"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="relative overflow-hidden bg-white/5 dark:bg-[#020617]/40 backdrop-blur-2xl p-8 sm:p-12 rounded-[2rem] text-center border border-emerald-500/30 shadow-[0_0_60px_rgba(52,211,153,0.15)] space-y-8 max-w-2xl mx-auto"
           >
-            <div className="w-20 h-20 rounded-full bg-emerald-500/20 border border-emerald-400 mx-auto flex items-center justify-center shadow-[0_0_30px_rgba(52,211,153,0.4)]">
-              <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+            {/* Emerald Glowing Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none" />
+
+            <div className="relative">
+              <div className="w-24 h-24 rounded-full bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center shadow-[0_0_40px_rgba(52,211,153,0.5)]">
+                <CheckCircle2 className="w-12 h-12 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.8)]" />
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="font-orbitron font-black text-2xl sm:text-3xl text-white">
+            <div className="space-y-3 relative z-10">
+              <h3 className="font-orbitron font-black text-3xl sm:text-4xl text-emerald-400 tracking-wide drop-shadow-lg">
                 Registration Confirmed!
               </h3>
-              <p className="text-slate-200 text-opacity-90 text-sm sm:text-base max-w-lg mx-auto">
+              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base max-w-lg mx-auto font-body leading-relaxed">
                 Your entry for{" "}
-                <strong className="text-white font-semibold">{formData.selectedEvent?.name}</strong>{" "}
-                has been logged with Transaction ID:{" "}
-                <strong className="text-white font-mono">{formData.transactionId || "VERIFIED"}</strong>.
+                <strong className="text-slate-900 dark:text-white font-bold">{formData.selectedEvent?.name}</strong>{" "}
+                has been securely logged. <br className="hidden sm:block" /> Transaction ID:{" "}
+                <strong className="text-slate-900 dark:text-emerald-300 font-mono tracking-wider">{formData.transactionId || "VERIFIED"}</strong>.
               </p>
             </div>
 
-            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 max-w-md mx-auto text-left text-xs font-space space-y-2">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Participant:</span>
-                <span className="text-white font-semibold">{formData.name}</span>
+            <div className="relative z-10 p-5 rounded-2xl bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/40 dark:border-emerald-500/20 max-w-md mx-auto text-left text-xs sm:text-sm font-space space-y-3 shadow-inner">
+              <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-2">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Participant</span>
+                <span className="text-slate-900 dark:text-white font-bold">{formData.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Roll / Enrollment:</span>
-                <span className="text-white font-semibold">{formData.rollNumber}</span>
+              <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-2">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Roll / Enrollment</span>
+                <span className="text-slate-900 dark:text-white font-bold">{formData.rollNumber}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Event:</span>
-                <span className="text-white font-semibold">{formData.selectedEvent?.name}</span>
+              <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-2">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Event</span>
+                <span className="text-slate-900 dark:text-white font-bold">{formData.selectedEvent?.name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Fee Paid:</span>
-                <span className="text-emerald-400 font-bold">₹{formData.selectedEvent?.fee}</span>
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Fee Paid</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-black text-sm sm:text-base drop-shadow-sm">₹{formData.selectedEvent?.fee}</span>
               </div>
             </div>
 
-            <button onClick={resetForm} className="btn-primary text-xs py-3 px-8">
-              REGISTER FOR ANOTHER EVENT
-            </button>
+            <div className="pt-2 relative z-10">
+              <button 
+                onClick={resetForm} 
+                className="group relative inline-flex items-center justify-center px-8 py-3.5 font-orbitron font-bold text-xs sm:text-sm tracking-widest rounded-full bg-emerald-500 text-emerald-950 overflow-hidden shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(52,211,153,0.6)]"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  REGISTER FOR ANOTHER EVENT
+                </span>
+                <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out" />
+              </button>
+            </div>
           </motion.div>
         )}
 
@@ -376,10 +402,10 @@ export default function Register() {
             className="space-y-8"
           >
             {/* 1. Event Selector */}
-            <div className="relative z-50 p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+            <div className="relative z-50 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl">
               <div className="flex items-center justify-between mb-5">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-white" />
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white" />
                   STEP 1: SELECT YOUR COMPETITION
                 </h3>
                 {selectedEvent && (
@@ -401,8 +427,8 @@ export default function Register() {
                   onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
                   className={`w-full p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between ${
                     selectedEvent
-                      ? "border-white/30 bg-white/10 shadow-[0_0_20px_rgba(0,242,254,0.3)]"
-                      : "border-slate-800 bg-slate-900/60 hover:border-slate-700"
+                      ? "border-cyan-200 bg-cyan-50 dark:border-white/30 dark:bg-white/10 shadow-[0_0_20px_rgba(0,242,254,0.15)] dark:shadow-[0_0_20px_rgba(0,242,254,0.3)]"
+                      : "border-slate-200 bg-white/60 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-slate-700"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -412,12 +438,12 @@ export default function Register() {
                           const SelectedIcon = ICON_MAP[selectedEvent.icon] || Code;
                           return <SelectedIcon className="w-5 h-5 text-cyan-400" />;
                         })()}
-                        <span className="font-orbitron text-sm sm:text-base font-bold text-white">
+                        <span className="font-orbitron text-sm sm:text-base font-bold text-slate-900 dark:text-white">
                           {selectedEvent.name}
                         </span>
                       </>
                     ) : (
-                      <span className="font-orbitron text-sm sm:text-base font-bold text-slate-400">
+                      <span className="font-orbitron text-sm sm:text-base font-bold text-slate-500 dark:text-slate-400">
                         Select an Event...
                       </span>
                     )}
@@ -437,7 +463,7 @@ export default function Register() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute z-50 w-full mt-2 bg-slate-900/95 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl max-h-[300px] overflow-y-auto"
+                      className="absolute z-50 w-full mt-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl max-h-[300px] overflow-y-auto"
                     >
                       {events.map((ev) => {
                         const Icon = ICON_MAP[ev.icon] || Code;
@@ -451,8 +477,8 @@ export default function Register() {
                               if (!isSel) selectEvent(ev);
                               setIsEventDropdownOpen(false);
                             }}
-                            className={`w-full p-4 flex items-center justify-between transition-colors border-b border-slate-800/50 last:border-0 ${
-                              isSel ? "bg-white/10" : "hover:bg-slate-800/60"
+                            className={`w-full p-4 flex items-center justify-between transition-colors border-b border-slate-100 dark:border-slate-800/50 last:border-0 ${
+                              isSel ? "bg-cyan-50/50 dark:bg-white/10" : "hover:bg-slate-50 dark:hover:bg-slate-800/60"
                             }`}
                           >
                             <div className="flex items-center gap-3">
@@ -490,15 +516,15 @@ export default function Register() {
             </div>
 
             {/* 2. Personal Information */}
-            <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
-              <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-white" />
+            <div className="p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl">
+              <h3 className="font-orbitron font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white" />
                 STEP 2: PARTICIPANT INTEL
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     FULL NAME *
                   </label>
                   <div className="relative">
@@ -509,14 +535,14 @@ export default function Register() {
                       placeholder="e.g. Rahul Sharma"
                       value={formData.name}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.name ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.name ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.name && <p className="text-rose-400 text-xs mt-1">{errors.name}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     ROLL NUMBER / ENROLLMENT ID *
                   </label>
                   <div className="relative">
@@ -527,14 +553,14 @@ export default function Register() {
                       placeholder="e.g. GU21MCA001"
                       value={formData.rollNumber}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.rollNumber && <p className="text-rose-400 text-xs mt-1">{errors.rollNumber}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     PROGRAM / BRANCH *
                   </label>
                   <div className="relative">
@@ -545,14 +571,14 @@ export default function Register() {
                       placeholder="e.g. B.Tech CSE"
                       value={formData.program}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.program ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.program ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.program && <p className="text-rose-400 text-xs mt-1">{errors.program}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     SEMESTER / YEAR *
                   </label>
                   <div className="relative">
@@ -563,14 +589,14 @@ export default function Register() {
                       placeholder="e.g. 5th Sem"
                       value={formData.semester}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.semester && <p className="text-rose-400 text-xs mt-1">{errors.semester}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     PHONE / WHATSAPP NUMBER *
                   </label>
                   <div className="relative">
@@ -581,14 +607,14 @@ export default function Register() {
                       placeholder="10-digit number"
                       value={formData.mobileNumber}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.mobileNumber && <p className="text-rose-400 text-xs mt-1">{errors.mobileNumber}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     EMAIL ADDRESS *
                   </label>
                   <div className="relative">
@@ -599,14 +625,14 @@ export default function Register() {
                       placeholder="student@example.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.email ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.email ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email}</p>}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     COLLEGE / UNIVERSITY *
                   </label>
                   <div className="relative">
@@ -617,7 +643,7 @@ export default function Register() {
                       placeholder="e.g. Geeta University"
                       value={formData.college}
                       onChange={handleChange}
-                      className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.college ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.college ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.college && <p className="text-rose-400 text-xs mt-1">{errors.college}</p>}
@@ -627,14 +653,14 @@ export default function Register() {
 
             {/* 3. Team Details (If team event) */}
             {isTeamEvent && (
-              <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-5 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-white" />
+              <div className="p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl">
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-5 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white" />
                   STEP 3: TEAM SQUAD DETAILS
                 </h3>
 
                 <div className="mb-6">
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     TEAM NAME *
                   </label>
                   <input
@@ -643,7 +669,7 @@ export default function Register() {
                       placeholder="e.g. Code Ninjas"
                     value={formData.teamName}
                     onChange={handleChange}
-                    className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.teamName ? "!border-rose-500" : ""}`}
+                    className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.teamName ? "!border-rose-500" : ""}`}
                   />
                   {errors.teamName && (
                     <p className="text-rose-400 text-xs mt-1">{errors.teamName}</p>
@@ -651,17 +677,17 @@ export default function Register() {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="text-xs font-space text-slate-400 uppercase tracking-wider">
+                  <div className="text-xs font-space text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                     TEAM MATES (Excluding Leader)
                   </div>
 
                   {formData.teamMembers.map((member, idx) => (
                     <div
                       key={idx}
-                      className="p-4 sm:p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3"
+                      className="p-4 sm:p-5 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-orbitron font-bold text-cyan-400">
+                        <span className="text-xs font-orbitron font-bold text-cyan-600 dark:text-cyan-400">
                           MEMBER 0{idx + 1}
                         </span>
                         {formData.teamMembers.length > Math.max(selectedEvent.minTeam - 1, 1) && (
@@ -690,7 +716,7 @@ export default function Register() {
                             arr[idx].name = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
@@ -701,7 +727,7 @@ export default function Register() {
                             arr[idx].rollNumber = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
@@ -712,7 +738,7 @@ export default function Register() {
                             arr[idx].program = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                       </div>
                     </div>
@@ -741,16 +767,16 @@ export default function Register() {
 
             {/* 4. Payment & Receipt Dropzone */}
             {selectedEvent && (
-              <div className="p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
-                <h3 className="font-orbitron font-bold text-sm sm:text-base text-white mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-white" />
+              <div className="p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl shadow-2xl">
+                <h3 className="font-orbitron font-bold text-sm sm:text-base text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-900 dark:bg-white" />
                   STEP {isTeamEvent ? "4" : "3"}: UPI PAYMENT & RECEIPT
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8 items-center mb-8">
                   {/* Left: UPI QR Showcase */}
-                  <div className="md:col-span-5 flex flex-col items-center text-center p-6 rounded-2xl bg-slate-900/80 border border-slate-700/60 shadow-xl">
-                    <div className="w-44 h-44 rounded-2xl bg-white p-2.5 flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.3)] mb-4">
+                  <div className="md:col-span-5 flex flex-col items-center text-center p-6 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700/60 shadow-xl">
+                    <div className="w-44 h-44 rounded-2xl bg-white p-2.5 flex items-center justify-center shadow-[0_0_30px_rgba(0,242,254,0.15)] dark:shadow-[0_0_30px_rgba(0,242,254,0.3)] mb-4">
                       {settings?.upiQrImageUrl ? (
                         <img
                           src={settings.upiQrImageUrl}
@@ -762,12 +788,12 @@ export default function Register() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-950/60 border border-white/20 text-xs font-mono-matrix text-white mb-2">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-white/20 text-xs font-mono-matrix text-slate-900 dark:text-white mb-2">
                       <span>{upiId}</span>
                       <button
                         type="button"
                         onClick={() => copyToClipboard(upiId)}
-                        className="hover:text-white transition-colors"
+                        className="text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors"
                         title="Copy UPI ID"
                       >
                         <Copy className="w-3.5 h-3.5" />
@@ -782,7 +808,7 @@ export default function Register() {
                   {/* Right: Payment Inputs */}
                   <div className="md:col-span-7 space-y-4">
                     <div>
-                      <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                         YOUR UPI ID / UTR NUMBER *
                       </label>
                       <input
@@ -791,13 +817,13 @@ export default function Register() {
                       placeholder="e.g. name@okicici"
                         value={formData.upiId}
                         onChange={handleChange}
-                        className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.upiId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.upiId ? "!border-rose-500" : ""}`}
                       />
                       {errors.upiId && <p className="text-rose-400 text-xs mt-1">{errors.upiId}</p>}
                     </div>
 
                     <div>
-                      <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                         TRANSACTION / REFERENCE ID *
                       </label>
                       <input
@@ -806,18 +832,27 @@ export default function Register() {
                       placeholder="e.g. 123456789012"
                         value={formData.transactionId}
                         onChange={handleChange}
-                        className={`w-full bg-slate-900/40 border border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-white/30/70 focus:bg-slate-900/80 transition-all text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.transactionId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.transactionId ? "!border-rose-500" : ""}`}
                       />
                       {errors.transactionId && (
                         <p className="text-rose-400 text-xs mt-1">{errors.transactionId}</p>
                       )}
                     </div>
+
+                    {isTeamEvent && (
+                      <div className="p-3 rounded-xl bg-red-50 dark:bg-cyan-900/20 border border-red-200 dark:border-cyan-500/30 flex items-start gap-3 mt-4">
+                        <AlertCircle className="w-5 h-5 text-red-500 dark:text-cyan-400 shrink-0 mt-0.5" />
+                        <p className="text-xs font-space text-red-700 dark:text-cyan-300 leading-relaxed">
+                          <strong>Important:</strong> The total registration fee for all team members must be paid in a single transaction by the person submitting this form.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
                 {/* Drag & Drop Receipt Dropzone */}
                 <div>
-                  <label className="block text-xs font-space font-semibold text-slate-200 text-opacity-90 uppercase tracking-wider mb-2.5">
+                  <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2.5">
                     PAYMENT SCREENSHOT / RECEIPT (PNG, JPG, PDF) *
                   </label>
 
@@ -835,10 +870,10 @@ export default function Register() {
                     onDragLeave={() => setIsDragActive(false)}
                     className={`flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
                       isDragActive
-                        ? "border-white/30 bg-white/10 shadow-[0_0_30px_rgba(0,242,254,0.3)]"
+                        ? "border-cyan-400 bg-cyan-50 dark:border-white/30 dark:bg-white/10 shadow-[0_0_30px_rgba(0,242,254,0.15)] dark:shadow-[0_0_30px_rgba(0,242,254,0.3)]"
                         : errors.paymentReceipt
-                        ? "border-rose-500 bg-slate-900/60"
-                        : "border-slate-700 bg-slate-900/60 hover:border-white/30"
+                        ? "border-rose-500 bg-rose-50 dark:bg-slate-900/60"
+                        : "border-slate-300 bg-white/60 hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900/60 dark:hover:border-white/30"
                     }`}
                   >
                     {previewUrl ? (
@@ -848,21 +883,21 @@ export default function Register() {
                           alt="Receipt Preview"
                           className="max-h-48 rounded-xl mx-auto shadow-lg"
                         />
-                        <p className="text-xs font-mono-matrix text-white">
+                        <p className="text-xs font-mono-matrix text-slate-900 dark:text-white">
                           {formData.paymentReceipt?.name}
                         </p>
                       </div>
                     ) : (
                       <div className="text-center space-y-2">
-                        <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-white/30/30 flex items-center justify-center mx-auto text-cyan-400">
+                        <div className="w-12 h-12 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-white/30/30 flex items-center justify-center mx-auto text-cyan-600 dark:text-cyan-400">
                           <Upload className="w-6 h-6" />
                         </div>
-                        <p className="text-sm font-space font-semibold text-white">
+                        <p className="text-sm font-space font-semibold text-slate-900 dark:text-white">
                           {formData.paymentReceipt
                             ? formData.paymentReceipt.name
                             : "Click to upload or drag & drop payment receipt"}
                         </p>
-                        <p className="text-xs font-mono-matrix text-slate-400">Max file size: 10MB</p>
+                        <p className="text-xs font-mono-matrix text-slate-500 dark:text-slate-400">Max file size: 10MB</p>
                       </div>
                     )}
                   </label>
@@ -897,18 +932,17 @@ export default function Register() {
               disabled={loading}
               whileHover={{ scale: loading ? 1 : 1.02 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
-              className="w-full py-4 text-sm font-orbitron font-bold uppercase tracking-widest justify-center flex items-center gap-2 rounded-2xl transition-all duration-300 bg-cyan-500/10 hover:bg-cyan-500/20 border border-white/30/50 backdrop-blur-xl text-white shadow-[0_0_20px_rgba(0,242,254,0.15)] hover:shadow-[0_0_30px_rgba(0,242,254,0.3)] relative overflow-hidden group"
+              className="w-full py-4 text-sm font-orbitron font-bold uppercase tracking-widest justify-center flex items-center gap-2 rounded-2xl transition-all duration-300 bg-cyan-50 dark:bg-cyan-500/10 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 border border-cyan-300 dark:border-white/30/50 backdrop-blur-xl text-slate-900 dark:text-white shadow-[0_0_20px_rgba(0,242,254,0.15)] hover:shadow-[0_0_30px_rgba(0,242,254,0.3)] relative overflow-hidden group"
             >
-              {/* Optional nice subtle inner gradient sweep effect could go here, but background changes on hover are enough! */}
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
-                  <span className="relative z-10 text-white">PROCESSING REGISTRATION...</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-cyan-600 dark:text-cyan-400" />
+                  <span className="relative z-10 text-slate-900 dark:text-white">PROCESSING REGISTRATION...</span>
                 </>
               ) : (
                 <>
-                  <span className="relative z-10 text-white group-hover:text-cyan-100 transition-colors">CONFIRM & SUBMIT REGISTRATION</span>
-                  <Send className="w-4 h-4 text-cyan-400 group-hover:text-cyan-200 transition-colors" />
+                  <span className="relative z-10 text-slate-900 dark:text-white group-hover:text-cyan-900 dark:group-hover:text-cyan-100 transition-colors">CONFIRM & SUBMIT REGISTRATION</span>
+                  <Send className="w-4 h-4 text-cyan-600 dark:text-cyan-400 group-hover:text-cyan-700 dark:group-hover:text-cyan-200 transition-colors" />
                 </>
               )}
             </motion.button>

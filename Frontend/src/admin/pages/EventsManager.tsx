@@ -13,6 +13,7 @@ const CATEGORIES = [
   { value: "coding", label: "Competitive Coding", color: "from-amber-500/20 to-orange-500/20 text-amber-300 border-amber-500/30" },
   { value: "swe", label: "Software Engineering", color: "from-indigo-500/20 to-purple-500/20 text-indigo-300 border-indigo-500/30" },
   { value: "iot", label: "IoT & Hardware", color: "from-rose-500/20 to-pink-500/20 text-rose-300 border-rose-500/30" },
+  { value: "design", label: "Design & Creativity", color: "from-pink-500/20 to-rose-500/20 text-pink-300 border-pink-500/30" },
   { value: "innovation", label: "Innovation & Startup", color: "from-yellow-500/20 to-amber-500/20 text-yellow-300 border-yellow-500/30" },
   { value: "gaming", label: "Esports & Gaming", color: "from-fuchsia-500/20 to-purple-500/20 text-fuchsia-300 border-fuchsia-500/30" },
   { value: "interactive", label: "Treasure Hunt", color: "from-teal-500/20 to-cyan-500/20 text-teal-300 border-teal-500/30" },
@@ -179,55 +180,11 @@ export default function EventsManager() {
         </div>
       </div>
 
-      {/* 2. Compact Search & Filter Toolbar */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-        {/* Search */}
-        <div className="relative flex-1 min-w-[200px] max-w-md">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
-          <input
-            type="text"
-            placeholder="Search by name, slug or description..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-900 border border-slate-700/70 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
-          />
-        </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
-          <button
-            onClick={() => setSelectedCategory("all")}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-space font-semibold whitespace-nowrap transition-all ${
-              selectedCategory === "all"
-                ? "bg-cyan-500 text-slate-950 shadow-sm"
-                : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
-            }`}
-          >
-            All Tracks ({events.length})
-          </button>
-          {CATEGORIES.map((cat) => {
-            const count = events.filter((e) => e.category === cat.value).length;
-            if (count === 0 && selectedCategory !== cat.value) return null;
-            return (
-              <button
-                key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-space font-semibold whitespace-nowrap transition-all ${
-                  selectedCategory === cat.value
-                    ? "bg-cyan-500 text-slate-950 shadow-sm"
-                    : "bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800"
-                }`}
-              >
-                {cat.label} {count > 0 && `(${count})`}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* 3. High-Density Compact Table */}
-      <div className="glass rounded-xl overflow-hidden border border-slate-800/90 shadow-xl">
-        <div className="overflow-x-auto max-h-[calc(100vh-290px)] min-h-[300px]">
+      <div className="bg-slate-900/50 backdrop-blur-md rounded-xl overflow-hidden border border-slate-800/90 shadow-xl">
+        <div className="overflow-x-auto min-h-[300px] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-slate-700/50">
           {loading ? (
             <div className="flex justify-center h-48 items-center">
               <div className="w-7 h-7 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />

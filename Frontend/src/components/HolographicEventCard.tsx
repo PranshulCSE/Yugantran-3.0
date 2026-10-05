@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useEffect, useState, useRef } from "react";
 import { LucideIcon, X, Info, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface HolographicEventCardProps {
   icon: LucideIcon;
@@ -25,6 +26,7 @@ export default function HolographicEventCard({
   teamSize,
   onSelectEvent,
 }: HolographicEventCardProps) {
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -323,10 +325,7 @@ const isRegistrationClosed = new Date() > registrationDeadline;
       );
       onSelectEvent?.(title);
       setShowModal(false);
-
-      const form = document.getElementById("register");
-      if (form)
-        form.scrollIntoView({ behavior: "smooth", block: "center" });
+      navigate("/register", { state: { preselectEvent: title } });
     }}
     whileHover={{ scale: 1.05 }}
     whileTap={{ scale: 0.95 }}
