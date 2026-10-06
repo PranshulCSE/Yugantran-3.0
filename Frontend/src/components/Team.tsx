@@ -35,7 +35,9 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ delay: index * 0.05, duration: 0.35 }}
+      whileHover={{ y: -8, rotateX: 2, rotateY: -2 }}
       className="card group transition-transform duration-300 mx-auto"
+      style={{ perspective: 1000 }}
     >
       <div className="card__inner">
         <div className="card__cover">
@@ -126,23 +128,29 @@ export default function Team() {
         <div className="flex justify-center items-center gap-4 mt-4 mb-8">
           <button
             onClick={() => setActiveTab("core")}
-            className={`px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all border ${
-              activeTab === "core"
-                ? "anim-silver-bg shadow-[0_0_15px_rgba(209,213,219,0.5)]"
-                : "glass border-transparent hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
-            }`}
+            className="relative px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           >
-            <span>CORE TEAM</span>
+            {activeTab === "core" && (
+              <motion.div
+                layoutId="activeTeamTab"
+                className="absolute inset-0 anim-silver-bg rounded-full shadow-[0_0_15px_rgba(209,213,219,0.5)] z-[-1]"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className={activeTab === "core" ? "text-slate-900" : ""}>CORE TEAM</span>
           </button>
           <button
             onClick={() => setActiveTab("volunteer")}
-            className={`px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-all border ${
-              activeTab === "volunteer"
-                ? "anim-silver-bg shadow-[0_0_15px_rgba(209,213,219,0.5)]"
-                : "glass border-transparent hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
-            }`}
+            className="relative px-8 py-3 rounded-full font-orbitron text-xs sm:text-sm font-bold tracking-widest transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
           >
-            <span>VOLUNTEERS</span>
+            {activeTab === "volunteer" && (
+              <motion.div
+                layoutId="activeTeamTab"
+                className="absolute inset-0 anim-silver-bg rounded-full shadow-[0_0_15px_rgba(209,213,219,0.5)] z-[-1]"
+                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+              />
+            )}
+            <span className={activeTab === "volunteer" ? "text-slate-900" : ""}>VOLUNTEERS</span>
           </button>
         </div>
 
