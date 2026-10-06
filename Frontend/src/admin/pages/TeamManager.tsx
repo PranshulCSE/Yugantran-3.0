@@ -90,7 +90,7 @@ export default function TeamManager() {
       setShowPanel(false);
       fetchTeam();
       toast.success("Team member saved successfully");
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);

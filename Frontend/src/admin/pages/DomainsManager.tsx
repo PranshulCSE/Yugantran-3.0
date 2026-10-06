@@ -39,8 +39,8 @@ export default function DomainsManager() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const updateField = (field: string, val: any) => {
-    setForm((p: any) => ({ ...p, [field]: val }));
+  const updateField = (field: keyof Domain, val: unknown) => {
+    setForm((p) => ({ ...p, [field]: val }));
   };
 
   const fetchDomains = async () => {
@@ -65,7 +65,7 @@ export default function DomainsManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (d: any) => {
+  const openEdit = (d: Domain) => {
     setEditDomain(d);
     setForm({ ...d });
     setShowPanel(true);
@@ -82,14 +82,14 @@ export default function DomainsManager() {
       else await adminApi.createDomain(form);
       setShowPanel(false);
       fetchDomains();
-    } catch (e: any) {
+    } catch (e: unknown) {
       alert(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const toggle = async (d: any) => {
+  const toggle = async (d: Domain) => {
     try {
       await adminApi.updateDomain(d._id, { isActive: !d.isActive });
       setDomains((prev) =>

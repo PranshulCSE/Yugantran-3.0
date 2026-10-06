@@ -88,7 +88,7 @@ export default function AwardsManager() {
       setShowPanel(false);
       fetchAwards();
       toast.success("Award saved successfully");
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);

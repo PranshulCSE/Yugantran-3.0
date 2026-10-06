@@ -20,7 +20,7 @@ const CATEGORIES = [
   { value: "flagship", label: "Grand Flagship", color: "from-amber-500/30 to-rose-500/30 text-amber-200 border-amber-400/40" },
 ];
 
-const EMPTY: any = {
+const EMPTY: Partial<Event> = {
   name: "",
   category: "ai",
   description: "",
@@ -72,7 +72,7 @@ export default function EventsManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (ev: any) => {
+  const openEdit = (ev: Event) => {
     setEditEvent(ev);
     setForm({ ...ev, rounds: ev.rounds?.length ? ev.rounds : [{ name: "", description: "" }] });
     setActiveDrawerTab("general");
@@ -90,14 +90,14 @@ export default function EventsManager() {
       else await adminApi.createEvent(form);
       setShowPanel(false);
       fetchEvents();
-    } catch (e: any) {
+    } catch (e: unknown) {
       alert(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
     }
   };
 
-  const toggle = async (ev: any) => {
+  const toggle = async (ev: Event) => {
     try {
       await adminApi.updateEvent(ev._id, { isActive: !ev.isActive });
       setEvents((prev) =>
@@ -118,8 +118,8 @@ export default function EventsManager() {
     }
   };
 
-  const updateField = (field: string, val: any) => {
-    setForm((p: any) => ({ ...p, [field]: val }));
+  const updateField = (field: keyof Event, val: unknown) => {
+    setForm((p) => ({ ...p, [field]: val }));
   };
 
   // Filtered & Searched Events
@@ -642,7 +642,7 @@ export default function EventsManager() {
                         No rounds configured. Click "+ Add Round" above.
                       </div>
                     ) : (
-                      (form.rounds || []).map((r: any, idx: number) => (
+                      (form.rounds || []).map((r: { title: string; time: string; location: string }, idx: number) => (
                         <div
                           key={idx}
                           className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2"
@@ -656,7 +656,7 @@ export default function EventsManager() {
                               onClick={() =>
                                 updateField(
                                   "rounds",
-                                  form.rounds.filter((_: any, j: number) => j !== idx)
+                                  form.rounds.filter((_, j: number) => j !== idx)
                                 )
                               }
                               className="text-[11px] text-rose-400 hover:text-rose-300 font-semibold"

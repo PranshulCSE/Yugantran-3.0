@@ -118,7 +118,7 @@ export default function RegistrationsManager() {
       } else {
         toast.info(`Registration marked as ${status}.`);
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Failed to update registration status.");
     } finally {
       setUpdating(null);
@@ -137,7 +137,7 @@ export default function RegistrationsManager() {
       if (selectedReg?._id === id) {
         setSelectedReg((prev) => (prev ? { ...prev, emailSentAt: updatedTimestamp } : null));
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Failed to send confirmation email.");
     } finally {
       setSendingEmailId(null);
@@ -156,7 +156,7 @@ export default function RegistrationsManager() {
       if (selectedReg?._id === id) {
         setSelectedReg((prev) => (prev ? { ...prev, sheetSyncedAt: updatedTimestamp } : null));
       }
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Failed to sync to Google Sheet.");
     } finally {
       setSyncingId(null);
@@ -171,7 +171,7 @@ export default function RegistrationsManager() {
       const res = await adminApi.syncAllToSheets();
       toast.success(res.data.message || "All confirmed registrations synced to Google Sheets!");
       fetchData();
-    } catch (e: any) {
+    } catch (e: unknown) {
       toast.error(e.response?.data?.error || "Failed to sync all registrations.");
     } finally {
       setSyncingAll(false);
