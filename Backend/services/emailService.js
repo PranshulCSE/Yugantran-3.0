@@ -328,7 +328,7 @@ export async function sendConfirmationEmail(to, payload) {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params.toString(),
-        redirect: "follow",
+          redirect: "follow",
         signal: controller.signal
       });
       
