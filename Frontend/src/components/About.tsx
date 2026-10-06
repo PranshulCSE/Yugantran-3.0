@@ -92,11 +92,11 @@ export default function About() {
           ].map((card, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: i * 0.08, duration: 0.35 }}
-              className="glass p-7 rounded-3xl border-cyan-500/20 flex flex-col justify-between shadow-lg"
+              transition={{ delay: i * 0.06, duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+              className="glass p-7 rounded-3xl border-cyan-500/20 flex flex-col justify-between shadow-lg transition-transform duration-200 ease-out-custom [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-1"
             >
               <div>
                 <div

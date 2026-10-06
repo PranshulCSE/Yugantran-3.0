@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, ToggleLeft, ToggleRight,
   Bot, Shield, Terminal, Cpu, Rocket, Gamepad2, Layers,
-  Search, Sparkles, Check
+  Search
 } from "lucide-react";
+import { Domain } from "../../types";
 
 const ICON_MAP: Record<string, any> = { Bot, Shield, Terminal, Cpu, Rocket, Gamepad2, Layers };
 const ICON_NAMES = Object.keys(ICON_MAP);
@@ -39,7 +40,7 @@ export default function DomainsManager() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const updateField = (field: string, val: any) => {
+  const updateField = (field: keyof Domain, val: unknown) => {
     setForm((p: any) => ({ ...p, [field]: val }));
   };
 
@@ -65,7 +66,7 @@ export default function DomainsManager() {
     setShowPanel(true);
   };
 
-  const openEdit = (d: any) => {
+  const openEdit = (d: Domain) => {
     setEditDomain(d);
     setForm({ ...d });
     setShowPanel(true);
@@ -89,7 +90,7 @@ export default function DomainsManager() {
     }
   };
 
-  const toggle = async (d: any) => {
+  const toggle = async (d: Domain) => {
     try {
       await adminApi.updateDomain(d._id, { isActive: !d.isActive });
       setDomains((prev) =>

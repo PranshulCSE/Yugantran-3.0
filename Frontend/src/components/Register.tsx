@@ -385,7 +385,7 @@ export default function Register() {
             <div className="pt-2 relative z-10">
               <button 
                 onClick={resetForm} 
-                className="group relative inline-flex items-center justify-center px-8 py-3.5 font-orbitron font-bold text-xs sm:text-sm tracking-widest rounded-full bg-emerald-500 text-emerald-950 overflow-hidden shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(52,211,153,0.6)]"
+                className="group relative inline-flex items-center justify-center px-8 py-3.5 font-orbitron font-bold text-xs sm:text-sm tracking-widest rounded-full bg-emerald-500 text-emerald-950 overflow-hidden shadow-[0_0_20px_rgba(52,211,153,0.4)] transition-[color,box-shadow,transform] hover:scale-105 hover:shadow-[0_0_40px_rgba(52,211,153,0.6)]"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   <Zap className="w-4 h-4" />
@@ -430,7 +430,7 @@ export default function Register() {
                 <button
                   type="button"
                   onClick={() => setIsEventDropdownOpen(!isEventDropdownOpen)}
-                  className={`w-full p-4 rounded-2xl border text-left transition-all duration-200 flex items-center justify-between ${
+                  className={`w-full p-4 rounded-2xl border text-left transition-colors duration-200 flex items-center justify-between ${
                     selectedEvent
                       ? "border-cyan-200 bg-cyan-50 dark:border-white/30 dark:bg-white/10 shadow-[0_0_20px_rgba(0,242,254,0.15)] dark:shadow-[0_0_20px_rgba(0,242,254,0.3)]"
                       : "border-slate-200 bg-white/60 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900/60 dark:hover:border-slate-700"
@@ -527,8 +527,17 @@ export default function Register() {
                 STEP 2: PARTICIPANT INTEL
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
+              <motion.div 
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true, margin: "-50px" }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+                }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-5"
+              >
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     FULL NAME *
                   </label>
@@ -540,13 +549,13 @@ export default function Register() {
                       placeholder="e.g. Rahul Sharma"
                       value={formData.name}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.name ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.name ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.name && <p className="text-rose-400 text-xs mt-1">{errors.name}</p>}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     ROLL NUMBER / ENROLLMENT ID *
                   </label>
@@ -558,13 +567,13 @@ export default function Register() {
                       placeholder="e.g. GU21MCA001"
                       value={formData.rollNumber}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.rollNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.rollNumber && <p className="text-rose-400 text-xs mt-1">{errors.rollNumber}</p>}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     PROGRAM / BRANCH *
                   </label>
@@ -576,13 +585,13 @@ export default function Register() {
                       placeholder="e.g. B.Tech CSE"
                       value={formData.program}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.program ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.program ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.program && <p className="text-rose-400 text-xs mt-1">{errors.program}</p>}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     SEMESTER / YEAR *
                   </label>
@@ -594,13 +603,13 @@ export default function Register() {
                       placeholder="e.g. 5th Sem"
                       value={formData.semester}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.semester ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.semester && <p className="text-rose-400 text-xs mt-1">{errors.semester}</p>}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     PHONE / WHATSAPP NUMBER *
                   </label>
@@ -612,13 +621,13 @@ export default function Register() {
                       placeholder="10-digit number"
                       value={formData.mobileNumber}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.mobileNumber ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.mobileNumber && <p className="text-rose-400 text-xs mt-1">{errors.mobileNumber}</p>}
-                </div>
+                </motion.div>
 
-                <div>
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }}>
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     EMAIL ADDRESS *
                   </label>
@@ -630,13 +639,13 @@ export default function Register() {
                       placeholder="student@example.com"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.email ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.email ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.email && <p className="text-rose-400 text-xs mt-1">{errors.email}</p>}
-                </div>
+                </motion.div>
 
-                <div className="md:col-span-2">
+                <motion.div variants={{ hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } }} className="md:col-span-2">
                   <label className="block text-xs font-space font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
                     COLLEGE / UNIVERSITY *
                   </label>
@@ -648,12 +657,12 @@ export default function Register() {
                       placeholder="e.g. Geeta University"
                       value={formData.college}
                       onChange={handleChange}
-                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.college ? "!border-rose-500" : ""}`}
+                      className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner pl-11 ${errors.college ? "!border-rose-500" : ""}`}
                     />
                   </div>
                   {errors.college && <p className="text-rose-400 text-xs mt-1">{errors.college}</p>}
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
 
             {/* 3. Team Details (If team event) */}
@@ -674,7 +683,7 @@ export default function Register() {
                       placeholder="e.g. Code Ninjas"
                     value={formData.teamName}
                     onChange={handleChange}
-                    className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.teamName ? "!border-rose-500" : ""}`}
+                    className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.teamName ? "!border-rose-500" : ""}`}
                   />
                   {errors.teamName && (
                     <p className="text-rose-400 text-xs mt-1">{errors.teamName}</p>
@@ -721,7 +730,7 @@ export default function Register() {
                             arr[idx].name = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
@@ -732,7 +741,7 @@ export default function Register() {
                             arr[idx].rollNumber = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                         <input
                           type="text"
@@ -743,7 +752,7 @@ export default function Register() {
                             arr[idx].program = e.target.value;
                             setFormData((p) => ({ ...p, teamMembers: arr }));
                           }}
-                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
+                          className="w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner text-xs"
                         />
                       </div>
                     </div>
@@ -822,7 +831,7 @@ export default function Register() {
                       placeholder="e.g. name@okicici"
                         value={formData.upiId}
                         onChange={handleChange}
-                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.upiId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.upiId ? "!border-rose-500" : ""}`}
                       />
                       {errors.upiId && <p className="text-rose-400 text-xs mt-1">{errors.upiId}</p>}
                     </div>
@@ -837,7 +846,7 @@ export default function Register() {
                       placeholder="e.g. 123456789012"
                         value={formData.transactionId}
                         onChange={handleChange}
-                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-all text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.transactionId ? "!border-rose-500" : ""}`}
+                        className={`w-full bg-white/60 dark:bg-slate-900/40 border border-slate-300 dark:border-slate-700/50 rounded-xl px-4 py-3 outline-none focus:border-cyan-400 focus:bg-white/90 dark:focus:border-white/30 dark:focus:bg-slate-900/80 transition-colors text-slate-900 dark:text-white font-space text-sm backdrop-blur-md shadow-inner ${errors.transactionId ? "!border-rose-500" : ""}`}
                       />
                       {errors.transactionId && (
                         <p className="text-rose-400 text-xs mt-1">{errors.transactionId}</p>
@@ -861,19 +870,21 @@ export default function Register() {
                     PAYMENT SCREENSHOT / RECEIPT (PNG, JPG, PDF) *
                   </label>
 
-                  <label
+                  <motion.label
                     htmlFor="receiptUpload"
-                    onDrop={(e) => {
+                    animate={{ scale: isDragActive ? 1.02 : 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    onDrop={(e: any) => {
                       e.preventDefault();
                       setIsDragActive(false);
                       handleFile(e.dataTransfer.files[0] || null);
                     }}
-                    onDragOver={(e) => {
+                    onDragOver={(e: any) => {
                       e.preventDefault();
                       setIsDragActive(true);
                     }}
                     onDragLeave={() => setIsDragActive(false)}
-                    className={`flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all ${
+                    className={`flex flex-col items-center justify-center p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-colors ${
                       isDragActive
                         ? "border-cyan-400 bg-cyan-50 dark:border-white/30 dark:bg-white/10 shadow-[0_0_30px_rgba(0,242,254,0.15)] dark:shadow-[0_0_30px_rgba(0,242,254,0.3)]"
                         : errors.paymentReceipt
@@ -905,7 +916,7 @@ export default function Register() {
                         <p className="text-xs font-mono-matrix text-slate-500 dark:text-slate-400">Max file size: 10MB</p>
                       </div>
                     )}
-                  </label>
+                  </motion.label>
 
                   <input
                     id="receiptUpload"
@@ -947,7 +958,7 @@ export default function Register() {
               disabled={loading}
               whileHover={{ scale: loading ? 1 : 1.02 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
-              className="w-full py-4 text-sm font-orbitron font-bold uppercase tracking-widest justify-center flex items-center gap-2 rounded-2xl transition-all duration-300 bg-cyan-50 dark:bg-cyan-500/10 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 border border-cyan-300 dark:border-white/30/50 backdrop-blur-xl text-slate-900 dark:text-white shadow-[0_0_20px_rgba(0,242,254,0.15)] hover:shadow-[0_0_30px_rgba(0,242,254,0.3)] relative overflow-hidden group"
+              className="w-full py-4 text-sm font-orbitron font-bold uppercase tracking-widest justify-center flex items-center gap-2 rounded-2xl transition-colors duration-300 bg-cyan-50 dark:bg-cyan-500/10 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 border border-cyan-300 dark:border-white/30/50 backdrop-blur-xl text-slate-900 dark:text-white shadow-[0_0_20px_rgba(0,242,254,0.15)] hover:shadow-[0_0_30px_rgba(0,242,254,0.3)] relative overflow-hidden group"
             >
               {loading ? (
                 <>

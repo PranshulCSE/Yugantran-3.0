@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, ToggleLeft, ToggleRight,
   Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award as AwardIcon,
-  Search, Sparkles, Check
+  Search
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {

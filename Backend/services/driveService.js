@@ -35,17 +35,18 @@ export async function uploadToDrive(buffer, filename, mimeType) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s max timeout
 
+      const params = new URLSearchParams();
+      params.append('base64', base64);
+      params.append('filename', filename);
+      params.append('mimeType', mimeType);
+      params.append('folderId', folderId);
+
       const res = await fetch(webhookUrl, {
         method: "POST",
         headers: {
-          "Content-Type": "text/plain;charset=utf-8",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: JSON.stringify({
-          base64,
-          filename,
-          mimeType,
-          folderId,
-        }),
+        body: params.toString(),
         redirect: "follow",
         signal: controller.signal,
       });
