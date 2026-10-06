@@ -1,18 +1,15 @@
 import { useState, useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Zap, Sun, Moon } from "lucide-react";
-import { publicApi } from "../lib/api";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { NAV_ROUTES } from "../routes";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
   const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
-  const headerRef = useRef<HTMLHeadingElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -20,12 +17,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    publicApi
-      .getSettings()
-      .then((res) => setIsRegistrationOpen(res.data.isRegistrationOpen ?? true))
-      .catch(() => { });
-  }, []);
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,7 +33,7 @@ export default function Header() {
 
   return (
     <motion.header
-      ref={headerRef as any}
+      ref={headerRef}
       initial={{ y: -80, x: "-50%" }}
       animate={{ y: 0, x: "-50%" }}
       transition={{ duration: 0.45, ease: "easeOut" }}

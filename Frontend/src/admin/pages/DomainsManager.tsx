@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, ToggleLeft, ToggleRight,
   Bot, Shield, Terminal, Cpu, Rocket, Gamepad2, Layers,
-  Search, Sparkles, Check
+  Search
 } from "lucide-react";
+import { Domain } from "../../types";
 
 const ICON_MAP: Record<string, any> = { Bot, Shield, Terminal, Cpu, Rocket, Gamepad2, Layers };
 const ICON_NAMES = Object.keys(ICON_MAP);
@@ -40,7 +41,7 @@ export default function DomainsManager() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const updateField = (field: keyof Domain, val: unknown) => {
-    setForm((p) => ({ ...p, [field]: val }));
+    setForm((p: any) => ({ ...p, [field]: val }));
   };
 
   const fetchDomains = async () => {
@@ -82,7 +83,7 @@ export default function DomainsManager() {
       else await adminApi.createDomain(form);
       setShowPanel(false);
       fetchDomains();
-    } catch (e: unknown) {
+    } catch (e: any) {
       alert(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);

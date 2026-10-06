@@ -1,14 +1,14 @@
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { publicApi } from "../lib/api";
-import { Linkedin, User, Users, Mail, Check, Copy } from "lucide-react";
+import { Linkedin, User, Mail } from "lucide-react";
 import "./Team.css";
 
 import { TeamMember } from "../types";
 
 function MemberCard({ member, index }: { member: TeamMember; index: number }) {
   const [imgSrc, setImgSrc] = useState(member.image || "");
-  const [copied, setCopied] = useState(false);
+
 
   // Fallback image handling
   const handleImageError = () => {
@@ -22,12 +22,7 @@ function MemberCard({ member, index }: { member: TeamMember; index: number }) {
     }
   };
 
-  const copyEmail = (e: React.MouseEvent) => {
-    if (!member.email) return;
-    navigator.clipboard.writeText(member.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+
 
   return (
     <motion.div

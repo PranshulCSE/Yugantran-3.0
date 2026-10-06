@@ -3,9 +3,9 @@ import { adminApi } from "../../lib/api";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, ToggleLeft, ToggleRight, X, Save,
-  Layers, Zap, Search, Trophy, Users, CheckCircle2,
-  Sparkles, ExternalLink
+  Zap, Trophy, Users
 } from "lucide-react";
+import { Event } from "../../types";
 
 const CATEGORIES = [
   { value: "ai", label: "AI & Emerging Tech", color: "from-cyan-500/20 to-blue-500/20 text-cyan-300 border-cyan-500/30" },
@@ -90,7 +90,7 @@ export default function EventsManager() {
       else await adminApi.createEvent(form);
       setShowPanel(false);
       fetchEvents();
-    } catch (e: unknown) {
+    } catch (e: any) {
       alert(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);
@@ -119,7 +119,7 @@ export default function EventsManager() {
   };
 
   const updateField = (field: keyof Event, val: unknown) => {
-    setForm((p) => ({ ...p, [field]: val }));
+    setForm((p: any) => ({ ...p, [field]: val }));
   };
 
   // Filtered & Searched Events
@@ -642,7 +642,7 @@ export default function EventsManager() {
                         No rounds configured. Click "+ Add Round" above.
                       </div>
                     ) : (
-                      (form.rounds || []).map((r: { title: string; time: string; location: string }, idx: number) => (
+                      (form.rounds || []).map((r: { name: string; description: string }, idx: number) => (
                         <div
                           key={idx}
                           className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 space-y-2"
@@ -656,7 +656,7 @@ export default function EventsManager() {
                               onClick={() =>
                                 updateField(
                                   "rounds",
-                                  form.rounds.filter((_, j: number) => j !== idx)
+                                  form.rounds.filter((_: any, j: number) => j !== idx)
                                 )
                               }
                               className="text-[11px] text-rose-400 hover:text-rose-300 font-semibold"

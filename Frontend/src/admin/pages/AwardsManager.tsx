@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Edit2, Trash2, X, Save, ToggleLeft, ToggleRight,
   Trophy, Bot, Shield, Code, Palette, Rocket, Star, Medal, Award as AwardIcon,
-  Search, Sparkles, Check
+  Search
 } from "lucide-react";
 
 const ICON_MAP: Record<string, any> = {
@@ -88,7 +88,7 @@ export default function AwardsManager() {
       setShowPanel(false);
       fetchAwards();
       toast.success("Award saved successfully");
-    } catch (e: unknown) {
+    } catch (e: any) {
       toast.error(e.response?.data?.error || "Save operation failed.");
     } finally {
       setSaving(false);

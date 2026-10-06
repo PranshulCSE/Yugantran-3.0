@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import MatrixRain from "./MatrixRain";
 import Header from "./Header";
 import Footer from "./Footer";
+import ThemePrompt from "./ThemePrompt";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -22,6 +23,7 @@ export default function Layout() {
       {/* Global Shared Navigation */}
       <Header />
       <ScrollToTop />
+      <ThemePrompt />
 
       {/* Main Routed Content */}
       <main className="relative z-10 min-h-screen flex flex-col">
