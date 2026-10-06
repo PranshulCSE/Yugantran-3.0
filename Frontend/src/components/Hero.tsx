@@ -146,14 +146,14 @@ export default function Hero() {
           >
             <button
               onClick={(e) => { e.preventDefault(); navigate("/register"); }}
-              className="anim-silver-bg group relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase overflow-hidden"
+              className="anim-silver-bg group relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.97] transition-[transform,opacity] duration-[160ms] ease-out-custom flex items-center justify-center uppercase overflow-hidden"
             >
               <span className="relative z-10 whitespace-nowrap">REGISTER NOW</span>
             </button>
 
             <button
               onClick={() => navigate("/awards")}
-              className="relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 bg-slate-900/5 dark:bg-white/10 hover:bg-slate-900/10 dark:hover:bg-white/20 backdrop-blur-xl border border-slate-900/20 dark:border-white/30 text-slate-950 dark:text-white font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:scale-[1.02] active:scale-[0.97] transition-all duration-200 ease-out flex items-center justify-center uppercase"
+              className="relative w-auto min-w-[200px] sm:min-w-[240px] px-6 py-2.5 sm:px-8 sm:py-3 bg-slate-900/5 dark:bg-white/10 hover:bg-slate-900/10 dark:hover:bg-white/20 backdrop-blur-xl border border-slate-900/20 dark:border-white/30 text-slate-950 dark:text-white font-orbitron text-[10px] sm:text-[12px] font-bold tracking-[0.15em] rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_15px_rgba(0,0,0,0.3)] hover:scale-[1.02] active:scale-[0.97] transition-[transform,opacity,background-color,border-color] duration-[160ms] ease-out-custom flex items-center justify-center uppercase"
             >
               <span className="relative z-10 whitespace-nowrap">See Exciting Awards !!</span>
             </button>
@@ -203,7 +203,7 @@ export default function Hero() {
             ].map((stat, idx) => (
               <div
                 key={idx}
-                className="glass glass-hover p-4 rounded-2xl border-cyan-500/20 text-center shadow-lg transition-all hover:-translate-y-1 hover:shadow-cyan-500/20"
+                className="glass glass-hover p-4 rounded-2xl border-cyan-500/20 text-center shadow-lg transition-transform duration-200 ease-out-custom hover:-translate-y-1 hover:shadow-cyan-500/20 [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-1"
               >
                 <div className={`font-orbitron font-black text-xl sm:text-2xl ${stat.color} drop-shadow-md`}>
                   {stat.value}

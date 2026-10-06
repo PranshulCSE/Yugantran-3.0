@@ -171,21 +171,27 @@ export default function Header() {
             className={`absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:hidden ${isDark ? "bg-[#020617]/95 border border-white/10" : "bg-white/95 border border-slate-200"} backdrop-blur-3xl rounded-2xl overflow-hidden shadow-2xl flex flex-col`}
           >
             <div className="flex flex-col p-2 space-y-1">
-              {NAV_ROUTES.map((item) => (
-                <NavLink
+              {NAV_ROUTES.map((item, idx) => (
+                <motion.div
                   key={item.path}
-                  to={item.path}
-                  end={item.path === "/"}
-                  onClick={() => setMobileOpen(false)}
-                  className={({ isActive }) =>
-                    `px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
-                      ? "bg-white/40 dark:bg-white/10 text-slate-900 dark:text-white font-semibold"
-                      : "text-slate-600 dark:text-slate-300 hover:bg-white/30 dark:hover:bg-white/5"
-                    }`
-                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 + idx * 0.04 }}
                 >
-                  {item.name}
-                </NavLink>
+                  <NavLink
+                    to={item.path}
+                    end={item.path === "/"}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) =>
+                      `block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive
+                        ? "bg-white/40 dark:bg-white/10 text-slate-900 dark:text-white font-semibold"
+                        : "text-slate-600 dark:text-slate-300 hover:bg-white/30 dark:hover:bg-white/5"
+                      }`
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                </motion.div>
               ))}
             </div>
 

@@ -99,15 +99,15 @@ export function WhyYugantran() {
           {pillars.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20, scale: 0.97 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: idx * 0.15, duration: 0.5 }}
+              transition={{ delay: idx * 0.06, duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
               className="relative z-10 flex flex-col items-center text-center group w-full lg:w-1/4"
             >
               {/* Glassy Flow Node */}
               <div 
-                className="glass p-6 sm:p-8 rounded-[2rem] w-full max-w-[280px] flex flex-col items-center hover:bg-white/10 transition-all duration-300 relative z-10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] h-full"
+                className="glass p-6 sm:p-8 rounded-[2rem] w-full max-w-[280px] flex flex-col items-center hover:bg-white/10 transition-[transform,background-color,box-shadow] duration-200 ease-out-custom relative z-10 shadow-[0_8px_32px_rgba(0,0,0,0.2)] [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] h-full"
                 style={{
                   border: `1px solid ${item.color}30`
                 }}

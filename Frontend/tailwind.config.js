@@ -69,6 +69,11 @@ export default {
         "gradient-neon": "linear-gradient(90deg, #00f2fe, #38bdf8, #818cf8, #c084fc, #00f2fe)",
         "gradient-dark-glass": "linear-gradient(135deg, rgba(14, 30, 60, 0.7) 0%, rgba(6, 15, 34, 0.85) 100%)",
       },
+      transitionTimingFunction: {
+        "out-custom": "var(--ease-out)",
+        "in-out-custom": "var(--ease-in-out)",
+        "hover": "var(--ease-hover)",
+      },
       animation: {
         "gradient-shift": "gradient-shift 4s linear infinite",
         "pulse-cyan": "pulse-cyan 2.5s ease-in-out infinite",

@@ -7,7 +7,7 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
       className="pt-24 sm:pt-28 pb-16 sm:pb-20 w-full min-h-[calc(100vh-140px)] flex-1 relative z-10"
     >
       {children}
