@@ -1,0 +1,5 @@
+{
+    "subject":  "Test Webhook Email",
+    "to":  "threjapranshul@gmail.com",
+    "htmlBody":  "\u003ch1\u003eThis is a test\u003c/h1\u003e"
+}

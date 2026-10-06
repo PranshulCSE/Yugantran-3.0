@@ -319,14 +319,15 @@ export async function sendConfirmationEmail(to, payload) {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
       
+      const params = new URLSearchParams();
+      params.append('to', to);
+      params.append('subject', subject);
+      params.append('htmlBody', html);
+      
       const res = await fetch(webhookUrl, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          to,
-          subject,
-          htmlBody: html
-        }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params.toString(),
         redirect: "follow",
         signal: controller.signal
       });
