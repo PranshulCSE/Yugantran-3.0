@@ -312,6 +312,40 @@ export async function sendConfirmationEmail(to, payload) {
 
   const subject = `✓ Registration Confirmed: ${event} — YUGANTRAN 3.0`;
 
+  // 1. Try Google Apps Script Webhook (Bypasses Render SMTP port blocks)
+  const webhookUrl = process.env.GOOGLE_EMAIL_WEBHOOK_URL;
+  if (webhookUrl && webhookUrl.startsWith("http")) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+      
+      const res = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          to,
+          subject,
+          htmlBody: html
+        }),
+        redirect: "follow",
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      const data = await res.json();
+      
+      if (data && data.success) {
+        console.log(`📧 [Google Webhook] Confirmation email sent successfully to ${to}`);
+        return { success: true, provider: "google-webhook" };
+      } else {
+        console.warn(`⚠️ [Google Webhook] Script returned error: ${data?.error}. Falling back...`);
+      }
+    } catch (webhookErr) {
+      console.warn(`⚠️ [Google Webhook] Request failed (${webhookErr.message}). Falling back...`);
+    }
+  }
+
+  // 2. Try Nodemailer / Gmail SMTP first if configured
   const gmailUser = (process.env.GMAIL_USER || "").trim();
   const gmailPass = (process.env.GMAIL_APP_PASSWORD || process.env.GMAIL_PASS || "").replace(/\s+/g, "");
 
