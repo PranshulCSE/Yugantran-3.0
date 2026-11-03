@@ -4,26 +4,23 @@ import { publicApi } from "../lib/api";
 import { Event } from "../types";
 import PageWrapper from "../components/PageWrapper";
 import {
-  Zap,
-  IndianRupee,
-  Trophy,
-  Users,
   Layers,
   ArrowLeft,
   ChevronRight,
-  Shield,
-  Bot,
-  CheckCircle2,
   Calendar,
   MapPin,
-  Flame,
 } from "lucide-react";
 
 export default function EventDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [event, setEvent] = useState<Event | null>(null);
+  const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    publicApi.getSettings().then((r) => setSettings(r.data)).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!slug) return;
@@ -66,6 +63,8 @@ export default function EventDetailPage() {
       </PageWrapper>
     );
   }
+
+  const isRegistrationOpen = Boolean(settings?.isRegistrationOpen);
 
   return (
     <PageWrapper>
@@ -165,14 +164,18 @@ export default function EventDetailPage() {
             <Calendar className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
             <div>
               <div className="text-xs font-space text-slate-500 dark:text-slate-400">Date & Schedule</div>
-              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">27–28 October 2026</div>
+              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">
+                {isRegistrationOpen ? "15–20 November 2026" : "To be announced"}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <MapPin className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
             <div>
               <div className="text-xs font-space text-slate-500 dark:text-slate-400">Venue Location</div>
-              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">Geeta University Campus</div>
+              <div className="font-orbitron font-bold text-sm text-slate-900 dark:text-white">
+                {settings?.venue || "Geeta University Campus"}
+              </div>
             </div>
           </div>
         </div>
@@ -189,7 +192,7 @@ export default function EventDetailPage() {
           <button
             onClick={() => {
               window.dispatchEvent(new CustomEvent("eventSelected", { detail: event.name }));
-              navigate("/register");
+              navigate("/register", { state: { preselectEvent: event.name } });
             }}
             className="btn-primary text-xs py-3.5 px-8 shadow-cyan-500/30 flex items-center gap-2 w-full sm:w-auto justify-center"
           >

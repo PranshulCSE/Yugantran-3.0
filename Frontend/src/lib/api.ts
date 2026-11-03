@@ -68,9 +68,13 @@ export const publicApi = {
   getTeam: async (category?: string) => {
     try {
       const res = await api.get("/api/team", { params: category ? { category } : {} });
-      if (Array.isArray(res.data)) return res;
+      if (Array.isArray(res.data) && res.data.length > 0) return res;
       console.warn("API returned empty team, using fallback.");
-      return { data: [] };
+      let filtered = coreTeamData as unknown as TeamMember[];
+      if (category) {
+        filtered = filtered.filter((m) => (m.category || "core") === category);
+      }
+      return { data: filtered };
     } catch (err) {
       console.error("Failed to fetch team from API:", err);
       let filtered = coreTeamData as unknown as TeamMember[];

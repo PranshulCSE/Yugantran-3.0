@@ -1,31 +1,16 @@
 import { motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import {
-  Bot,
-  Shield,
-  Terminal,
-  Cpu,
-  Rocket,
-  Gamepad2,
   FileText,
   Download,
   Zap,
-  ArrowRight,
   Flame,
   Building2,
-  Award,
-  Users,
   Target,
-  CheckCircle2,
 } from "lucide-react";
-import { publicApi } from "../lib/api";
-
-const ICON_MAP: Record<string, any> = { Bot, Shield, Terminal, Cpu, Rocket, Gamepad2 };
 
 export default function About() {
   const ref = useRef(null);
-  const navigate = useNavigate();
   return (
     <section id="about" ref={ref} className="relative py-0 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">

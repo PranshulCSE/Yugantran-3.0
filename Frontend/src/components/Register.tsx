@@ -103,17 +103,21 @@ export default function Register() {
 
   // Listen for event pre-selection from other pages
   useEffect(() => {
-    const handler = (e: Event) => {
-      // @ts-ignore
-      const eventName = (e as CustomEvent).detail;
+    const handler = (e: globalThis.Event) => {
+      const eventName = (e as CustomEvent<string>).detail;
       const found = events.find((ev) => ev.name === eventName);
       if (found) selectEvent(found);
     };
-    // @ts-ignore
     window.addEventListener("eventSelected", handler as EventListener);
-    // @ts-ignore
     return () => window.removeEventListener("eventSelected", handler as EventListener);
   }, [events]);
+
+  // Cleanup object URL on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   // Pre-select event from route state (e.g. when navigated from Events page)
   useEffect(() => {
@@ -245,13 +249,19 @@ export default function Register() {
         () => successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
         100
       );
-    } catch {
-      // Simulate successful offline client receipt if API endpoint is not reachable in local dev
-      setSubmitted(true);
-      setTimeout(
-        () => successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
-        100
-      );
+    } catch (err: any) {
+      if (err.response?.data?.error) {
+        showToast(err.response.data.error);
+      } else if (import.meta.env.DEV && (!err.response || err.message === "Network Error")) {
+        // Fallback simulation only in local dev when backend server is offline
+        setSubmitted(true);
+        setTimeout(
+          () => successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }),
+          100
+        );
+      } else {
+        showToast("Registration failed. Please check your connection and try again.");
+      }
     } finally {
       setLoading(false);
     }

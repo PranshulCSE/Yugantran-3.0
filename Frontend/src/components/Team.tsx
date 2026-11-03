@@ -175,7 +175,6 @@ export default function Team() {
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
           >
             {members.map((m, i) => (
-              // @ts-ignore
               <MemberCard key={m._id || m.id || i} member={m} index={i} />
             ))}
           </motion.div>

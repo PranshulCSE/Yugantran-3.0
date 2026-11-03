@@ -19,6 +19,7 @@ export interface Event {
 
 export interface TeamMember {
   _id: string;
+  id?: string;
   name: string;
   role: string;
   department: string;
