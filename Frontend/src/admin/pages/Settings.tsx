@@ -185,8 +185,8 @@ export default function SettingsPage() {
               label="Total Prize Pool Tag"
               value={settings?.totalPrizePool}
               onChange={(e) => set("totalPrizePool", e)}
-              hint="Shown in hero & ribbons (e.g. ₹73,000+)"
-              placeholder="₹73,000+"
+              hint="Shown in hero & ribbons (e.g. ₹21,000+)"
+              placeholder="₹21,000+"
             />
           </div>
         </div>

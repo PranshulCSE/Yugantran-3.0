@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Clock, Zap, MapPin, CalendarDays } from "lucide-react";
+import { publicApi } from "../lib/api";
 import "./Timeline.css";
 
 const SCHEDULE_DAY1 = [
@@ -95,7 +96,7 @@ const SCHEDULE_DAY2 = [
     time: "04:30 PM",
     title: "Grand Valedictory & Prize Distribution",
     category: "AWARDS",
-    desc: "Distribution of ₹73,000+ prizes, trophies, certificates, and closing ceremony.",
+    desc: "Distribution of ₹21,000+ prizes, trophies, certificates, and closing ceremony.",
     location: "Auditorium",
   },
 ];
@@ -168,7 +169,12 @@ const TimelineItem = ({ item, globalIdx, handleMouseMove }: { item: Record<strin
 export default function Timeline() {
   const ref = useRef(null);
   const [activeDay, setActiveDay] = useState<1 | 2>(1);
+  const [settings, setSettings] = useState<Record<string, any> | null>(null);
   const currentSchedule = activeDay === 1 ? SCHEDULE_DAY1 : SCHEDULE_DAY2;
+
+  useEffect(() => {
+    publicApi.getSettings().then((r) => setSettings(r.data)).catch(() => {});
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -189,6 +195,10 @@ export default function Timeline() {
     ));
   };
 
+  const dateSubtitle = settings?.isRegistrationOpen
+    ? "Unveiling 2 Days of Pure Innovation • 15–20 November 2026 • Geeta University"
+    : "Unveiling 2 Days of Pure Innovation • Schedule To Be Announced • Geeta University";
+
   return (
     <section id="timeline" ref={ref} className="relative pt-10 pb-16 sm:pt-16 sm:pb-24 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16">
@@ -205,7 +215,7 @@ export default function Timeline() {
           </h1>
 
           <p className="text-slate-600 dark:text-slate-400 font-inter text-sm sm:text-base leading-relaxed">
-            Unveiling 2 Days of Pure Innovation • October 27–28, 2026 • Geeta University
+            {dateSubtitle}
           </p>
         </motion.div>
 

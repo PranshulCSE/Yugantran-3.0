@@ -88,13 +88,13 @@ export function WhyYugantran() {
           </p>
         </motion.div>
 
-        <div className="relative mt-16 lg:mt-24 max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-stretch justify-between gap-12 lg:gap-6">
+        <div className="relative mt-12 sm:mt-16 lg:mt-24 max-w-6xl mx-auto flex flex-col sm:grid sm:grid-cols-2 lg:flex lg:flex-row items-center sm:items-stretch justify-between gap-8 sm:gap-6 lg:gap-6 px-2">
           
           {/* Glowing Track Line (Desktop) */}
           <div className="absolute top-1/2 left-[5%] right-[5%] h-[2px] bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent -translate-y-1/2 hidden lg:block z-0" />
           
           {/* Glowing Track Line (Mobile) */}
-          <div className="absolute left-1/2 top-[5%] bottom-[5%] w-[2px] bg-gradient-to-b from-transparent via-cyan-500/40 to-transparent -translate-x-1/2 block lg:hidden z-0" />
+          <div className="absolute left-1/2 top-[5%] bottom-[5%] w-[2px] bg-gradient-to-b from-transparent via-cyan-500/40 to-transparent -translate-x-1/2 block sm:hidden z-0" />
 
           {pillars.map((item, idx) => (
             <motion.div
@@ -150,7 +150,7 @@ export function WhyYugantran() {
               
               {/* Connecting Arrows for Mobile (except last) */}
               {idx < pillars.length - 1 && (
-                <div className="flex lg:hidden absolute -bottom-8 left-1/2 -translate-x-1/2 items-center text-cyan-500/50 z-0">
+                <div className="flex sm:hidden absolute -bottom-8 left-1/2 -translate-x-1/2 items-center text-cyan-500/50 z-0">
                   <ArrowRight className="w-5 h-5 rotate-90 animate-pulse" />
                 </div>
               )}
@@ -167,7 +167,7 @@ export function AboutTeaser() {
   const navigate = useNavigate();
   const highlights = [
     { icon: Zap, label: "6 Tech Domains", sub: "AI, Cyber, SWE, IoT & more" },
-    { icon: Users, label: "500+ Expected Innovaters", sub: "National participation" },
+    { icon: Users, label: "500+ Expected Innovators", sub: "National participation" },
     { icon: ShieldCheck, label: "10 Competitive Events", sub: "Real-world engineering challenges" },
   ];
 

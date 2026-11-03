@@ -1,15 +1,33 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, Sun, Moon } from "lucide-react";
-import { NAV_ROUTES } from "../routes";
+import { ALL_NAV_ROUTES, POSTPONED_NAV_ROUTES } from "../routes";
+import { publicApi } from "../lib/api";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    publicApi
+      .getSettings()
+      .then((r) => {
+        setIsRegistrationOpen(Boolean(r.data?.isRegistrationOpen));
+      })
+      .catch(() => {});
+  }, []);
+
+  const navItems = useMemo(() => {
+    if (isRegistrationOpen) {
+      return ALL_NAV_ROUTES.filter((item) => item.path !== "/register");
+    }
+    return POSTPONED_NAV_ROUTES;
+  }, [isRegistrationOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -20,13 +38,23 @@ export default function Header() {
 
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (mobileOpen && headerRef.current && !headerRef.current.contains(event.target as Node)) {
         setMobileOpen(false);
       }
     };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [mobileOpen]);
 
   const isDark = theme === "dark";
@@ -64,7 +92,7 @@ export default function Header() {
 
           {/* Desktop Nav Items */}
           <div className="hidden md:flex items-center justify-center gap-1 lg:gap-2 whitespace-nowrap">
-            {NAV_ROUTES.filter((item) => item.path !== "/register").map((item) => (
+            {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
@@ -163,7 +191,7 @@ export default function Header() {
             className={`absolute top-[calc(100%+0.5rem)] right-0 w-[240px] md:hidden ${isDark ? "bg-[#020617]/95 border border-white/10" : "bg-white/95 border border-slate-200"} backdrop-blur-3xl rounded-2xl overflow-hidden shadow-2xl flex flex-col`}
           >
             <div className="flex flex-col p-2 space-y-1">
-              {NAV_ROUTES.map((item, idx) => (
+              {navItems.map((item, idx) => (
                 <motion.div
                   key={item.path}
                   initial={{ opacity: 0 }}

@@ -58,7 +58,6 @@ export const PARTNER_LOGOS: PartnerLogo[] = [
     name: "IEEE Delhi Branch",
     image: "/images/Geeta/univ-5.png",
   }
-  
 ];
 
 export default function LogoTicker() {
@@ -67,7 +66,7 @@ export default function LogoTicker() {
 
   return (
     <div className="w-full py-1 relative">
-      <div className="text-center mb-2">
+      <div className="text-center mb-2.5">
         <span className="font-mono-matrix text-[11px] sm:text-xs text-cyan-400 font-bold uppercase tracking-[0.25em] px-4 py-1.5 rounded-full glass inline-flex items-center">
           ORGANIZING INSTITUTIONS & PARTNERS
         </span>
@@ -75,26 +74,26 @@ export default function LogoTicker() {
 
       {/* Infinite Scrolling Marquee Track with Gradient Edge Masking */}
       <div 
-        className="relative w-full max-w-[90vw] md:max-w-5xl mx-auto overflow-hidden"
+        className="relative w-full max-w-[96vw] md:max-w-6xl mx-auto overflow-hidden"
         style={{
-          maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-          WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)'
+          maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)'
         }}
       >
         <div 
-          className="animate-marquee flex items-center gap-6 sm:gap-8 py-3 w-max"
+          className="animate-marquee flex items-center gap-4 sm:gap-6 md:gap-8 py-2 sm:py-3 w-max"
           style={{ animationDuration: '40s' }}
         >
           {tickerItems.map((logo, idx) => (
             <div
               key={`${logo.id}-${idx}`}
-              className="flex-shrink-0 flex items-center justify-center h-16 sm:h-20 min-w-[160px] sm:min-w-[200px] px-6 py-2.5 rounded-2xl bg-white/95 border border-cyan-400/40 shadow-[0_4px_25px_rgba(0,242,254,0.2)] hover:scale-105 hover:border-cyan-300 transition-all duration-300"
+              className="flex-shrink-0 flex items-center justify-center h-16 sm:h-20 md:h-24 min-w-[150px] sm:min-w-[190px] md:min-w-[240px] px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-white/95 border border-cyan-400/40 shadow-[0_4px_25px_rgba(0,242,254,0.2)] hover:scale-105 hover:border-cyan-300 transition-all duration-300"
               title={logo.name}
             >
               <img
                 src={logo.image}
                 alt={logo.name}
-                className="h-10 sm:h-14 w-auto max-w-[170px] object-contain select-none"
+                className="h-10 sm:h-13 md:h-16 w-auto max-w-[130px] sm:max-w-[170px] md:max-w-[200px] object-contain select-none"
               />
             </div>
           ))}

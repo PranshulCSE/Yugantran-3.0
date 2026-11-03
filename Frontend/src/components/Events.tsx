@@ -359,33 +359,39 @@ export default function Events() {
             </button>
             <AnimatePresence>
               {isDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl glass !bg-white/60 dark:!bg-black/60 backdrop-blur-3xl shadow-2xl !border-white/10 z-50 flex flex-col gap-1 max-h-[60vh] overflow-y-auto"
-                >
-                  {categories.map((cat) => {
-                    const cfg = cat === "all" ? null : CATEGORY_CONFIG[cat];
-                    const isSel = activeFilter === cat;
-                    return (
-                      <button
-                        key={cat}
-                        onClick={() => {
-                          setActiveFilter(cat);
-                          setIsDropdownOpen(false);
-                        }}
-                        className={`text-left px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-colors ${
-                          isSel
-                            ? "bg-black/10 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm"
-                            : "text-slate-800 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-slate-200"
-                        }`}
-                      >
-                        {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}
-                      </button>
-                    );
-                  })}
-                </motion.div>
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsDropdownOpen(false)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute top-full left-0 right-0 mt-2 p-2 rounded-2xl glass !bg-white/90 dark:!bg-black/90 backdrop-blur-3xl shadow-2xl !border-white/10 z-50 flex flex-col gap-1 max-h-[60vh] overflow-y-auto"
+                  >
+                    {categories.map((cat) => {
+                      const cfg = cat === "all" ? null : CATEGORY_CONFIG[cat];
+                      const isSel = activeFilter === cat;
+                      return (
+                        <button
+                          key={cat}
+                          onClick={() => {
+                            setActiveFilter(cat);
+                            setIsDropdownOpen(false);
+                          }}
+                          className={`text-left px-4 py-3 rounded-xl text-sm font-semibold tracking-wide transition-colors ${
+                            isSel
+                              ? "bg-black/10 dark:bg-white/15 text-slate-900 dark:text-white shadow-sm"
+                              : "text-slate-800 dark:text-slate-400 hover:bg-black/5 dark:hover:bg-white/10 hover:text-slate-900 dark:hover:text-slate-200"
+                          }`}
+                        >
+                          {cat === "all" ? `ALL (${events.length || 10})` : (cfg?.label || cat).toUpperCase()}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                </>
               )}
             </AnimatePresence>
           </div>
